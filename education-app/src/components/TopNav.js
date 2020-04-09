@@ -36,10 +36,10 @@ const TopNav = () => {
 						</>
 					) : (
 						<>
-							<button onClick={(e) => handleClick(e)} value='signUp'>
+							<button onClick={(e) => handleClick(e)} value='Sign Up'>
 								Sign Up
 							</button>
-							<button onClick={(e) => handleClick(e)} value='logIn'>
+							<button onClick={(e) => handleClick(e)} value='Log In'>
 								Log In
 							</button>
 						</>
