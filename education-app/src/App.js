@@ -1,9 +1,18 @@
 import React from 'react';
 
+import Homepage from "./pages/Homepage"
+import TopNav from "./components/TopNav"
+
+import ResetCSS from "./ResetCSS"
+
 const App = () => {
 
    return (
-      <h1>Hello World!</h1>
+      <>
+         <ResetCSS/>
+         <TopNav/>
+         <Homepage/>
+      </>
    )
 }
 
