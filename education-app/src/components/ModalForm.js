@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const ModalForm = () => {
+const ModalForm = (props) => {
 	return (
 		<ModalStyle>
 			<div className='modal-box'>
-				<h1 className='modal-title'>Login</h1>
+				<h1 className='modal-title'>{props.formType}</h1>
 				<form className='modal-form'>
 					<input
 						className='form-control'
@@ -15,7 +15,7 @@ const ModalForm = () => {
 						required
 					/>
 
-					<button className='modal-btn'>Login</button>
+					<button className='modal-btn'>Submit</button>
 				</form>
 			</div>
 		</ModalStyle>
