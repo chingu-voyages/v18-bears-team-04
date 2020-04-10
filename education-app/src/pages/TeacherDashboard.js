@@ -1,34 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+import CreateAssignmentForm from "../components/CreateAssignmentForm";
 import styled from "styled-components";
 import bgImg from "../images/Dashboard-bg.jpg";
 import STORE from "../STORE.js";
-import exampleImg from "../images/ProfExample.jpg";
+import exampleImg from "../images/maria-hill-teacher.jpg";
 
 const TeacherDashboard = () => {
 	//temporary
-	let user = {
-		userName: "MorganStark",
-		img: exampleImg,
-		userType: "Teacher",
-		class: "Math 101",
+	let user = STORE[1];
+
+	const [{ showModal }, setModal] = useState({ showModal: false });
+
+	const handleModal = () => {
+		setModal({ showModal: !showModal });
 	};
 
-	console.log(STORE);
+	//need to add: create button handler, cancel button handler
+
 	return (
 		<TeacherDashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
 					<div className='prof-img'>
-						<img src={user.img} alt='' />
+						<img src={exampleImg} alt='' />
 					</div>
-					<p className='user-name'>{user.userName}</p>
+					<p className='user-name'>{user.username}</p>
 					<p className='user-type'>{user.userType}</p>
 				</div>
+				<div className='class-title'>
+					<h1> {user.className}</h1>
+				</div>
+
 				<div className='links'>
-					{user.class}
-					<Link>Assignments</Link>
-					<Link>Grades</Link>
+					<button onClick={() => handleModal()}>Create An Assignment</button>
+					<Link to={`/${user.username}/assignments`}>Assignments</Link>
+
+					<Modal open={showModal} onClose={() => handleModal()} center>
+						<CreateAssignmentForm handleModal={() => handleModal()} />
+					</Modal>
+					<Link to={`/${user.username}/feedback`}>Feedback</Link>
 				</div>
 			</div>
 		</TeacherDashboardStyle>
@@ -72,14 +84,21 @@ const TeacherDashboardStyle = styled.main`
 				margin-top: 8px;
 			}
 		}
+		.class-title {
+			text-align: center;
+			font-size: 8rem;
+			color: #ffffff;
+		}
 		.links {
 			display: flex;
 			flex-direction: column;
+
+			button,
 			a {
 				text-align: center;
 				font-size: 2.6rem;
-				color: #fff;
 				margin-bottom: 30px;
+				color: #ffffff;
 				transition: 0.3s;
 				&:last-child {
 					margin-bottom: 0;
