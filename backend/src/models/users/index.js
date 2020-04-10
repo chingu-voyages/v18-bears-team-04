@@ -1,1 +1,2 @@
-export { default } from "./model";
+import User from "./model";
+export default User;

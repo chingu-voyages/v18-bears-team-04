@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
-
+const mongoose = require("mongoose");
 const password = process.env.DB_PASSWORD;
 const user = process.env.DB_USER;
 const url = process.env.DB_URL;
 
-const mongoURL = `mongodb://${user}:${password}@${url}`;
+const mongoURL = `mongodb://${user}:${password}@${url}?retryWrites=true&w=majority`;
+
 const mongoMsg = (msg) => console.log(`DB Connection ${msg}`);
 const mongoOptions = {
   useNewUrlParser: true,
