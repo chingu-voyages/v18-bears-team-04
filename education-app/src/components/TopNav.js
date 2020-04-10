@@ -20,6 +20,7 @@ const TopNav = () => {
 	const handleLogIn = (e) => {
 		e.preventDefault();
 		//will change to api auth service
+		console.log(e.target);
 		const { value } = e.target;
 		value === "Log In"
 			? //check user in db and update to loggedIn = true

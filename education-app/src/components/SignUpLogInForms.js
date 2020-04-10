@@ -50,8 +50,9 @@ const SignUpLogInForms = (props) => {
 
 					<button
 						className='modal-btn'
-						onClick={(e) => props.handleLogIn(e)}
 						value={props.formType}
+						onSubmit={(e) => props.handleLogIn(e)}
+						//will change to form submit
 					>
 						{props.formType}
 					</button>
