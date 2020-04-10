@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Modal } from "react-responsive-modal";
-import ModalForm from "./ModalForm";
+import SignUpLogInForms from "./SignUpLogInForms";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
-import bellIcon from "../images/bell-solid.svg"
+import bellIcon from "../images/bell-solid.svg";
 
 const TopNav = () => {
 	const [{ loggedIn, showModal, formType }, setForm] = useState({
-		loggedIn: true,
+		loggedIn: false,
 		showModal: false,
 		formType: "",
 	});
@@ -15,6 +15,18 @@ const TopNav = () => {
 	const handleClick = (e) => {
 		const { value } = e.target;
 		setForm({ formType: value, showModal: true });
+	};
+
+	const handleLogIn = (e) => {
+		e.preventDefault();
+		//will change to api auth service
+		const { value } = e.target;
+		value === "Log In"
+			? //check user in db and update to loggedIn = true
+			  setForm({ loggedIn: true, showModal: false })
+			: // : value === "Sign Up"
+			  // ? //set post new user and update to loggedIn = true
+			  setForm({ loggedIn: false });
 	};
 
 	return (
@@ -25,15 +37,18 @@ const TopNav = () => {
 				onClose={() => setForm({ showModal: false })}
 				center
 			>
-				<ModalForm formType={formType} />
+				<SignUpLogInForms
+					formType={formType}
+					handleLogIn={(e) => handleLogIn(e)}
+				/>
 			</Modal>
 			<nav className='top-nav-menu'>
 				<ul>
 					{loggedIn ? (
 						<>
-							<button className="logOut-btn" >Log Out</button>
-							<button className="notif-btn">
-								<img src={bellIcon} alt="notification"/>
+							<button className='logOut-btn'>Log Out</button>
+							<button className='notif-btn'>
+								<img src={bellIcon} alt='notification' />
 							</button>
 						</>
 					) : (
@@ -61,11 +76,11 @@ const NavStyle = styled.header`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	border-bottom: 3px solid #00A3FF;
+	border-bottom: 3px solid #00a3ff;
 	z-index: 100;
 	h1 {
 		font-size: 4rem;
-		color: #00A3FF;
+		color: #00a3ff;
 	}
 	.top-nav-menu {
 		ul {
@@ -85,7 +100,7 @@ const NavStyle = styled.header`
 				}
 			}
 			.logOut-btn {
-				background-color: #00A3FF;
+				background-color: #00a3ff;
 				color: #fff;
 				border-radius: 10px;
 			}
