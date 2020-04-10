@@ -2,7 +2,9 @@ import cors from "cors";
 import express from "express";
 import createError from "http-errors";
 import morganBody from "morgan-body";
-import api from "../api";
+import api from "./api";
+import mongoManager from "./mongo";
+//require("dotenv").config();
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+mongoManager();
+
 // use all routes exported from the routes folder
 app.use("/api", api);
 
@@ -42,4 +46,4 @@ const GlobalErrorHandler = ({ status, message }, _req, res, _next) => {
 
 app.use(GlobalErrorHandler);
 
-export default app;
+module.exports = app;

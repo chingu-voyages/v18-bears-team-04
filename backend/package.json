@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "0.0.0",
   "private": true,
-  "main": "src/server/index.js",
   "scripts": {
-    "start": "node ./src/server"
+    "dev": "cross-env NODE_ENV=development node -r dotenv/config -r esm ./src/bin/www",
+    "start": "node -r dotenv/config -r esm ./src/bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -12,6 +12,7 @@
     "cross-env": "^7.0.2",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
     "express": "~4.16.1",
     "http-errors": "^1.6.3",
     "jade": "~1.11.0",
@@ -20,6 +21,6 @@
     "morgan-body": "^2.4.8"
   },
   "devDependencies": {
-    "webpack": "^4.42.1"
+    "nodemon": "^2.0.3"
   }
 }

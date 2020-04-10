@@ -1,1 +1,2 @@
-export { default } from "./routes";
+import router from "./routes";
+export default router;
