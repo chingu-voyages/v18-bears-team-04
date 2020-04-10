@@ -21,9 +21,9 @@ const TopNav = () => {
 	const handleLogIn = (e) => {
 		e.preventDefault();
 		//will change to api auth service
-		console.log(e.target);
+
 		const { value } = e.target;
-		value === "Log In"
+		value === "Log In" || value === "Sign Up"
 			? //check user in db and update to loggedIn = true
 			  setForm({ loggedIn: true, showModal: false })
 			: // : value === "Sign Up"
