@@ -3,10 +3,11 @@ import { Modal } from "react-responsive-modal";
 import ModalForm from "./ModalForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
+import bellIcon from "../images/bell-solid.svg"
 
 const TopNav = () => {
 	const [{ loggedIn, showModal, formType }, setForm] = useState({
-		loggedIn: false,
+		loggedIn: true,
 		showModal: false,
 		formType: "",
 	});
@@ -30,9 +31,10 @@ const TopNav = () => {
 				<ul>
 					{loggedIn ? (
 						<>
-							<li>My Page</li>
-							<li>My Profile</li>
-							<li>Log Out</li>
+							<button className="logOut-btn" >Log Out</button>
+							<button className="notif-btn">
+								<img src={bellIcon} alt="notification"/>
+							</button>
 						</>
 					) : (
 						<>
@@ -55,18 +57,20 @@ const NavStyle = styled.header`
 	width: 100%;
 	height: 60px;
 	padding: 0 60px;
-	background-color: #efefef;
+	background-color: #fff;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	border-bottom: 3px solid #00A3FF;
 	z-index: 100;
 	h1 {
 		font-size: 4rem;
+		color: #00A3FF;
 	}
 	.top-nav-menu {
 		ul {
 			display: flex;
-			li,
+			align-items: center;
 			button {
 				width: 180px;
 				height: 40px;
@@ -78,6 +82,19 @@ const NavStyle = styled.header`
 				cursor: pointer;
 				&:last-child {
 					margin-right: 0;
+				}
+			}
+			.logOut-btn {
+				background-color: #00A3FF;
+				color: #fff;
+				border-radius: 10px;
+			}
+			.notif-btn {
+				width: 30px;
+				height: 30px;
+				background-color: #fff;
+				img {
+					height: 100%;
 				}
 			}
 		}
