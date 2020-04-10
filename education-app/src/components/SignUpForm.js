@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-const SignUpLogInForms = (props) => {
+const SignUpForm = (props) => {
+	const [{ username, email }, setInput] = useState({
+		username: "",
+		email: "",
+	});
+
+	const handleChange = (e) => {
+		const { value, name } = e.target;
+		setInput({ [name]: value });
+	};
+
 	return (
-		<SignUpLogInFormsStyle>
+		<SignUpFormStyle>
 			<div className='modal-box'>
 				<h1 className='modal-title'>{props.formType}</h1>
 				<form className='modal-form'>
@@ -12,57 +22,57 @@ const SignUpLogInForms = (props) => {
 						type='text'
 						name='username'
 						placeholder='username'
+						value={username}
+						onChange={(e) => handleChange(e)}
 						required
 					/>
-					{props.formType === "Sign Up" ? (
-						<>
+					<input
+						className='email-input'
+						type='email'
+						name='email'
+						value={email}
+						onChange={(e) => handleChange(e)}
+						placeholder='E-mail'
+						required
+					/>
+					<div className='sign-up-user-info'>
+						I am a:
+						<br />
+						<div className='radio-wrapper'>
 							<input
-								className='email-input'
-								type='email'
-								name='email'
-								placeholder='E-mail'
-								required
+								type='radio'
+								id='teacher'
+								name='user-type'
+								value='teacher'
 							/>
-							<div className='sign-up-user-info'>
-								I am a:
-								<br />
-								<div className='radio-wrapper'>
-									<input
-										type='radio'
-										id='teacher'
-										name='user-type'
-										value='teacher'
-									/>
-									<label for='teacher'>Teacher</label>
-								</div>
-								<div className='radio-wrapper'>
-									<input
-										type='radio'
-										id='student'
-										name='user-type'
-										value='student'
-									/>
-									<label for='student'>Student</label>
-								</div>
-							</div>
-						</>
-					) : null}
+							<label for='teacher'>Teacher</label>
+						</div>
+						<div className='radio-wrapper'>
+							<input
+								type='radio'
+								id='student'
+								name='user-type'
+								value='student'
+							/>
+							<label for='student'>Student</label>
+						</div>
+					</div>
 
 					<button
 						className='modal-btn'
 						value={props.formType}
-						onSubmit={(e) => props.handleLogIn(e)}
+						onClick={(e) => props.handleLogIn(e)}
 						//will change to form submit
 					>
 						{props.formType}
 					</button>
 				</form>
 			</div>
-		</SignUpLogInFormsStyle>
+		</SignUpFormStyle>
 	);
 };
 
-const SignUpLogInFormsStyle = styled.div`
+const SignUpFormStyle = styled.div`
 	.modal-box {
 		width: 300px;
 		height: 400px;
@@ -110,4 +120,4 @@ const SignUpLogInFormsStyle = styled.div`
 	}
 `;
 
-export default SignUpLogInForms;
+export default SignUpForm;

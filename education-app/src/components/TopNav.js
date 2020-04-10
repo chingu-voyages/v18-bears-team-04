@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal } from "react-responsive-modal";
-import SignUpLogInForms from "./SignUpLogInForms";
+import SignUpForm from "./SignUpForm";
+import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
@@ -38,10 +39,11 @@ const TopNav = () => {
 				onClose={() => setForm({ showModal: false })}
 				center
 			>
-				<SignUpLogInForms
-					formType={formType}
-					handleLogIn={(e) => handleLogIn(e)}
-				/>
+				{formType === "Sign Up" ? (
+					<SignUpForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+				) : formType === "Log In" ? (
+					<LogInForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+				) : null}
 			</Modal>
 			<nav className='top-nav-menu'>
 				<ul>
