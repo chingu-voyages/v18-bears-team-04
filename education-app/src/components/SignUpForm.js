@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const SignUpForm = (props) => {
-	const [{ username, email }, setInput] = useState({
-		username: "",
-		email: "",
-	});
+	const initialState = { username: "", email: "", userType: "" };
+	const [userInput, setInput] = useState(initialState);
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
-		setInput({ [name]: value });
+		setInput({ ...userInput, [name]: value });
 	};
+
+	const { username, email } = userInput;
 
 	return (
 		<SignUpFormStyle>
@@ -42,19 +42,21 @@ const SignUpForm = (props) => {
 							<input
 								type='radio'
 								id='teacher'
-								name='user-type'
+								name='userType'
 								value='teacher'
+								onChange={(e) => handleChange(e)}
 							/>
-							<label for='teacher'>Teacher</label>
+							<label htmlFor='teacher'>Teacher</label>
 						</div>
 						<div className='radio-wrapper'>
 							<input
 								type='radio'
 								id='student'
-								name='user-type'
+								name='userType'
 								value='student'
+								onChange={(e) => handleChange(e)}
 							/>
-							<label for='student'>Student</label>
+							<label htmlFor='student'>Student</label>
 						</div>
 					</div>
 
