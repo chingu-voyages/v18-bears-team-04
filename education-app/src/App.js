@@ -7,7 +7,7 @@ import {
 
 import TopNav from "./components/TopNav"
 import Homepage from "./pages/Homepage"
-import StudentDashBoard from "./pages/StudentDasboard"
+import StudentDashboard from './pages/StudentDasboard';
 
 import ResetCSS from "./ResetCSS"
 
@@ -19,13 +19,10 @@ const App = () => {
             <ResetCSS/>
             <TopNav/>
             <Switch>
-               <Route>
-                  <Homepage path="/" />
-               </Route>
-               <Route>
-                  <StudentDashBoard path="/test" />
-               </Route>
+               <Route path="/" exact component={Homepage}/>
+               <Route path="/studentdashboard" component={StudentDashboard} />
             </Switch>
+            {/* <StudentDashboard/> */}
          </Router>
       </>
    )
