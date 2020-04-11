@@ -32,3 +32,13 @@ Class API
    classCode: String, //unique
    teacherName: String //UserName
    }
+
+2. PUT /api/class/:studentName
+   Description: Add A Student to the Student Names Array
+   Returns:
+   Success: The Updated Class Object {Status:200}
+   Failed: {message: 'A detailed Error message'}
+   Body:
+   {
+   classCode: String
+   }
