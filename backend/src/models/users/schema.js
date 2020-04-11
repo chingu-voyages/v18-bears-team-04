@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+export const userRole = {
+  TEACHER: "teacher",
+  STUDENT: "student",
+};
 
 const userSchema = new Schema({
   userName: {
@@ -16,8 +20,8 @@ const userSchema = new Schema({
 
   role: {
     type: String,
-    enum: ["teacher", "student"],
-    default: "student",
+    enum: [userRole.TEACHER, userRole.STUDENT],
+    default: userRole.STUDENT,
   },
 });
 
