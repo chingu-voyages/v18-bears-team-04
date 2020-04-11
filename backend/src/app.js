@@ -4,7 +4,6 @@ import createError from "http-errors";
 import morganBody from "morgan-body";
 import api from "./api";
 import mongoManager from "./mongo";
-//require("dotenv").config();
 
 const app = express();
 
@@ -16,19 +15,20 @@ if (NODE_ENV === "development" || NODE_ENV === "test:withLogs") {
   morganBody(app, { theme: "darkened", dateTimeFormat: "utc" });
 }
 
+//Connect To the Database
+mongoManager();
+
 // EXPRESS MIDDLEWARES
 app.use(
   cors({
     origin:
       NODE_ENV === "development"
-        ? "http://localhost:3000"
+        ? "http://localhost:5000"
         : "https://productionUrlHere.now.sh",
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-mongoManager();
 
 // use all routes exported from the routes folder
 app.use("/api", api);

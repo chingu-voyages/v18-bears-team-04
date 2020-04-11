@@ -1,2 +1,2 @@
-import User from "./model";
+import User from "./schema";
 export default User;
