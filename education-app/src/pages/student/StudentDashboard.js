@@ -1,11 +1,16 @@
 import React from 'react'
 import styled from "styled-components"
 import bgImg from "../../images/Dashboard-bg.jpg"
-
 import exampleImg from "../../images/ProfExample.jpg"
 
-const SDashboard = () => {
+import STORE from "../../STORE"
 
+const SDashboard = () => {
+   console.log(STORE)
+
+   // temporary
+   let user = STORE[0]
+   console.log(user)
 
    return (
       <SDashboardStyle>
@@ -14,8 +19,8 @@ const SDashboard = () => {
                <div className="prof-img">
                   <img src={exampleImg} alt=""/>
                </div>
-               <p className="user-name">UserName</p>
-               <p className="user-type">Student</p>
+               <p className="user-name">{user.username}</p>
+               <p className="user-type">{user.userType}</p>
             </div>
             <div className="links">
                <a>Assignments</a>
