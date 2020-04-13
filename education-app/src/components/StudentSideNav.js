@@ -2,7 +2,6 @@ import React from 'react'
 import styled from "styled-components"
 
 import bgImg from "../images/Dashboard-bg.jpg"
-
 import exampleImg from "../images/ProfExample.jpg"
 
 const StudentSideNav = () => {

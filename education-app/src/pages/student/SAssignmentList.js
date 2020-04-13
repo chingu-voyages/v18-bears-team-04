@@ -17,7 +17,6 @@ const SAssignmentList = () => {
          name: "Assignment-D"
       },
    ]
-
    const assignments = examples.map(assign => {
 
       return (
