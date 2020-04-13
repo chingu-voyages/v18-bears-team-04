@@ -4,6 +4,7 @@ import createError from "http-errors";
 import morganBody from "morgan-body";
 import api from "./api";
 import mongoManager from "./mongo";
+import trimmer from './helper';
 
 const app = express();
 
@@ -27,9 +28,10 @@ app.use(
         : "https://productionUrlHere.now.sh",
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(trimmer);
 // use all routes exported from the routes folder
 app.use("/api", api);
 
