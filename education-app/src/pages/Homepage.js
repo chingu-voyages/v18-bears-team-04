@@ -74,6 +74,7 @@ const HomepageStyle = styled.div`
       height: 100vh;
       display: flex;
       padding-top: 60px;
+      color: #5d5d5d;
       #select-lang {
          position: absolute;
          right: 20%;
