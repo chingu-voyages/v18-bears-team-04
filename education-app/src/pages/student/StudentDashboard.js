@@ -1,43 +1,42 @@
 import React from 'react'
 import styled from "styled-components"
-import bgImg from "../images/Dashboard-bg.jpg"
+import bgImg from "../../images/Dashboard-bg.jpg"
+import exampleImg from "../../images/ProfExample.jpg"
 
-import exampleImg from "../images/ProfExample.jpg"
+import STORE from "../../STORE"
 
-const StudentDashboard = () => {
+const SDashboard = () => {
+   console.log(STORE)
 
-   //temporary
-   let user = {
-      userName: "MorganStark",
-      img: exampleImg
-   }
+   // temporary
+   let user = STORE[0]
+   console.log(user)
 
    return (
-      <StudentDashboardStyle bgImg={bgImg} >
+      <SDashboardStyle>
          <div className="wrap">
             <div className="user-info">
                <div className="prof-img">
-                  <img src={user.img} alt=""/>
+                  <img src={exampleImg} alt=""/>
                </div>
-               <p className="user-name">{user.userName}</p>
-               <p className="user-type">Student</p>
+               <p className="user-name">{user.username}</p>
+               <p className="user-type">{user.userType}</p>
             </div>
             <div className="links">
                <a>Assignments</a>
                <a>Grades</a>
             </div>
          </div>
-      </StudentDashboardStyle>
+      </SDashboardStyle>
    )
 }
 
-const StudentDashboardStyle = styled.main`
+const SDashboardStyle = styled.main`
    padding-top: 60px;
    width: 100%;
    height: 100vh;
-   background-image: url( ${({bgimg}) => bgImg} );
+   background-image: url( ${bgImg} );
    background-size: cover;
-   z-index: 2;
    .wrap {
       width: 100%;
       height: 100%;
@@ -89,4 +88,4 @@ const StudentDashboardStyle = styled.main`
    }
 `
 
-export default StudentDashboard
+export default SDashboard
