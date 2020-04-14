@@ -25,14 +25,11 @@ const TopNav = (props) => {
 	const handleLogIn = (username, type) => {
 		setForm({ loggedIn: true, showModal: false });
 
-		console.log(username, type);
-
-		// if (type === "teacher") {
-		// 	history.push(`/${username}/dashboard`);
-		// }
-		// if (type === "student") {
-		// 	history.push(`/${username}/studentdashboard`);
-		// }
+		if (type === "teacher") {
+			history.push(`/${username}/dashboard`);
+		} else {
+			history.push(`/${username}/studentdashboard`);
+		}
 	};
 
 	const handleLogOut = () => {

@@ -1,13 +1,7 @@
 import React from "react";
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-	Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
-import TokenService from "./services/token-service";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 
