@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import DropDownMenu from "../components/DropDownMenu";
+import ApiService from "../services/api-services";
 
 const CreateClassForm = (props) => {
 	const initialFormState = {
@@ -17,17 +18,11 @@ const CreateClassForm = (props) => {
 
 	const { className, description } = userInput;
 
-	async function fetchUsers() {
-		const res = await fetch("http://localhost:5000/api/user");
-		res
-			.json()
+	useEffect(() => {
+		ApiService.getUsers()
 			.then((res) => setUsers(res))
 			.then((res) => setUsersLoaded({ usersLoaded: true }))
 			.catch((err) => setError({ error: err }));
-	}
-
-	useEffect(() => {
-		fetchUsers();
 	}, []);
 
 	const handleChange = (e) => {
@@ -35,7 +30,25 @@ const CreateClassForm = (props) => {
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const selectionItems = console.log(students);
+	const handleSelection = (e) => {
+		const { value } = e.target;
+		console.log(value);
+	};
+
+	const students = usersLoaded
+		? users.filter((i) => i.role === "teacher")
+		: null;
+
+	const studentChoices =
+		students != null
+			? students.map((i) => (
+					<DropDownMenu
+						handleClick={(e) => handleSelection(e)}
+						selection={i.userName}
+						key={i._id}
+					/>
+			  ))
+			: "";
 
 	return (
 		<CreateClassFormStyle>
@@ -66,12 +79,20 @@ const CreateClassForm = (props) => {
 						/>
 					</label>
 
+					{/* <label htmlFor='students'>
+						Add Students
+						<br />
+						<select className='selection' id='cars' name='cars' multiple>
+							{studentChoices}
+						</select>
+					</label> */}
+
 					<label htmlFor='students'>
 						Add Students
 						<br />
-						<div className='students-drop-down'>
-							<DropDownMenu selectionItems={selectionItems} />
-						</div>
+						<select className='selection' id='cars' name='cars' multiple>
+							{studentChoices}
+						</select>
 					</label>
 
 					<div className='button-container'>
@@ -126,8 +147,10 @@ const CreateClassFormStyle = styled.div`
 		height: 90px;
 		width: 400px;
 	}
-	.students-drop-down {
+	.selection {
+		margin-left: 20px;
 		width: 400px;
+		font-size: 1.75rem;
 	}
 	.modal-btn {
 		background-color: #c4c4c4;
