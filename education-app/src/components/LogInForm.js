@@ -40,7 +40,7 @@ const LogInForm = (props) => {
 
 const LogInFormStyle = styled.div`
 	.modal-box {
-		width: 300px;
+		width: 500px;
 		height: 400px;
 		display: flex;
 		flex-direction: column;
@@ -50,22 +50,30 @@ const LogInFormStyle = styled.div`
 		font-size: 4rem;
 		padding: 30px;
 		text-align: center;
+		color: #00a3ff;
 	}
 	.username-input {
 		display: block;
+		width: 80%;
 		margin: 10px auto;
 		padding-left: 10px;
 		height: 60px;
 		font-size: 2rem;
+		border-radius: 10px;
+		border: 1px solid #00a3ff;
+		outline: 0;
 	}
 	.modal-btn {
 		display: block;
 		height: 50px;
-		width: 100px;
+		width: 200px;
 		padding: 10px;
 		margin: 20px auto;
 		font-size: 2rem;
-		border: 2px solid #c4c4c4;
+		background-color: #00a3ff;
+		color: #fff;
+		border-radius: 10px;
+		cursor: pointer;
 	}
 `;
 
