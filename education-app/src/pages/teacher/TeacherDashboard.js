@@ -3,7 +3,7 @@ import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
 
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
-
+import CreateClassForm from "../../components/CreateClassForm";
 import STORE from "../../STORE";
 
 import styled from "styled-components";
@@ -14,10 +14,17 @@ const TeacherDashboard = () => {
 	//temporary
 	let user = STORE[1];
 
-	const [{ showModal }, setModal] = useState({ showModal: false });
+	const [{ showClassModal, showAssignmentModal }, setModal] = useState({
+		showClassModal: false,
+		showAssignmentModal: false,
+	});
 
-	const handleModal = () => {
-		setModal({ showModal: !showModal });
+	const handleClassModal = () => {
+		setModal({ showClassModal: !showClassModal });
+	};
+
+	const handleAssignmentModal = () => {
+		setModal({ showAssignmentModal: !showAssignmentModal });
 	};
 
 	//need to add: create button handler, cancel button handler
@@ -37,11 +44,28 @@ const TeacherDashboard = () => {
 				</div>
 
 				<div className='links'>
-					<button onClick={() => handleModal()}>Create An Assignment</button>
+					<button onClick={() => handleClassModal()}>Create Your Class</button>
+					<Modal
+						open={showClassModal}
+						onClose={() => handleClassModal()}
+						center
+					>
+						<CreateClassForm handleClassModal={() => handleClassModal()} />
+					</Modal>
+					<button onClick={() => handleAssignmentModal()}>
+						Create An Assignment
+					</button>
+					<Link to={`/${user.username}/grades`}>Grades</Link>
 					<Link to={`/${user.username}/assignments`}>Assignments</Link>
 
-					<Modal open={showModal} onClose={() => handleModal()} center>
-						<CreateAssignmentForm handleModal={() => handleModal()} />
+					<Modal
+						open={showAssignmentModal}
+						onClose={() => handleAssignmentModal()}
+						center
+					>
+						<CreateAssignmentForm
+							handleAssignmentModal={() => handleAssignmentModal()}
+						/>
 					</Modal>
 					<Link to={`/${user.username}/feedback`}>Feedback</Link>
 				</div>
