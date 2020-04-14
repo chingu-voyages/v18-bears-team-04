@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ValidationError from "./ValidationError";
 import ApiService from "../services/api-services";
 import styled from "styled-components";
 
@@ -9,6 +10,7 @@ const SignUpForm = (props) => {
 	const { username, email, userType } = userInput;
 
 	const handleChange = (e) => {
+		setError({ error: null });
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
 	};
@@ -22,9 +24,15 @@ const SignUpForm = (props) => {
 		};
 		ApiService.addUser(newUser)
 			.then((res) => {
-				props.handleLogIn("Log In", res.userName);
+				props.handleLogIn(res.userName, res.role);
 			})
 			.catch((err) => setError({ error: err }));
+	};
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `User name is not found.`;
+		}
 	};
 
 	return (
@@ -74,13 +82,8 @@ const SignUpForm = (props) => {
 							<label htmlFor='student'>Student</label>
 						</div>
 					</div>
-
-					<button
-						className='modal-btn'
-						value={props.formType}
-						// onClick={(e) => props.handleLogIn(e)}
-						//will change to form submit
-					>
+					<ValidationError message={errorMessage()} />
+					<button className='modal-btn' value={props.formType}>
 						{props.formType}
 					</button>
 				</form>

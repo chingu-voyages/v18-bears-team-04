@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ValidationError from "./ValidationError";
 import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 import styled from "styled-components";
 
 const LogInForm = (props) => {
@@ -17,7 +18,8 @@ const LogInForm = (props) => {
 		e.preventDefault();
 		ApiService.getUserName(username)
 			.then((res) => {
-				props.handleLogIn("Log In", res.userName);
+				props.handleLogIn(res.userName, res.role);
+				TokenService.saveAuthToken(res.userName);
 			})
 			.catch((err) => setError({ error: err }));
 	};
