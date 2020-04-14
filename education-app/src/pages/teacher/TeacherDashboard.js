@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
+
+import STORE from "../../STORE";
+
 import styled from "styled-components";
 import bgImg from "../../images/Dashboard-bg.jpg";
-import STORE from "../../STORE.js";
 import exampleImg from "../../images/maria-hill-teacher.jpg";
 
 const TeacherDashboard = () => {
