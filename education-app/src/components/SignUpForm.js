@@ -1,22 +1,37 @@
 import React, { useState } from "react";
+import ApiService from "../services/api-services";
 import styled from "styled-components";
 
 const SignUpForm = (props) => {
 	const initialState = { username: "", email: "", userType: "" };
 	const [userInput, setInput] = useState(initialState);
+	const [{ error }, setError] = useState({ error: null });
+	const { username, email, userType } = userInput;
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const { username, email } = userInput;
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newUser = {
+			userName: username,
+			email: email,
+			role: userType,
+		};
+		ApiService.addUser(newUser)
+			.then((res) => {
+				props.handleLogIn("Log In", res.userName);
+			})
+			.catch((err) => setError({ error: err }));
+	};
 
 	return (
 		<SignUpFormStyle>
 			<div className='modal-box'>
 				<h1 className='modal-title'>{props.formType}</h1>
-				<form className='modal-form'>
+				<form className='modal-form' onSubmit={(e) => handleSubmit(e)}>
 					<input
 						className='username-input'
 						type='text'
@@ -63,7 +78,7 @@ const SignUpForm = (props) => {
 					<button
 						className='modal-btn'
 						value={props.formType}
-						onClick={(e) => props.handleLogIn(e)}
+						// onClick={(e) => props.handleLogIn(e)}
 						//will change to form submit
 					>
 						{props.formType}
