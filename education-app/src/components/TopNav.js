@@ -18,12 +18,8 @@ const TopNav = () => {
 		setForm({ formType: value, showModal: true });
 	};
 
-	const handleLogIn = (e) => {
-		e.preventDefault();
-		//will change to api auth service
-
-		const { value } = e.target;
-		value === "Log In" || value === "Sign Up"
+	const handleLogIn = (str, username) => {
+		str === "Log In" || str === "Sign Up"
 			? //check user in db and update to loggedIn = true
 			  setForm({ loggedIn: true, showModal: false })
 			: // : value === "Sign Up"
@@ -40,9 +36,15 @@ const TopNav = () => {
 				center
 			>
 				{formType === "Sign Up" ? (
-					<SignUpForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+					<SignUpForm
+						formType={formType}
+						handleLogIn={(e, username) => handleLogIn(e, username)}
+					/>
 				) : formType === "Log In" ? (
-					<LogInForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+					<LogInForm
+						formType={formType}
+						handleLogIn={(e, username) => handleLogIn(e, username)}
+					/>
 				) : null}
 			</Modal>
 			<nav className='top-nav-menu'>
@@ -56,16 +58,16 @@ const TopNav = () => {
 						</>
 					) : (
 						<>
-							<button 
-								className="login-btn"
-								onClick={(e) => handleClick(e)} 
+							<button
+								className='login-btn'
+								onClick={(e) => handleClick(e)}
 								value='Log In'
 							>
 								Log In
 							</button>
-							<button 
-								className="signup-btn"
-								onClick={(e) => handleClick(e)} 
+							<button
+								className='signup-btn'
+								onClick={(e) => handleClick(e)}
 								value='Sign Up'
 							>
 								Sign Up

@@ -20,11 +20,17 @@ const TeacherDashboard = () => {
 	});
 
 	const handleClassModal = () => {
-		setModal({ showClassModal: !showClassModal });
+		setModal({
+			showClassModal: !showClassModal,
+			showAssignmentModal: showAssignmentModal,
+		});
 	};
 
 	const handleAssignmentModal = () => {
-		setModal({ showAssignmentModal: !showAssignmentModal });
+		setModal({
+			showClassModal: showClassModal,
+			showAssignmentModal: !showAssignmentModal,
+		});
 	};
 
 	//need to add: create button handler, cancel button handler

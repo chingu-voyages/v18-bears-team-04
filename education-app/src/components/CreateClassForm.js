@@ -40,7 +40,7 @@ const CreateClassForm = (props) => {
 		: null;
 
 	const studentChoices =
-		students != null
+		students != null && !error
 			? students.map((i) => (
 					<DropDownMenu
 						handleClick={(e) => handleSelection(e)}
@@ -79,14 +79,6 @@ const CreateClassForm = (props) => {
 						/>
 					</label>
 
-					{/* <label htmlFor='students'>
-						Add Students
-						<br />
-						<select className='selection' id='cars' name='cars' multiple>
-							{studentChoices}
-						</select>
-					</label> */}
-
 					<label htmlFor='students'>
 						Add Students
 						<br />
@@ -96,9 +88,6 @@ const CreateClassForm = (props) => {
 					</label>
 
 					<div className='button-container'>
-						<button className='modal-btn' onClick={() => props.handleModal()}>
-							Cancel
-						</button>
 						<button className='modal-btn'>Create</button>
 					</div>
 				</form>

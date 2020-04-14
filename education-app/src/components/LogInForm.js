@@ -1,19 +1,39 @@
 import React, { useState } from "react";
+import ValidationError from "./ValidationError";
+import ApiService from "../services/api-services";
 import styled from "styled-components";
 
 const LogInForm = (props) => {
-	const [username, setInput] = useState("");
+	const [{ username }, setInput] = useState({ username: "" });
+	const [{ error }, setError] = useState({ error: null });
 
 	const handleChange = (e) => {
+		setError({ error: null });
 		const { value } = e.target;
-		setInput(value);
+		setInput({ username: value });
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		// props.handleLogIn("Log In", username);
+		ApiService.getUserName(username)
+			.then((res) => {
+				props.handleLogIn("Log In", res.userName);
+			})
+			.catch((err) => setError({ error: err }));
+	};
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `User name is not found.`;
+		}
 	};
 
 	return (
 		<LogInFormStyle>
 			<div className='modal-box'>
 				<h1 className='modal-title'>{props.formType}</h1>
-				<form className='modal-form'>
+				<form className='modal-form' onSubmit={(e) => handleSubmit(e)}>
 					<input
 						className='username-input'
 						type='text'
@@ -23,13 +43,8 @@ const LogInForm = (props) => {
 						onChange={(e) => handleChange(e)}
 						required
 					/>
-
-					<button
-						className='modal-btn'
-						value={props.formType}
-						onClick={(e) => props.handleLogIn(e)}
-						//will change to form submit
-					>
+					<ValidationError message={errorMessage()} />
+					<button className='modal-btn' value={props.formType}>
 						{props.formType}
 					</button>
 				</form>
