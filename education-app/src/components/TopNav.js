@@ -49,18 +49,26 @@ const TopNav = () => {
 				<ul>
 					{loggedIn ? (
 						<>
-							<button className='logOut-btn'>Log Out</button>
+							<button className='logout-btn'>Log Out</button>
 							<button className='notif-btn'>
 								<img src={bellIcon} alt='notification' />
 							</button>
 						</>
 					) : (
 						<>
-							<button onClick={(e) => handleClick(e)} value='Sign Up'>
-								Sign Up
-							</button>
-							<button onClick={(e) => handleClick(e)} value='Log In'>
+							<button 
+								className="login-btn"
+								onClick={(e) => handleClick(e)} 
+								value='Log In'
+							>
 								Log In
+							</button>
+							<button 
+								className="signup-btn"
+								onClick={(e) => handleClick(e)} 
+								value='Sign Up'
+							>
+								Sign Up
 							</button>
 						</>
 					)}
@@ -96,16 +104,15 @@ const NavStyle = styled.header`
 				font-size: 2rem;
 				line-height: 40px;
 				margin-right: 20px;
-				background-color: #afafaf;
+				border-radius: 10px;
 				cursor: pointer;
 				&:last-child {
 					margin-right: 0;
 				}
 			}
-			.logOut-btn {
+			.logout-btn {
 				background-color: #00a3ff;
 				color: #fff;
-				border-radius: 10px;
 			}
 			.notif-btn {
 				width: 30px;
@@ -114,6 +121,13 @@ const NavStyle = styled.header`
 				img {
 					height: 100%;
 				}
+			}
+			.login-btn {
+				color: #00a3ff;
+			}
+			.signup-btn {
+				background-color: #00a3ff;
+				color: #fff;
 			}
 		}
 	}
