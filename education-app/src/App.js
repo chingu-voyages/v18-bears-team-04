@@ -17,6 +17,12 @@ const App = () => {
 					<Route path='/' exact component={Homepage} />
 					<Route path='/studentdashboard' component={StudentDashboard} />
 					<Route path='/teacherdashboard' component={TeacherDashboard} />
+					{/* <Route
+						path='/:userName/dashboard'
+						render={(routeProps) => (
+							<TeacherDashboard userName={routeProps.match.params.userName} />
+						)}
+					/> */}
 				</Switch>
 			</Router>
 		</>
