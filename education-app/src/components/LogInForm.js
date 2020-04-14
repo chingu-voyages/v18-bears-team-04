@@ -15,7 +15,6 @@ const LogInForm = (props) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// props.handleLogIn("Log In", username);
 		ApiService.getUserName(username)
 			.then((res) => {
 				props.handleLogIn("Log In", res.userName);
