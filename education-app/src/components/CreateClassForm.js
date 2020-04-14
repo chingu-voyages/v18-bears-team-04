@@ -1,60 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import ValidationError from "./ValidationError";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import DropDownMenu from "../components/DropDownMenu";
 import ApiService from "../services/api-services";
 
 const CreateClassForm = (props) => {
 	const initialFormState = {
 		className: "",
-		description: "",
-		showModal: false,
+		classCode: "",
 	};
 	const [userInput, setInput] = useState(initialFormState);
-	const [{ error }, setError] = useState({ error: false });
-	const [users, setUsers] = useState({});
-	const [{ usersLoaded }, setUsersLoaded] = useState({
-		studentsLoaded: false,
-	});
+	const [{ error }, setError] = useState({ error: null });
+	const { className, classCode } = userInput;
 
-	const { className, description } = userInput;
-
-	useEffect(() => {
-		ApiService.getUsers()
-			.then((res) => setUsers(res))
-			.then((res) => setUsersLoaded({ usersLoaded: true }))
-			.catch((err) => setError({ error: err }));
-	}, []);
+	const history = useHistory();
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const handleSelection = (e) => {
-		const { value } = e.target;
-		console.log(value);
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newClassObj = {
+			className,
+			classCode,
+			teacherName: props.userName,
+		};
+
+		ApiService.addClass(newClassObj)
+			.then((res) => {
+				history.push(`/${props.userName}/dashboard`);
+			})
+			.catch((err) => setError({ error: err }));
 	};
 
-	const students = usersLoaded
-		? users.filter((i) => i.role === "teacher")
-		: null;
-
-	const studentChoices =
-		students != null && !error
-			? students.map((i) => (
-					<DropDownMenu
-						handleClick={(e) => handleSelection(e)}
-						selection={i.userName}
-						key={i._id}
-					/>
-			  ))
-			: "";
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong. Try again`;
+		}
+	};
 
 	return (
 		<CreateClassFormStyle>
 			<div className='create-class-box'>
 				<h1> Add A Class</h1>
-				<form className='form-flex'>
+				<form className='form-flex' onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='class-name'>
 						Class Name
 						<br />
@@ -67,26 +58,19 @@ const CreateClassForm = (props) => {
 						/>
 					</label>
 
-					<label htmlFor='description'>
-						Description
+					<label htmlFor='classCode'>
+						Class Code
 						<br />
-						<textarea
-							className='text-area-box'
-							name='description'
-							placeholder='What is this class about?'
-							value={description}
+						<input
+							type='text'
+							name='classCode'
+							placeholder='Create A Code'
+							value={classCode}
 							onChange={(e) => handleChange(e)}
 						/>
 					</label>
 
-					<label htmlFor='students'>
-						Add Students
-						<br />
-						<select className='selection' id='cars' name='cars' multiple>
-							{studentChoices}
-						</select>
-					</label>
-
+					<ValidationError message={errorMessage()} />
 					<div className='button-container'>
 						<button className='modal-btn'>Create</button>
 					</div>
@@ -98,8 +82,8 @@ const CreateClassForm = (props) => {
 
 const CreateClassFormStyle = styled.div`
 	.create-class-box {
-		width: 600px;
-		height: 600px;
+		width: 400px;
+		height: 400px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -124,17 +108,11 @@ const CreateClassFormStyle = styled.div`
 	}
 	input {
 		margin-left: 20px;
+		margin-top: 10px;
 		padding-left: 10px;
 		font-size: 1.75rem;
 		height: 30px;
-		width: 400px;
-	}
-	.text-area-box {
-		margin-left: 20px;
-		padding-left: 10px;
-		font-size: 1.75rem;
-		height: 90px;
-		width: 400px;
+		width: 300px;
 	}
 	.selection {
 		margin-left: 20px;
@@ -153,6 +131,9 @@ const CreateClassFormStyle = styled.div`
 	}
 	.button-container {
 		display: flex;
+	}
+	.choice-instructions {
+		margin: 10px;
 	}
 `;
 export default CreateClassForm;

@@ -163,7 +163,7 @@ const CreateAssignmentFormStyle = styled.div`
 		justify-content: center;
 	}
 	.modal-btn {
-		rid-column-start: 1;
+		grid-column-start: 1;
 		grid-column-end: 3;
 	}
 `;
