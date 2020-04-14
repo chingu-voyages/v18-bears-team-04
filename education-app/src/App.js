@@ -1,7 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
+import TokenService from "./services/token-service";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 
@@ -15,14 +21,18 @@ const App = () => {
 				<TopNav />
 				<Switch>
 					<Route path='/' exact component={Homepage} />
-					<Route path='/studentdashboard' component={StudentDashboard} />
-					<Route path='/teacherdashboard' component={TeacherDashboard} />
-					{/* <Route
+					{/* <Route path='/studentdashboard' component={StudentDashboard} /> */}
+					{/* <Route path='/teacherdashboard' component={TeacherDashboard} /> */}
+					<Route
+						exact
+						path='/:userName/studentdashboard'
+						render={(routeProps) => <StudentDashboard {...routeProps} />}
+					/>
+					<Route
+						exact
 						path='/:userName/dashboard'
-						render={(routeProps) => (
-							<TeacherDashboard userName={routeProps.match.params.userName} />
-						)}
-					/> */}
+						render={(routeProps) => <TeacherDashboard {...routeProps} />}
+					/>
 				</Switch>
 			</Router>
 		</>
