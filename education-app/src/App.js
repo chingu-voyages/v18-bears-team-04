@@ -4,6 +4,7 @@ import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import Grades from "./pages/teacher/Grades";
 
 import ResetCSS from "./ResetCSS";
 
@@ -27,6 +28,7 @@ const App = () => {
 						path='/:userName/dashboard'
 						render={(routeProps) => <TeacherDashboard {...routeProps} />}
 					/>
+					<Route path='/grades' exact component={Grades} />
 				</Switch>
 			</Router>
 		</>
