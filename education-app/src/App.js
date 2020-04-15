@@ -7,6 +7,7 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import Grades from "./pages/teacher/Grades";
 
 import ResetCSS from "./ResetCSS";
+import TokenService from "./services/token-service";
 
 const App = () => {
 	return (
@@ -14,6 +15,8 @@ const App = () => {
 			<Router>
 				<ResetCSS />
 				<TopNav />
+				{/* Add conditional to render omnipresent side nav when user is login */}
+				{/* {TokenService.hasAuthToken ? <SideNav /> : null} */}
 				<Switch>
 					<Route path='/' exact component={Homepage} />
 					{/* <Route path='/studentdashboard' component={StudentDashboard} /> */}
@@ -28,7 +31,11 @@ const App = () => {
 						path='/:userName/dashboard'
 						render={(routeProps) => <TeacherDashboard {...routeProps} />}
 					/>
-					<Route path='/grades' exact component={Grades} />
+					<Route
+						exact
+						path='/:userName/grades'
+						render={(routeProps) => <Grades {...routeProps} />}
+					/>
 				</Switch>
 			</Router>
 		</>
