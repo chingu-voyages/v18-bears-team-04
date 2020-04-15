@@ -4,7 +4,8 @@ import styled from "styled-components";
 import bgImg from "../images/Dashboard-bg.jpg";
 import exampleImg from "../images/ProfExample.jpg";
 
-const SideNav = () => {
+const SideNav = (props) => {
+	const displayedLinks = props.links.map((l) => <a key={l + "1"}>{l}</a>);
 	return (
 		<SideNavStyle>
 			<div className='wrap'>
@@ -12,22 +13,19 @@ const SideNav = () => {
 					<div className='prof-img'>
 						<img src={exampleImg} alt='' />
 					</div>
-					<p className='user-name'>UserName</p>
-					<p className='user-type'>Student</p>
+					<p className='user-name'>{props.userName}</p>
+					<p className='user-type'>{props.role}</p>
 				</div>
-				<div className='links'>
-					<a>Assignments</a>
-					<a>Grades</a>
-				</div>
+				<div className='links'>{displayedLinks}</div>
 			</div>
 		</SideNavStyle>
 	);
 };
 
 const SideNavStyle = styled.div`
-	width: 22%;
+	width: 250px;
 	height: 100vh;
-	position: absolute;
+	position: fixed;
 	background-color: #fff;
 	background-image: url(${bgImg});
 	background-size: cover;
