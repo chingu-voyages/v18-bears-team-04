@@ -5,17 +5,26 @@ import SideNav from "../../components/SideNav";
 import styled from "styled-components";
 
 const Grades = (props) => {
-	const [selection, setSelection] = useState({ selection: "" });
+	const [selection, setSelection] = useState({});
 	//temporary
 	const gradesList = STORE[1].assignmentGrades;
+	const filteredGrades = gradesList.filter(
+		(a) =>
+			// if (selection.value === "All") {
+			// 	return a;
+			// }
+			// return
+			a.assignmentName === selection.value
+	);
 	const assignmentList = ["Algebra Take Home Quiz #1", "Polynomial Drills"];
 	//if assignment is part of the class - pull the assignment and make a list
 	//fetch - get all assignments created by teacher
 
 	const handleSelectionChange = (e) => {
-		setSelection({ selection: e.target.value });
-		gradesList.filter((a) => a.assignmentName === e.target.value);
+		const { value } = e.target;
+		setSelection({ value });
 	};
+	console.log(gradesList, selection.value, filteredGrades);
 
 	const assignmentSelection = assignmentList.map((a) => (
 		<option key={a + `1`} value={a}>
@@ -23,7 +32,7 @@ const Grades = (props) => {
 		</option>
 	));
 
-	const displayedGrades = gradesList.map((s) => {
+	const displayedGrades = filteredGrades.map((s) => {
 		if (s.status === "Submitted") {
 			return (
 				<tr key={s.studentUserName}>
