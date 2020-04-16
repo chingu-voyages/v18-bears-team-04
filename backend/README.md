@@ -29,7 +29,6 @@ Class API
    Body:
    {
    className: String,
-   classCode: String, //unique
    teacherName: String //UserName
    }
 
@@ -40,5 +39,18 @@ Class API
    Failed: {message: 'A detailed Error message'}
    Body:
    {
-   classCode: String
+   classId: String
    }
+
+3. GET /api/class
+   Description:Get All Classes
+   Returns:
+   Success: An array of Class Objects
+   Failed: {message: 'A detailed Error message'}
+
+4. GET /api/class/:classId
+   Description: Get A class From Class Id
+   Returns:
+   Success: The Class Object {Status:200}
+   Failed: {message: 'A detailed error message}
+   Body: No Body needed
