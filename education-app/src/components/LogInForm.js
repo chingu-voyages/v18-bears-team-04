@@ -19,7 +19,10 @@ const LogInForm = (props) => {
 		ApiService.getUserName(username)
 			.then((res) => {
 				props.handleLogIn(res.userName, res.role);
-				TokenService.saveAuthToken(res.userName);
+				TokenService.saveAuthToken(res._id);
+				if (res.classIds) {
+					TokenService.saveClassToken(res.classIds);
+				}
 			})
 			.catch((err) => setError({ error: err }));
 	};

@@ -38,6 +38,11 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	getClassById(classId) {
+		return fetch(`${config.API_ENDPOINT}/class/${classId}`).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	getAssignments() {
 		return fetch(`${config.API_ENDPOINT}/assignment`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
@@ -58,6 +63,11 @@ const ApiService = {
 		return fetch(
 			`${config.API_ENDPOINT}/assignment/${assignmentId}`
 		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	getAssignmentByUserId(userId) {
+		return fetch(`${config.API_ENDPOINT}/assignment/${userId}`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},

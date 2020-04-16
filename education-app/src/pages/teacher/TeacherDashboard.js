@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
 import CreateClassForm from "../../components/CreateClassForm";
 import ApiService from "../../services/api-services";
+import TokenService from "../../services/token-service";
 import STORE from "../../STORE";
 
 import styled from "styled-components";
@@ -23,10 +24,9 @@ const TeacherDashboard = (props) => {
 	});
 
 	function getUserInfo() {
-		ApiService.getClasses()
+		ApiService.getClassById(TokenService.getClassToken())
 			.then((res) => {
-				setClassInfo({ currClass: res });
-				console.log(res);
+				setClassInfo({ currClass: res.className });
 			})
 			.catch((err) => setError({ error: err }));
 	}
@@ -35,12 +35,36 @@ const TeacherDashboard = (props) => {
 		getUserInfo();
 	}, []);
 
-	const filteredClass =
-		currClass != null
-			? currClass.filter((i) => i.teacherName === props.match.params.userName)
-			: null;
+	// const filteredClass =
+	// 	currClass != null
+	// 		? currClass.filter((i) => i.teacherName === props.match.params.userName)
+	// 		: null;
 
-	console.log(filteredClass);
+	const renderClass = () => {
+		if (currClass === null) {
+			return (
+				<>
+					<button onClick={() => handleClassModal()}>Create Your Class</button>
+					<Modal
+						open={showClassModal}
+						onClose={() => handleClassModal()}
+						center
+					>
+						<CreateClassForm
+							userName={props.match.params.userName}
+							handleClassModal={() => handleClassModal()}
+						/>
+					</Modal>
+				</>
+			);
+		}
+		return (
+			<div className='class-title'>
+				<h1>{currClass}</h1>
+			</div>
+		);
+	};
+
 	const handleClassModal = () => {
 		setModal({
 			showClassModal: !showClassModal,
@@ -66,7 +90,7 @@ const TeacherDashboard = (props) => {
 					<p className='user-type'>{user.userType}</p>
 				</div>
 				<div className='links'>
-					{filteredClass === null || filteredClass.length === 0 ? (
+					{/* {filteredClass === null || filteredClass.length === 0 ? (
 						<>
 							<button onClick={() => handleClassModal()}>
 								Create Your Class
@@ -86,12 +110,15 @@ const TeacherDashboard = (props) => {
 						<div className='class-title'>
 							<h1> {filteredClass[0].className}</h1>
 						</div>
-					)}
+					)} */}
+					{renderClass()}
 					<button onClick={() => handleAssignmentModal()}>
 						Create An Assignment
 					</button>
-					<Link to={`/${user.username}/grades`}>Grades</Link>
-					<Link to={`/${user.username}/assignments`}>Assignments</Link>
+					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
+					<Link to={`/${props.match.params.userName}/assignments`}>
+						Assignments
+					</Link>
 
 					<Modal
 						open={showAssignmentModal}
@@ -103,7 +130,7 @@ const TeacherDashboard = (props) => {
 							handleAssignmentModal={() => handleAssignmentModal()}
 						/>
 					</Modal>
-					<Link to={`/${user.username}/feedback`}>Feedback</Link>
+					<Link to={`/${props.match.params.userName}}/feedback`}>Feedback</Link>
 				</div>
 			</div>
 		</TeacherDashboardStyle>
