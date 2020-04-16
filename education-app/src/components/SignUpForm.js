@@ -24,7 +24,7 @@ const SignUpForm = (props) => {
 		};
 		ApiService.addUser(newUser)
 			.then((res) => {
-				props.handleLogIn(res.userName, res.role);
+				props.handleLogIn(res._id, res.role);
 			})
 			.catch((err) => setError({ error: err }));
 	};
