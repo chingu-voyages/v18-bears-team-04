@@ -1,34 +1,41 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Modal } from "react-responsive-modal";
+import TokenService from "../services/token-service";
 import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
 
-const TopNav = () => {
+const TopNav = (props) => {
 	const [{ loggedIn, showModal, formType }, setForm] = useState({
 		loggedIn: false,
 		showModal: false,
 		formType: "",
 	});
 
+	const history = useHistory();
+
 	const handleClick = (e) => {
 		const { value } = e.target;
 		setForm({ formType: value, showModal: true });
 	};
 
-	const handleLogIn = (e) => {
-		e.preventDefault();
-		//will change to api auth service
+	const handleLogIn = (username, type) => {
+		setForm({ loggedIn: true, showModal: false });
 
-		const { value } = e.target;
-		value === "Log In" || value === "Sign Up"
-			? //check user in db and update to loggedIn = true
-			  setForm({ loggedIn: true, showModal: false })
-			: // : value === "Sign Up"
-			  // ? //set post new user and update to loggedIn = true
-			  setForm({ loggedIn: false });
+		if (type === "teacher") {
+			history.push(`/${username}/dashboard`);
+		} else {
+			history.push(`/${username}/studentdashboard`);
+		}
+	};
+
+	const handleLogOut = () => {
+		setForm({ loggedIn: !loggedIn });
+		TokenService.clearAuthToken();
+		history.push(`/`);
 	};
 
 	return (
@@ -40,27 +47,43 @@ const TopNav = () => {
 				center
 			>
 				{formType === "Sign Up" ? (
-					<SignUpForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+					<SignUpForm
+						formType={formType}
+						handleLogIn={(username, type) => handleLogIn(username, type)}
+					/>
 				) : formType === "Log In" ? (
-					<LogInForm formType={formType} handleLogIn={(e) => handleLogIn(e)} />
+					<LogInForm
+						formType={formType}
+						handleLogIn={(username, type) => handleLogIn(username, type)}
+					/>
 				) : null}
 			</Modal>
 			<nav className='top-nav-menu'>
 				<ul>
 					{loggedIn ? (
 						<>
-							<button className='logOut-btn'>Log Out</button>
+							<button className='logout-btn' onClick={() => handleLogOut()}>
+								Log Out
+							</button>
 							<button className='notif-btn'>
 								<img src={bellIcon} alt='notification' />
 							</button>
 						</>
 					) : (
 						<>
-							<button onClick={(e) => handleClick(e)} value='Sign Up'>
-								Sign Up
-							</button>
-							<button onClick={(e) => handleClick(e)} value='Log In'>
+							<button
+								className='login-btn'
+								onClick={(e) => handleClick(e)}
+								value='Log In'
+							>
 								Log In
+							</button>
+							<button
+								className='signup-btn'
+								onClick={(e) => handleClick(e)}
+								value='Sign Up'
+							>
+								Sign Up
 							</button>
 						</>
 					)}
@@ -96,16 +119,15 @@ const NavStyle = styled.header`
 				font-size: 2rem;
 				line-height: 40px;
 				margin-right: 20px;
-				background-color: #afafaf;
+				border-radius: 10px;
 				cursor: pointer;
 				&:last-child {
 					margin-right: 0;
 				}
 			}
-			.logOut-btn {
+			.logout-btn {
 				background-color: #00a3ff;
 				color: #fff;
-				border-radius: 10px;
 			}
 			.notif-btn {
 				width: 30px;
@@ -114,6 +136,13 @@ const NavStyle = styled.header`
 				img {
 					height: 100%;
 				}
+			}
+			.login-btn {
+				color: #00a3ff;
+			}
+			.signup-btn {
+				background-color: #00a3ff;
+				color: #fff;
 			}
 		}
 	}

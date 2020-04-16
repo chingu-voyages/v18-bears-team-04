@@ -101,9 +101,6 @@ const CreateAssignmentForm = (props) => {
 						/>
 					</label>
 
-					<button className='modal-btn' onClick={() => props.handleModal()}>
-						Cancel
-					</button>
 					<button className='modal-btn'>Create</button>
 				</form>
 			</div>
@@ -129,7 +126,7 @@ const CreateAssignmentFormStyle = styled.div`
 		display: grid;
 		grid-template-rows: 1fr 1fr 1fr 1fr;
 		grid-template-columns: 1fr 1fr;
-		grid-template-areas: "assignment-name class-name" "instructions files" "start-date due-date" "cancel-btn create-btn";
+		grid-template-areas: "assignment-name class-name" "instructions files" "start-date due-date" "modal-btn modal-btn";
 		height: 90%;
 		padding: 20px;
 	}
@@ -164,6 +161,10 @@ const CreateAssignmentFormStyle = styled.div`
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+	}
+	.modal-btn {
+		grid-column-start: 1;
+		grid-column-end: 3;
 	}
 `;
 export default CreateAssignmentForm;
