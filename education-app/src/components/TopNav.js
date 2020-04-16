@@ -33,9 +33,61 @@ const TopNav = (props) => {
 	};
 
 	const handleLogOut = () => {
-		setForm({ loggedIn: !loggedIn });
+		setForm({ loggedIn: false });
 		TokenService.clearAuthToken();
 		history.push(`/`);
+	};
+
+	const renderLogIn = () => {
+		return (
+			<>
+				<button
+					className='login-btn'
+					onClick={(e) => handleClick(e)}
+					value='Log In'
+				>
+					Log In
+				</button>
+				<button
+					className='signup-btn'
+					onClick={(e) => handleClick(e)}
+					value='Sign Up'
+				>
+					Sign Up
+				</button>
+			</>
+		);
+	};
+
+	const renderLogOut = () => {
+		return (
+			<>
+				<button className='logout-btn' onClick={() => handleLogOut()}>
+					Log Out
+				</button>
+				<button className='notif-btn'>
+					<img src={bellIcon} alt='notification' />
+				</button>
+			</>
+		);
+	};
+
+	const renderForm = (str) => {
+		if (str === "Sign Up") {
+			return (
+				<SignUpForm
+					formType={formType}
+					handleLogIn={(username, type) => handleLogIn(username, type)}
+				/>
+			);
+		} else if (str === "Log In") {
+			return (
+				<LogInForm
+					formType={formType}
+					handleLogIn={(username, type) => handleLogIn(username, type)}
+				/>
+			);
+		}
 	};
 
 	return (
@@ -46,47 +98,13 @@ const TopNav = (props) => {
 				onClose={() => setForm({ showModal: false })}
 				center
 			>
-				{formType === "Sign Up" ? (
-					<SignUpForm
-						formType={formType}
-						handleLogIn={(username, type) => handleLogIn(username, type)}
-					/>
-				) : formType === "Log In" ? (
-					<LogInForm
-						formType={formType}
-						handleLogIn={(username, type) => handleLogIn(username, type)}
-					/>
-				) : null}
+				{!formType ? null : renderForm(formType)}
 			</Modal>
 			<nav className='top-nav-menu'>
 				<ul>
-					{loggedIn ? (
-						<>
-							<button className='logout-btn' onClick={() => handleLogOut()}>
-								Log Out
-							</button>
-							<button className='notif-btn'>
-								<img src={bellIcon} alt='notification' />
-							</button>
-						</>
-					) : (
-						<>
-							<button
-								className='login-btn'
-								onClick={(e) => handleClick(e)}
-								value='Log In'
-							>
-								Log In
-							</button>
-							<button
-								className='signup-btn'
-								onClick={(e) => handleClick(e)}
-								value='Sign Up'
-							>
-								Sign Up
-							</button>
-						</>
-					)}
+					{loggedIn || TokenService.hasAuthToken()
+						? renderLogOut()
+						: renderLogIn()}
 				</ul>
 			</nav>
 		</NavStyle>

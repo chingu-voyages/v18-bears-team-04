@@ -9,12 +9,7 @@ const Grades = (props) => {
 	//temporary
 	const gradesList = STORE[1].assignmentGrades;
 	const filteredGrades = gradesList.filter(
-		(a) =>
-			// if (selection.value === "All") {
-			// 	return a;
-			// }
-			// return
-			a.assignmentName === selection.value
+		(a) => a.assignmentName === selection.value
 	);
 	const assignmentList = ["Algebra Take Home Quiz #1", "Polynomial Drills"];
 	//if assignment is part of the class - pull the assignment and make a list

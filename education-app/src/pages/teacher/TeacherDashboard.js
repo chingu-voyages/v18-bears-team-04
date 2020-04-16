@@ -26,6 +26,7 @@ const TeacherDashboard = (props) => {
 		ApiService.getClasses()
 			.then((res) => {
 				setClassInfo({ currClass: res });
+				console.log(res);
 			})
 			.catch((err) => setError({ error: err }));
 	}
@@ -39,6 +40,7 @@ const TeacherDashboard = (props) => {
 			? currClass.filter((i) => i.teacherName === props.match.params.userName)
 			: null;
 
+	console.log(filteredClass);
 	const handleClassModal = () => {
 		setModal({
 			showClassModal: !showClassModal,
@@ -82,7 +84,7 @@ const TeacherDashboard = (props) => {
 						</>
 					) : (
 						<div className='class-title'>
-							<h1> {currClass[0].className}</h1>
+							<h1> {filteredClass[0].className}</h1>
 						</div>
 					)}
 					<button onClick={() => handleAssignmentModal()}>
