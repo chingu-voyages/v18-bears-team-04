@@ -42,3 +42,100 @@ Class API
    {
    classCode: String
    }
+
+Assignment API
+
+1. POST /api/assignment
+   Description: Create a New Assignment
+   Returns:
+   Success: The Assignment Object created {Status:201}
+   Failed: {message: 'A detailed error message here'}
+   Body:
+   {
+   clasId: String,
+   title: String, //title
+   teacherName: String //UserName
+   description: String //description
+   startDate: String //startDate
+   endDate: String //endDate
+   userId: String //Unique
+   }
+
+
+1. GET /api/assignment  
+   Description: Returns All Assignment created
+   Returns:
+   Success: List Of all Assignment {Status:200}
+   Failed: {message: 'A detailed error message here'}
+   Body:[
+     {
+   clasId: String,
+   title: String, //title
+   teacherName: String //UserName
+   description: String //description
+   startDate: String //startDate
+   endDate: String //endDate
+   userId: String //Unique
+   },
+    {
+   clasId: String,
+   title: String, //title
+   teacherName: String //UserName
+   description: String //description
+   startDate: String //startDate
+   endDate: String //endDate
+   userId: String //Unique
+   }
+   ]
+
+3.     GET /api/assignment/      assignment:userId      
+   Description: Returns user Assignment by userId
+   Returns:
+   Success: Retrieved User Assignment {Status:200}
+   Failed: {message: 'A detailed error message here'}
+   Body:
+   {
+   clasId: String,
+   title: String, //title
+   teacherName: String //UserName
+   description: String //description
+   startDate: String //startDate
+   endDate: String //endDate
+   userId: String //Unique
+   }
+    
+4.     PUT /api/assignment/:assignmentiD
+   Description: Returns user Assignment by userId
+   Returns:
+   Success: Assignment Updated Successfully {Status:200}
+   Failed: {message: 'A detailed error message here'}
+   Body:
+   {
+   clasId: String,
+   title: String, //title
+   teacherName: String //UserName
+   description: String //description
+   startDate: String //startDate
+   endDate: String //endDate
+   userId: String //Unique
+   }
+   
+5.     DELETE /api/assignment/:assignmentId
+   Description: Delete Assignment by an Id
+   Returns:
+   Success: Assignment Deleted Successfully {Status:200}
+   Failed: {message: 'A detailed error message here'}
+   msg:
+   {
+     Assignment Deleted Successfully
+   }
+   
+6.     DELETE /api/assignment
+   Description: Delete All Assignment 
+   Returns:
+   Success: Deleted All Assignments {Status:200}
+   Failed: {message: 'A detailed error message here'}
+   msg:
+   {
+    Deleted All Assignments
+   }

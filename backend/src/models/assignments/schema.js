@@ -3,24 +3,21 @@ const Schema = mongoose.Schema;
 
 const assignmentSchema = new Schema({
     classId: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Class",
     },
+    userId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }],
       title: {
           type: String,
           required: true,
-          validate: async (value) => {
-            try {
-                const result = await Assignment.findOne({ title: value })
-                if (result) throw new Error("duplicity detected: title :" + value);
-            } catch (error) {
-                throw new Error(error);
-            }
-        }
+         
       },
       description:{
           type: String,
-          required: true
+          required: true,
       },
       startDate: {
           type: Date,
