@@ -1,6 +1,10 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from "styled-components";
 
 const ResetCSS = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+   html {
+      font-family: 'Lato', sans-serif;
+   }
    *, *:after, *:before {
       box-sizing: border-box;
    }
@@ -94,6 +98,6 @@ const ResetCSS = createGlobalStyle`
    
    input, select {
       vertical-align: middle; }
-`
+`;
 
-export default ResetCSS
+export default ResetCSS;

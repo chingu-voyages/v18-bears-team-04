@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
+import CreateClassForm from "../../components/CreateClassForm";
+import ApiService from "../../services/api-services";
+import STORE from "../../STORE";
+
 import styled from "styled-components";
 import bgImg from "../../images/Dashboard-bg.jpg";
-import STORE from "../../STORE.js";
 import exampleImg from "../../images/maria-hill-teacher.jpg";
 
-const TeacherDashboard = () => {
+const TeacherDashboard = (props) => {
 	//temporary
 	let user = STORE[1];
 
-	const [{ showModal }, setModal] = useState({ showModal: false });
+	const [{ currClass }, setClassInfo] = useState({ currClass: null });
+	const [{ error }, setError] = useState({ error: false });
+	const [{ showClassModal, showAssignmentModal }, setModal] = useState({
+		showClassModal: false,
+		showAssignmentModal: false,
+	});
 
-	const handleModal = () => {
-		setModal({ showModal: !showModal });
+	function getUserInfo() {
+		ApiService.getClasses()
+			.then((res) => {
+				setClassInfo({ currClass: res });
+			})
+			.catch((err) => setError({ error: err }));
+	}
+
+	useEffect(() => {
+		getUserInfo();
+	}, []);
+
+	const filteredClass =
+		currClass != null
+			? currClass.filter((i) => i.teacherName === props.match.params.userName)
+			: null;
+
+	const handleClassModal = () => {
+		setModal({
+			showClassModal: !showClassModal,
+			showAssignmentModal: showAssignmentModal,
+		});
 	};
 
-	//need to add: create button handler, cancel button handler
+	const handleAssignmentModal = () => {
+		setModal({
+			showClassModal: showClassModal,
+			showAssignmentModal: !showAssignmentModal,
+		});
+	};
 
 	return (
 		<TeacherDashboardStyle bgImg={bgImg}>
@@ -26,19 +60,46 @@ const TeacherDashboard = () => {
 					<div className='prof-img'>
 						<img src={exampleImg} alt='' />
 					</div>
-					<p className='user-name'>{user.username}</p>
+					<p className='user-name'>{props.match.params.userName}</p>
 					<p className='user-type'>{user.userType}</p>
 				</div>
-				<div className='class-title'>
-					<h1> {user.className}</h1>
-				</div>
-
 				<div className='links'>
-					<button onClick={() => handleModal()}>Create An Assignment</button>
+					{filteredClass === null || filteredClass.length === 0 ? (
+						<>
+							<button onClick={() => handleClassModal()}>
+								Create Your Class
+							</button>
+							<Modal
+								open={showClassModal}
+								onClose={() => handleClassModal()}
+								center
+							>
+								<CreateClassForm
+									userName={props.match.params.userName}
+									handleClassModal={() => handleClassModal()}
+								/>
+							</Modal>
+						</>
+					) : (
+						<div className='class-title'>
+							<h1> {currClass[0].className}</h1>
+						</div>
+					)}
+					<button onClick={() => handleAssignmentModal()}>
+						Create An Assignment
+					</button>
+					<Link to={`/${user.username}/grades`}>Grades</Link>
 					<Link to={`/${user.username}/assignments`}>Assignments</Link>
 
-					<Modal open={showModal} onClose={() => handleModal()} center>
-						<CreateAssignmentForm handleModal={() => handleModal()} />
+					<Modal
+						open={showAssignmentModal}
+						onClose={() => handleAssignmentModal()}
+						center
+					>
+						<CreateAssignmentForm
+							userName={props.match.params.userName}
+							handleAssignmentModal={() => handleAssignmentModal()}
+						/>
 					</Modal>
 					<Link to={`/${user.username}/feedback`}>Feedback</Link>
 				</div>
@@ -88,6 +149,7 @@ const TeacherDashboardStyle = styled.main`
 			text-align: center;
 			font-size: 8rem;
 			color: #ffffff;
+			margin: 20px;
 		}
 		.links {
 			display: flex;

@@ -29,7 +29,6 @@ Class API
    Body:
    {
    className: String,
-   classCode: String, //unique
    teacherName: String //UserName
    }
 
@@ -40,7 +39,7 @@ Class API
    Failed: {message: 'A detailed Error message'}
    Body:
    {
-   classCode: String
+   classId: String
    }
 
 Assignment API

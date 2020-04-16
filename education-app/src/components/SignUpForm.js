@@ -1,22 +1,45 @@
 import React, { useState } from "react";
+import ValidationError from "./ValidationError";
+import ApiService from "../services/api-services";
 import styled from "styled-components";
 
 const SignUpForm = (props) => {
 	const initialState = { username: "", email: "", userType: "" };
 	const [userInput, setInput] = useState(initialState);
+	const [{ error }, setError] = useState({ error: null });
+	const { username, email, userType } = userInput;
 
 	const handleChange = (e) => {
+		setError({ error: null });
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const { username, email } = userInput;
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newUser = {
+			userName: username,
+			email: email,
+			role: userType,
+		};
+		ApiService.addUser(newUser)
+			.then((res) => {
+				props.handleLogIn(res.userName, res.role);
+			})
+			.catch((err) => setError({ error: err }));
+	};
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `User name is not found.`;
+		}
+	};
 
 	return (
 		<SignUpFormStyle>
 			<div className='modal-box'>
 				<h1 className='modal-title'>{props.formType}</h1>
-				<form className='modal-form'>
+				<form className='modal-form' onSubmit={(e) => handleSubmit(e)}>
 					<input
 						className='username-input'
 						type='text'
@@ -59,13 +82,8 @@ const SignUpForm = (props) => {
 							<label htmlFor='student'>Student</label>
 						</div>
 					</div>
-
-					<button
-						className='modal-btn'
-						value={props.formType}
-						onClick={(e) => props.handleLogIn(e)}
-						//will change to form submit
-					>
+					<ValidationError message={errorMessage()} />
+					<button className='modal-btn' value={props.formType}>
 						{props.formType}
 					</button>
 				</form>
@@ -76,7 +94,7 @@ const SignUpForm = (props) => {
 
 const SignUpFormStyle = styled.div`
 	.modal-box {
-		width: 300px;
+		width: 500px;
 		height: 400px;
 		display: flex;
 		flex-direction: column;
@@ -86,28 +104,37 @@ const SignUpFormStyle = styled.div`
 		font-size: 4rem;
 		padding: 30px;
 		text-align: center;
+		color: #00a3ff;
 	}
 	.email-input,
 	.username-input {
 		display: block;
+		width: 80%;
 		margin: 10px auto;
 		padding-left: 10px;
 		height: 60px;
 		font-size: 2rem;
+		border-radius: 10px;
+		border: 1px solid #00a3ff;
+		outline: 0;
 	}
 	.modal-btn {
 		display: block;
 		height: 50px;
-		width: 100px;
+		width: 200px;
 		padding: 10px;
 		margin: 20px auto;
 		font-size: 2rem;
-		border: 2px solid #c4c4c4;
+		background-color: #00a3ff;
+		color: #fff;
+		border-radius: 10px;
+		cursor: pointer;
 	}
 	.sign-up-user-info {
 		text-align: center;
 		padding: 10px;
 		font-size: 2rem;
+		color: #5d5d5d;
 	}
 	.sign-up-user-info label {
 		font-size: 2rem;

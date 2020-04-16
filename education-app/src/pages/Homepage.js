@@ -92,6 +92,7 @@ const HomepageStyle = styled.div`
          .welcome {
             font-size: 5.5rem;
             text-align: center;
+            color: #00a3ff;
          }
          .descriptions {
             width: 80%;
@@ -143,9 +144,18 @@ const HomepageStyle = styled.div`
          .try-btn {
             width: 40%;
             height: 50px;
-            background-color: #afafaf;
+            background-color: #00a3ff;
+            color: #fff;
             font-size: 2rem;
+            border-radius: 10px;
             cursor: pointer;
+            transition: 0.1s;
+            &:hover {
+               border: 2px solid #00a3ff;
+               background-color: #fff;
+               color: #00a3ff;
+               line-height: 46px;
+            }
          }
       }
    }

@@ -56,7 +56,7 @@ export const createClass = async (req, res, next) => {
 export const addStudentToClass = async (req, res, next) => {
   try {
     const { studentName } = req.params;
-    const { classCode } = req.body;
+    const { classId } = req.body;
 
     //Check if Class Exists
     const existingClass = await Class.findOne({ classCode });
