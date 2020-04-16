@@ -60,13 +60,13 @@ const Grades = (props) => {
 
 	//teachername to classid, classid to assignment
 
-	const filteredAssignments =
-		assignments != null
-			? assignments.map((a) => a.classId === TokenService.getClassToken())
-			: null;
-	console.log(filteredAssignments);
+	// const filteredAssignments =
+	// 	assignments != null
+	// 		? assignments.map((a) => a.classId === TokenService.getClassToken())
+	// 		: null;
+	// console.log(TokenService.getClassToken());
 
-	const assignmentSelection =
+	const assignmentSelection = //need to change to filter out by classId
 		assignments != null
 			? assignments.map((a) => (
 					<option key={a._id} value={a.title}>
