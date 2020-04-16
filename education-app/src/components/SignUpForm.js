@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ValidationError from "./ValidationError";
 import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 import styled from "styled-components";
 
 const SignUpForm = (props) => {
@@ -24,7 +25,11 @@ const SignUpForm = (props) => {
 		};
 		ApiService.addUser(newUser)
 			.then((res) => {
-				props.handleLogIn(res._id, res.role);
+				props.handleLogIn(res.userName, res.role);
+				TokenService.saveAuthToken(res._id);
+				if (res.classIds) {
+					TokenService.saveClassToken(res.classIds);
+				}
 			})
 			.catch((err) => setError({ error: err }));
 	};

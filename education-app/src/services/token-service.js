@@ -13,6 +13,9 @@ const TokenService = {
 	getClassToken() {
 		return window.localStorage.getItem(config.CLASS_TOKEN_KEY);
 	},
+	clearClassToken() {
+		return window.localStorage.removeItem(config.TOKEN_KEY);
+	},
 	clearAuthToken() {
 		window.localStorage.removeItem(config.TOKEN_KEY);
 	},

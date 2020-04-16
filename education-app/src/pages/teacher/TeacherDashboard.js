@@ -26,6 +26,7 @@ const TeacherDashboard = (props) => {
 	function getUserInfo() {
 		ApiService.getClassById(TokenService.getClassToken())
 			.then((res) => {
+				console.log(res);
 				setClassInfo({ currClass: res.className });
 			})
 			.catch((err) => setError({ error: err }));
@@ -39,6 +40,8 @@ const TeacherDashboard = (props) => {
 	// 	currClass != null
 	// 		? currClass.filter((i) => i.teacherName === props.match.params.userName)
 	// 		: null;
+
+	console.log(currClass);
 
 	const renderClass = () => {
 		if (currClass === null) {

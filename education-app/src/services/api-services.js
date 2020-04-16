@@ -82,6 +82,11 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	getGrades() {
+		return fetch(`${config.API_ENDPOINT}/grade`).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	// router.delete("/:assignmentId", deleteSingleAssignmentById);
 };
 

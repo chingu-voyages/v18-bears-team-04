@@ -1,31 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import STORE from "../../STORE";
 import SideNav from "../../components/SideNav";
+
+import ApiService from "../../services/api-services";
+import TokenService from "../../services/token-service";
 
 import styled from "styled-components";
 
 const Grades = (props) => {
+	//initialize state and all api pulls
+
+	const infoObj = {
+		users: [],
+		grades: [],
+		classes: [],
+		assignments: [],
+	};
+	const [apiInfo, setApiInfo] = useState({ infoObj });
 	const [selection, setSelection] = useState({});
+	const { users, grades, classes, assignments } = apiInfo;
 	//temporary
 	const gradesList = STORE[1].assignmentGrades;
 	const filteredGrades = gradesList.filter(
 		(a) => a.assignmentName === selection.value
 	);
-	const assignmentList = ["Algebra Take Home Quiz #1", "Polynomial Drills"];
 	//if assignment is part of the class - pull the assignment and make a list
 	//fetch - get all assignments created by teacher
+
+	const getAllApiInfo = () => {
+		Promise.all([
+			ApiService.getClasses(),
+			ApiService.getUsers(),
+			ApiService.getGrades(),
+			ApiService.getAssignments(),
+		]).then((res) =>
+			setApiInfo({
+				users: res[1],
+				grades: res[2].grades,
+				classes: res[0],
+				assignments: res[3],
+			})
+		);
+	};
+
+	useEffect(() => {
+		getAllApiInfo();
+	}, []);
+
+	// const titles = assignment
+	// 	.filter((i) => grades.some((k) => k.assignmentId === i._id))
+	// 	.map((a) => a.title);
 
 	const handleSelectionChange = (e) => {
 		const { value } = e.target;
 		setSelection({ value });
 	};
-	console.log(gradesList, selection.value, filteredGrades);
 
-	const assignmentSelection = assignmentList.map((a) => (
-		<option key={a + `1`} value={a}>
-			{a}
-		</option>
-	));
+	console.log(users, classes, grades, assignments);
+
+	//teachername to classid, classid to assignment
+
+	const filteredAssignments =
+		assignments != null
+			? assignments.map((a) => a.classId === TokenService.getClassToken())
+			: null;
+	console.log(filteredAssignments);
+
+	const assignmentSelection =
+		assignments != null
+			? assignments.map((a) => (
+					<option key={a._id} value={a.title}>
+						{a.title}
+					</option>
+			  ))
+			: " ";
 
 	const displayedGrades = filteredGrades.map((s) => {
 		if (s.status === "Submitted") {

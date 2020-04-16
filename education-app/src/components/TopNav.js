@@ -35,6 +35,7 @@ const TopNav = (props) => {
 	const handleLogOut = () => {
 		setForm({ loggedIn: false });
 		TokenService.clearAuthToken();
+		TokenService.clearClassToken();
 		history.push(`/`);
 	};
 
