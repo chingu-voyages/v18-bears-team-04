@@ -2,8 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
+import SideNav from "./components/SideNav";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import AssignmentView from "./pages/teacher/AssignmentView";
 import Grades from "./pages/teacher/Grades";
 
 import ResetCSS from "./ResetCSS";
@@ -15,6 +17,7 @@ const App = () => {
 			<Router>
 				<ResetCSS />
 				<TopNav />
+				{TokenService.hasAuthToken() && <SideNav />}
 				{/* Add conditional to render omnipresent side nav when user is login */}
 				{/* {TokenService.hasAuthToken ? <SideNav /> : null} */}
 				<Switch>
@@ -31,6 +34,9 @@ const App = () => {
 						path='/:userName/dashboard'
 						render={(routeProps) => <TeacherDashboard {...routeProps} />}
 					/>
+
+					<Route exact path='/assignment-view' component={AssignmentView} />
+
 					<Route
 						exact
 						path='/:userName/grades'
