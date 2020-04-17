@@ -1,11 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import bgImg from "../images/Dashboard-bg.jpg";
 import exampleImg from "../images/ProfExample.jpg";
 
 const SideNav = (props) => {
-	const displayedLinks = props.links.map((l) => <a key={l + "1"}>{l}</a>);
 	return (
 		<SideNavStyle>
 			<div className='wrap'>
@@ -16,7 +16,9 @@ const SideNav = (props) => {
 					<p className='user-name'>{props.userName}</p>
 					<p className='user-type'>{props.role}</p>
 				</div>
-				<div className='links'>{displayedLinks}</div>
+				<div className='links'>
+					<Link to='/somewhere'>Link</Link>
+				</div>
 			</div>
 		</SideNavStyle>
 	);

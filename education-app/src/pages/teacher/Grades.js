@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import STORE from "../../STORE";
-import SideNav from "../../components/SideNav";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -143,13 +142,6 @@ const Grades = (props) => {
 	return (
 		<GradesStyle>
 			<div className='grades-container'>
-				<div className='side-nav'>
-					<SideNav
-						userName={props.match.params.userName}
-						role={`Teacher`}
-						links={["Home", "Create An Assignment", "Grades", "Feedback"]}
-					/>
-				</div>
 				<div className='title-section'>
 					<h1 className='text'>Assignment Grades</h1>
 					<p className='selection-text'> Select By Assignment</p>
