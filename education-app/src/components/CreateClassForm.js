@@ -3,6 +3,7 @@ import ValidationError from "./ValidationError";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 
 const CreateClassForm = (props) => {
 	const initialFormState = {
@@ -30,7 +31,10 @@ const CreateClassForm = (props) => {
 
 		ApiService.addClass(newClassObj)
 			.then((res) => {
-				history.push(`/${props.userName}/dashboard`);
+				TokenService.saveClassToken(res._id);
+				props.handleClassModal();
+				props.setClassName(res.className);
+				// history.push(`/${props.userName}/dashboard`);
 			})
 			.catch((err) => setError({ error: err }));
 	};
