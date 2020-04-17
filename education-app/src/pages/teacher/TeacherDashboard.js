@@ -51,8 +51,6 @@ const TeacherDashboard = (props) => {
 	// 		? currClass.filter((i) => i.teacherName === props.match.params.userName)
 	// 		: null;
 
-	console.log(currClass);
-
 	const renderClass = () => {
 		if (currClass === null) {
 			return (
@@ -109,10 +107,8 @@ const TeacherDashboard = (props) => {
 					<button onClick={() => handleAssignmentModal()}>
 						Create An Assignment
 					</button>
-					<Link to={`/${props.match.params.userName}/assignment-grades`}>
-						Grades
-					</Link>
-					<Link to={`/${props.match.params.userName}/assignment`}>
+					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
+					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
 					</Link>
 
@@ -122,6 +118,7 @@ const TeacherDashboard = (props) => {
 						center
 					>
 						<CreateAssignmentForm
+							className={currClass}
 							userName={props.match.params.userName}
 							handleAssignmentModal={() => handleAssignmentModal()}
 						/>

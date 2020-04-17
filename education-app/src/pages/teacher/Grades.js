@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import STORE from "../../STORE";
 
 import ApiService from "../../services/api-services";
@@ -93,7 +94,7 @@ const Grades = (props) => {
 					</td>
 					<td>
 						<button className='view-assignment-btn' value={s.assignmentName}>
-							View
+							<Link to={`/:studentUsername/assignment-view`}>View</Link>
 						</button>
 					</td>
 					<td className='comment'>

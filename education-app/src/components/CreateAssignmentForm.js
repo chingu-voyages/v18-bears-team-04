@@ -1,37 +1,51 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 
 const CreateAssignmentForm = (props) => {
 	const initialFormState = {
 		assignmentName: "",
-		className: "",
-		dueDate: "",
+		className: props.className,
+		endDate: "",
 		startDate: "",
 		files: "",
-		instructions: "",
+		description: "",
 		showModal: false,
 	};
 	const [userInput, setInput] = useState(initialFormState);
+	const [{ error }, setError] = useState({ error: null });
+	const { assignmentName, endDate, startDate, files, description } = userInput;
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const {
-		assignmentName,
-		className,
-		dueDate,
-		startDate,
-		files,
-		instructions,
-	} = userInput;
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const classId = TokenService.getClassToken();
+		const userId = TokenService.getAuthToken();
+		const newAssignmentObj = {
+			classId,
+			userId,
+			description,
+			title: assignmentName,
+			teacherName: props.userName,
+		};
+
+		ApiService.addAssignment(newAssignmentObj)
+			//Add close modal and go to assignments list
+			.then((res) => console.log(res))
+			.catch((err) => setError({ error: err }));
+		//awaiting startDate/endDate input
+	};
 
 	return (
 		<CreateAssignmentFormStyle>
 			<div className='create-assignment-box'>
 				<h1> Add An Assignment</h1>
-				<form className='form-grid'>
+				<form className='form-grid' onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='assignment-name'>
 						Assignment Name
 						<br />
@@ -51,8 +65,13 @@ const CreateAssignmentForm = (props) => {
 							type='text'
 							name='className'
 							placeholder='e.g. Math 101'
-							value={className}
-							onChange={(e) => handleChange(e)}
+							value={
+								props.className === null
+									? "Make A Class First"
+									: props.className
+							}
+							//MVP - teachers should only have one class
+							readOnly={true}
 						/>
 					</label>
 
@@ -61,9 +80,9 @@ const CreateAssignmentForm = (props) => {
 						<br />
 						<textarea
 							className='text-area-box'
-							name='instructions'
+							name='description'
 							placeholder='Write your instructions here'
-							value={instructions}
+							value={description}
 							onChange={(e) => handleChange(e)}
 						/>
 					</label>
@@ -95,8 +114,8 @@ const CreateAssignmentForm = (props) => {
 						<br />
 						<input
 							type='datetime-local'
-							name='dueDate'
-							value={dueDate}
+							name='endDate'
+							value={endDate}
 							onChange={(e) => handleChange(e)}
 						/>
 					</label>

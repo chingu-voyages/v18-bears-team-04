@@ -5,7 +5,7 @@ import Homepage from "./pages/Homepage";
 import SideNav from "./components/SideNav";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
-import GradesAssignmentView from "./pages/teacher/GradesAssignmentView";
+import AssignmentView from "./pages/teacher/AssignmentView";
 import Grades from "./pages/teacher/Grades";
 
 import ResetCSS from "./ResetCSS";
@@ -18,12 +18,9 @@ const App = () => {
 				<ResetCSS />
 				<TopNav />
 				{TokenService.hasAuthToken() && <SideNav />}
-				{/* Add conditional to render omnipresent side nav when user is login */}
-				{/* {TokenService.hasAuthToken ? <SideNav /> : null} */}
+				{/* Shouldn't be seen on dashboard */}
 				<Switch>
 					<Route path='/' exact component={Homepage} />
-					{/* <Route path='/studentdashboard' component={StudentDashboard} /> */}
-					{/* <Route path='/teacherdashboard' component={TeacherDashboard} /> */}
 					<Route
 						exact
 						path='/:userName/studentdashboard'
@@ -37,8 +34,8 @@ const App = () => {
 
 					<Route
 						exact
-						path='/:userName/assignment-grades'
-						component={GradesAssignmentView}
+						path='/:studentUsername/assignment-view'
+						component={AssignmentView}
 					/>
 
 					<Route
