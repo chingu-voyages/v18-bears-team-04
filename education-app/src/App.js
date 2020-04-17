@@ -5,7 +5,7 @@ import Homepage from "./pages/Homepage";
 import SideNav from "./components/SideNav";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
-import AssignmentView from "./pages/teacher/AssignmentView";
+import GradesAssignmentView from "./pages/teacher/GradesAssignmentView";
 import Grades from "./pages/teacher/Grades";
 
 import ResetCSS from "./ResetCSS";
@@ -35,7 +35,11 @@ const App = () => {
 						render={(routeProps) => <TeacherDashboard {...routeProps} />}
 					/>
 
-					<Route exact path='/assignment-view' component={AssignmentView} />
+					<Route
+						exact
+						path='/:userName/assignment-grades'
+						component={GradesAssignmentView}
+					/>
 
 					<Route
 						exact
