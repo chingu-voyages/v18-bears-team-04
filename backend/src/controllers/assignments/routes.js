@@ -6,12 +6,14 @@ getAllAssignment,
 getUserAssignmentById,
 updateAssignment,
 deleteSingleAssignmentById,
-deleteAllAssignment
+deleteAllAssignment,
+submitAssignment,
 } from './controllers';
 
 const router = Router();
 router.get("", getAllAssignment);
 router.put("/:assignmentId", updateAssignment);
+router.post("/submit/:assignmentId", submitAssignment)
 router.get("/assignment/:userId", getUserAssignmentById)
 router.post("/", createAssignment);
 router.delete("/:assignmentId", deleteSingleAssignmentById);

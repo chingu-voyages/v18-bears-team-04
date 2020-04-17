@@ -18,7 +18,8 @@
     "jade": "~1.11.0",
     "mongoose": "^5.9.7",
     "morgan": "~1.9.1",
-    "morgan-body": "^2.4.8"
+    "morgan-body": "^2.4.8",
+    "pusher": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
