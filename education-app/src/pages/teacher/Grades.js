@@ -21,9 +21,15 @@ const Grades = (props) => {
 	const { users, grades, classes, assignments } = apiInfo;
 	//temporary
 	const gradesList = STORE[1].assignmentGrades;
+	const assignmentList = [
+		"Pick An Assignment",
+		"Algebra Take Home Quiz #1",
+		"Polynomial Drills",
+	];
 	const filteredGrades = gradesList.filter(
 		(a) => a.assignmentName === selection.value
 	);
+
 	//if assignment is part of the class - pull the assignment and make a list
 	//fetch - get all assignments created by teacher
 
@@ -47,33 +53,40 @@ const Grades = (props) => {
 		getAllApiInfo();
 	}, []);
 
+	/* API Functionality */
+
 	// const titles = assignment
 	// 	.filter((i) => grades.some((k) => k.assignmentId === i._id))
 	// 	.map((a) => a.title);
+
+	// console.log(users, classes, grades, assignments);
+
+	// const filteredAssignments =
+	// 	assignments != null
+	// 		? assignments.map((a) => a.classId === TokenService.getClassToken())
+	// 		: null;
+
+	// const assignmentSelection = //need to change to filter out by classId
+	// assignments != null
+	// 	? assignments.map((a) => (
+	// 			<option key={a._id} value={a.title}>
+	// 				{a.title}
+	// 			</option>
+	// 	  ))
+	// 	: " ";
+
+	/* API Functionality */
 
 	const handleSelectionChange = (e) => {
 		const { value } = e.target;
 		setSelection({ value });
 	};
 
-	console.log(users, classes, grades, assignments);
-
-	//teachername to classid, classid to assignment
-
-	// const filteredAssignments =
-	// 	assignments != null
-	// 		? assignments.map((a) => a.classId === TokenService.getClassToken())
-	// 		: null;
-	// console.log(TokenService.getClassToken());
-
-	const assignmentSelection = //need to change to filter out by classId
-		assignments != null
-			? assignments.map((a) => (
-					<option key={a._id} value={a.title}>
-						{a.title}
-					</option>
-			  ))
-			: " ";
+	const assignmentSelection = assignmentList.map((a) => (
+		<option key={a + `1`} value={a}>
+			{a}
+		</option>
+	));
 
 	const displayedGrades = filteredGrades.map((s) => {
 		if (s.status === "Submitted") {
@@ -145,7 +158,7 @@ const Grades = (props) => {
 			<div className='grades-container'>
 				<div className='title-section'>
 					<h1 className='text'>Assignment Grades</h1>
-					<p className='selection-text'> Select By Assignment</p>
+					<p className='selection-text'> View By Assignment</p>
 					<select
 						className='assignment-selection'
 						onChange={(e) => handleSelectionChange(e)}
@@ -176,6 +189,7 @@ const Grades = (props) => {
 const GradesStyle = styled.div`
 	.grades-container {
 		padding-top: 60px;
+		padding-left: 275px;
 	}
 	.container {
 		padding-top: 60px;
@@ -188,10 +202,7 @@ const GradesStyle = styled.div`
 		grid-column-start: 2;
 		grid-column-end: 6;
 	}
-	.title-section,
-	.grade-display {
-		margin-left: 275px;
-	}
+
 	h1 {
 		font-size: 4rem;
 		color: #00a3ff;
