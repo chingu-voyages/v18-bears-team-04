@@ -2,9 +2,9 @@ import React from "react";
 
 import styled from "styled-components";
 
-const AssignmentView = (props) => {
+const GradesAssignmentView = (props) => {
 	return (
-		<AssignmentViewStyle>
+		<GradesAssignmentViewStyle>
 			<div className='assignment-view-container'>
 				<h1>Assignment View</h1>
 				<div className='submission-container'>
@@ -21,11 +21,11 @@ const AssignmentView = (props) => {
 					</div>
 				</div>
 			</div>
-		</AssignmentViewStyle>
+		</GradesAssignmentViewStyle>
 	);
 };
 
-const AssignmentViewStyle = styled.div`
+const GradesAssignmentViewStyle = styled.div`
 	.assignment-view-container {
 		padding-top: 60px;
 		width: 80vw;
@@ -92,4 +92,4 @@ const AssignmentViewStyle = styled.div`
 	}
 `;
 
-export default AssignmentView;
+export default GradesAssignmentView;

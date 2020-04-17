@@ -6,6 +6,7 @@ import CreateAssignmentForm from "../../components/CreateAssignmentForm";
 import CreateClassForm from "../../components/CreateClassForm";
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
+import ValidationError from "../../components/ValidationError";
 import STORE from "../../STORE";
 
 import styled from "styled-components";
@@ -34,6 +35,12 @@ const TeacherDashboard = (props) => {
 	useEffect(() => {
 		getUserInfo();
 	}, []);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.  Refresh your page.`;
+		}
+	};
 
 	const setClassName = (str) => {
 		setClassInfo({ currClass: str });
@@ -93,37 +100,19 @@ const TeacherDashboard = (props) => {
 					<div className='prof-img'>
 						<img src={exampleImg} alt='' />
 					</div>
+					{error && <ValidationError message={errorMessage()} />}
 					<p className='user-name'>{props.match.params.userName}</p>
 					<p className='user-type'>{user.userType}</p>
 				</div>
 				<div className='links'>
-					{/* {filteredClass === null || filteredClass.length === 0 ? (
-						<>
-							<button onClick={() => handleClassModal()}>
-								Create Your Class
-							</button>
-							<Modal
-								open={showClassModal}
-								onClose={() => handleClassModal()}
-								center
-							>
-								<CreateClassForm
-									userName={props.match.params.userName}
-									handleClassModal={() => handleClassModal()}
-								/>
-							</Modal>
-						</>
-					) : (
-						<div className='class-title'>
-							<h1> {filteredClass[0].className}</h1>
-						</div>
-					)} */}
 					{renderClass()}
 					<button onClick={() => handleAssignmentModal()}>
 						Create An Assignment
 					</button>
-					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
-					<Link to={`/${props.match.params.userName}/assignments`}>
+					<Link to={`/${props.match.params.userName}/assignment-grades`}>
+						Grades
+					</Link>
+					<Link to={`/${props.match.params.userName}/assignment`}>
 						Assignments
 					</Link>
 
