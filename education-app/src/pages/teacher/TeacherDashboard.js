@@ -26,7 +26,6 @@ const TeacherDashboard = (props) => {
 	function getUserInfo() {
 		ApiService.getClassById(TokenService.getClassToken())
 			.then((res) => {
-				console.log(res);
 				setClassInfo({ currClass: res.className });
 			})
 			.catch((err) => setError({ error: err }));
@@ -35,6 +34,10 @@ const TeacherDashboard = (props) => {
 	useEffect(() => {
 		getUserInfo();
 	}, []);
+
+	const setClassName = (str) => {
+		setClassInfo({ currClass: str });
+	};
 
 	// const filteredClass =
 	// 	currClass != null
@@ -56,6 +59,7 @@ const TeacherDashboard = (props) => {
 						<CreateClassForm
 							userName={props.match.params.userName}
 							handleClassModal={() => handleClassModal()}
+							setClassName={(str) => setClassName(str)}
 						/>
 					</Modal>
 				</>

@@ -2,14 +2,14 @@ import React from "react";
 
 import styled from "styled-components";
 
-const AssignmentView = () => {
+const AssignmentView = (props) => {
 	return (
 		<AssignmentViewStyle>
 			<div className='assignment-view-container'>
 				<h1>Assignment View</h1>
 				<div className='submission-container'>
 					<div className='student-submission-view-container'>
-						<h2>Peter Parker</h2>
+						<h2> Student: Peter Parker</h2>
 						<div className='submission-text'></div>
 						<button>Download</button>
 					</div>
@@ -41,7 +41,7 @@ const AssignmentViewStyle = styled.div`
 	h2 {
 		font-size: 3rem;
 		margin: 20px 20px;
-		color: #00a3ff;
+		color: #888888;
 	}
 	.submission-view {
 		width: 90%;
@@ -86,6 +86,8 @@ const AssignmentViewStyle = styled.div`
         width: auto;
         border: 1px solid #a9a9a9;
         border-radius: 10px;
+        padding: 10px;
+        font-size: 1.5rem;
 }
 	}
 `;
