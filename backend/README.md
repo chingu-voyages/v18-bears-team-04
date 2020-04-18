@@ -33,7 +33,27 @@ Users API
 
 Class API
 
-1. POST /api/class
+1. GET /api/class
+   Description: Get All Classes
+   Returns: An Array of Class Objects {Status: 200}
+   Failed: {message: 'A detailed error message'}
+   Body: No body needed
+
+2. GET /api/class/:classId
+   Description: Get Class From Id
+   Returns: A Class Object
+   Failed: {message: 'Class with Id (classId) not found} {Status:404}
+   Body: No Body needed
+
+3. GET /api/class/user/:userName
+   Description: Get All Classes that a user Belongs to.
+   User can belong to a class either as a Student or a Teacher.
+
+   Returns: An array of Class Objects
+   Failed: {message: 'User (userName) not Found'} {Status: 404}
+   Body: No body needed
+
+4. POST /api/class
    Description: Create a New Class
    Returns:
    Success: The Class Object created {Status:201}
@@ -44,15 +64,12 @@ Class API
    teacherName: String //UserName
    }
 
-2. PUT /api/class/:studentName
+5. PUT /api/class/:classId/:studentName
    Description: Add A Student to the Student Names Array
    Returns:
    Success: The Updated Class Object {Status:200}
    Failed: {message: 'A detailed Error message'}
-   Body:
-   {
-   classId: String
-   }
+   Body: No Body needed
 
 Assignment API
 
@@ -98,7 +115,7 @@ Assignment API
     }
     ]
 
-2)      GET /api/assignment/      assignment:userId
+2)       GET /api/assignment/      assignment:userId
     Description: Returns user Assignment by userId
     Returns:
     Success: Retrieved User Assignment {Status:200}
@@ -113,7 +130,7 @@ Assignment API
     endDate: String //endDate
     userId: String //Unique
     }
-3)      PUT /api/assignment/:assignmentiD
+3)       PUT /api/assignment/:assignmentiD
 
     Description: Returns user Assignment by userId
     Returns:
@@ -130,7 +147,7 @@ Assignment API
     userId: String //Unique
     }
 
-4)      DELETE /api/assignment/:assignmentId
+4)       DELETE /api/assignment/:assignmentId
 
     Description: Delete Assignment by an Id
     Returns:
@@ -141,7 +158,7 @@ Assignment API
     Assignment Deleted Successfully
     }
 
-5)      DELETE /api/assignment
+5)       DELETE /api/assignment
     Description: Delete All Assignment
     Returns:
     Success: Deleted All Assignments {Status:200}
