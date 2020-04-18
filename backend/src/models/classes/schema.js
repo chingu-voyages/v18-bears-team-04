@@ -6,11 +6,6 @@ const classSchema = new Schema({
     type: String,
     required: true,
   },
-  // classCode: {
-  //   type: String,
-  //   required: true,
-  //   unique: [true, "Class Code is already in Use."], //TODO: Display Custom Message
-  // },
   teacherName: {
     type: String,
     required: true,
@@ -18,6 +13,7 @@ const classSchema = new Schema({
   studentNames: [
     {
       type: String,
+      ref: "User",
     },
   ],
 });
