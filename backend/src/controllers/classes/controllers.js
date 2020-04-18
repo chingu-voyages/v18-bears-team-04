@@ -27,7 +27,7 @@ export const getClassesByUserName = async (req, res, next) => {
   try {
     const { userName } = req.params;
     const user = await User.findOne({ userName: userName });
-    if (!user) throw createError(404, `Student (${userName}) not Found`);
+    if (!user) throw createError(404, `User (${userName}) not Found`);
 
     const classIds = user.classIds;
 
@@ -59,7 +59,6 @@ export const createClass = async (req, res, next) => {
     if (user.role != userRole.TEACHER)
       throw createError(404, `User (${teacherName}) is not a Teacher`);
 
-    console.log(req.body);
     const newClass = await Class.create(req.body);
 
     //Add ClassId to User Table's Class Id's Array
@@ -78,8 +77,6 @@ export const addStudentToClass = async (req, res, next) => {
     const { studentName } = req.params;
     const { classId } = req.params;
 
-    console.log("Class Id is here");
-    console.log(classId);
     //Check if Class Exists
     const existingClass = await Class.findById(classId);
     if (!existingClass)
