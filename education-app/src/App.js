@@ -17,7 +17,7 @@ const App = () => {
 			<Router>
 				<ResetCSS />
 				<TopNav />
-				{TokenService.hasAuthToken() && <SideNav />}
+				{/* {TokenService.hasAuthToken() && <SideNav />} */}
 				{/* Shouldn't be seen on dashboard */}
 				<Switch>
 					<Route path='/' exact component={Homepage} />
