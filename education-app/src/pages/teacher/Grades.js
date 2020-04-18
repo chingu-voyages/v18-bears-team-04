@@ -106,9 +106,11 @@ const Grades = (props) => {
 						</select>
 					</td>
 					<td>
-						<button className='view-assignment-btn' value={s.assignmentName}>
-							<Link to={`/:studentUsername/assignment-view`}>View</Link>
-						</button>
+						<Link to={`/assignment-view`}>
+							<button className='view-assignment-btn' value={s.assignmentName}>
+								View
+							</button>
+						</Link>
 					</td>
 					<td className='comment'>
 						{!s.studentComment ? (
@@ -134,9 +136,11 @@ const Grades = (props) => {
 					<span className='completed-grade'>{s.grade}</span>
 				</td>
 				<td>
-					<button className='view-assignment-btn' value={s.assignmentName}>
-						View
-					</button>
+					<Link to={`/assignment-view`}>
+						<button className='view-assignment-btn' value={s.assignmentName}>
+							View
+						</button>
+					</Link>
 				</td>
 				<td className='comment'>
 					{!s.studentComment ? (

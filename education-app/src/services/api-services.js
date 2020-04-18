@@ -7,7 +7,7 @@ const ApiService = {
 		);
 	},
 	getUserName(userName) {
-		return fetch(`${config.API_ENDPOINT}/user/${userName}`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/user/name/${userName}`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
