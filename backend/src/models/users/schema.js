@@ -23,6 +23,13 @@ const userSchema = new Schema({
     enum: [userRole.TEACHER, userRole.STUDENT],
     default: userRole.STUDENT,
   },
+
+  classIds: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Class",
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
