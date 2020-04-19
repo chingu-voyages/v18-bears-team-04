@@ -3,7 +3,7 @@ import styled from "styled-components"
 import bgImg from "../../images/Dashboard-bg.jpg"
 import exampleImg from "../../images/ProfExample.jpg"
 
-import STORE from "../../STORE"
+import STORE from "../../STORE.JS"
 
 const SDashboard = () => {
    console.log(STORE)

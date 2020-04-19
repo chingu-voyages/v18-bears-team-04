@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import STORE from "../../STORE";
+import STORE from "../../STORE.JS";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";

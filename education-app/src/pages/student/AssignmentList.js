@@ -42,10 +42,12 @@ const SAssignmentList = () => {
 }
 
 const SAssignmentListStyle = styled.main`
-   width: 78%;
-   height: 100v;
+   padding-left: 250px;
    padding-top: 60px;
+   width: 90vw;
+   height: 100%;
    margin-left: auto;
+   margin-right: auto;
    .wrap {
       width: 90%;
       margin: 0 auto;

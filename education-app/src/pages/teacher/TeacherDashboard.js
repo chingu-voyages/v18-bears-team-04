@@ -7,7 +7,7 @@ import CreateClassForm from "../../components/CreateClassForm";
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 import ValidationError from "../../components/ValidationError";
-import STORE from "../../STORE";
+import STORE from "../../STORE.JS";
 
 import styled from "styled-components";
 import bgImg from "../../images/Dashboard-bg.jpg";
