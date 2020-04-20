@@ -61,8 +61,9 @@ const CreateAssignmentForm = (props) => {
 					files: "",
 					description: "",
 				});
-			})
 
+				history.push(`/${props.userName}/assignments`);
+			})
 			.catch((err) => setError({ error: err }));
 		//awaiting startDate/endDate input
 	};
