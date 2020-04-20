@@ -1,5 +1,10 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+
 import styled from "styled-components";
+
+import ValidationError from "../components/ValidationError";
+
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
 
@@ -14,12 +19,21 @@ const CreateAssignmentForm = (props) => {
 		showModal: false,
 	};
 	const [userInput, setInput] = useState(initialFormState);
+
 	const [{ error }, setError] = useState({ error: null });
 	const { assignmentName, endDate, startDate, files, description } = userInput;
+
+	const history = useHistory();
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
 		setInput({ ...userInput, [name]: value });
+	};
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong. Try again.`;
+		}
 	};
 
 	const handleSubmit = (e) => {
@@ -32,11 +46,23 @@ const CreateAssignmentForm = (props) => {
 			description,
 			title: assignmentName,
 			teacherName: props.userName,
+			startDate,
+			endDate,
 		};
 
 		ApiService.addAssignment(newAssignmentObj)
 			//Add close modal and go to assignments list
-			.then((res) => console.log(res))
+			.then((res) => {
+				setInput({
+					assignmentName: "",
+					className: props.className,
+					endDate: "",
+					startDate: "",
+					files: "",
+					description: "",
+				});
+			})
+
 			.catch((err) => setError({ error: err }));
 		//awaiting startDate/endDate input
 	};
@@ -45,6 +71,7 @@ const CreateAssignmentForm = (props) => {
 		<CreateAssignmentFormStyle>
 			<div className='create-assignment-box'>
 				<h1> Add An Assignment</h1>
+
 				<form className='form-grid' onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='assignment-name'>
 						Assignment Name
@@ -122,6 +149,7 @@ const CreateAssignmentForm = (props) => {
 
 					<button className='modal-btn'>Create</button>
 				</form>
+				<ValidationError message={errorMessage()} />
 			</div>
 		</CreateAssignmentFormStyle>
 	);
@@ -143,7 +171,7 @@ const CreateAssignmentFormStyle = styled.div`
 	.form-grid {
 		background-clip: content-box;
 		display: grid;
-		grid-template-rows: 1fr 1fr 1fr 1fr;
+		grid-template-rows: 1fr 1fr 1fr 0.5fr;
 		grid-template-columns: 1fr 1fr;
 		grid-template-areas: "assignment-name class-name" "instructions files" "start-date due-date" "modal-btn modal-btn";
 		height: 90%;
@@ -171,7 +199,10 @@ const CreateAssignmentFormStyle = styled.div`
 		height: 50px;
 		width: 140px;
 		padding: 10px;
-		margin: 20px auto;
+		margin-top: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 10px;
 		font-size: 2rem;
 		border: 2px solid #c4c4c4;
 	}
@@ -184,6 +215,12 @@ const CreateAssignmentFormStyle = styled.div`
 	.modal-btn {
 		grid-column-start: 1;
 		grid-column-end: 3;
+	}
+	.assignment-created {
+		text-align: center;
+		color: green;
+		font-size: 2rem;
+		font-style: italic;
 	}
 `;
 export default CreateAssignmentForm;
