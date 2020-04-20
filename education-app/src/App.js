@@ -37,7 +37,7 @@ const App = () => {
 					<Route
 						exact
 						path='/:assignmentName/submission'
-						component={AssignmentSubmission}
+						render={(routeProps) => <AssignmentSubmission {...routeProps} />}
 					/>
 					<Route
 						exact

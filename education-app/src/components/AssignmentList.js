@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Link } from "react-router-dom";
 import ApiService from "../services/api-services";
 import styled from "styled-components";
 
@@ -65,17 +65,17 @@ const AssignmentList = (props) => {
 			? combinedInfo.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<h4 className='assignment-title'>{assign.title}</h4>
-							<div key={index} className='class-name-container'>
-								<p className='class-name'>{assign.className}</p>
-								{renderSubmittedInfo(assign.submitted)}
-							</div>
+							<Link to={`/${assign.title}/submission`}>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.submitted)}
+								</div>
+							</Link>
 						</div>
 					);
 			  })
 			: null;
-
-	console.log(combinedInfo);
 
 	return (
 		<AssignmentListStyle>
@@ -150,6 +150,8 @@ const AssignmentListStyle = styled.main`
 				margin-top: 30%;
 			}
 			.assignment-title {
+				width: 100%;
+				height: 100%;
 				position: absolute;
 				color: #5e5e5e;
 				top: 10%;
