@@ -19,16 +19,23 @@ const App = () => {
 			<Router>
 				<ResetCSS />
 				<TopNav />
-				{/* {TokenService.hasAuthToken() && <SideNav />} */}
-				{/* Shouldn't be seen on dashboard */}
+
+				{/* Order matters! */}
+				<Route exact path='/' component={Homepage} />
+				<Route
+					exact
+					path='/:userName/studentdashboard'
+					render={(routeProps) => <StudentDashboard {...routeProps} />}
+				/>
+				<Route
+					exact
+					path='/:userName/dashboard'
+					render={(routeProps) => <TeacherDashboard {...routeProps} />}
+				/>
+
+				{TokenService.hasAuthToken() && <SideNav />}
 
 				<Switch>
-					<Route path='/' exact component={Homepage} />
-					<Route
-						exact
-						path='/:userName/studentdashboard'
-						render={(routeProps) => <StudentDashboard {...routeProps} />}
-					/>
 					<Route
 						exact
 						path='/:userName/assignments'
@@ -38,11 +45,6 @@ const App = () => {
 						exact
 						path='/:assignmentName/submission'
 						render={(routeProps) => <AssignmentSubmission {...routeProps} />}
-					/>
-					<Route
-						exact
-						path='/:userName/dashboard'
-						render={(routeProps) => <TeacherDashboard {...routeProps} />}
 					/>
 
 					<Route

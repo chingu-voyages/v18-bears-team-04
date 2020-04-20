@@ -1,23 +1,80 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import bgImg from "../images/Dashboard-bg.jpg";
-import exampleImg from "../images/ProfExample.jpg";
+import exampleImgStudent from "../images/ProfExample.jpg";
+import exampleImgTeacher from "../images/maria-hill-teacher.jpg";
+
+import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 
 const SideNav = (props) => {
+	const user = {
+		userName: "",
+		userRole: "",
+	};
+	const [userInfo, setUserInfo] = useState({ user });
+	const [{ error }, setError] = useState({ error: null });
+	const id = TokenService.getAuthToken();
+
+	const getUserInfo = (props) => {
+		const userId = TokenService.getAuthToken();
+		ApiService.getUsers()
+			.then((res) => {
+				const dbUser = res.filter((a) => a._id === userId);
+				setUserInfo({
+					userName: dbUser[0].userName,
+					userRole: dbUser[0].role,
+					userId: userId,
+				});
+			})
+			.catch((err) => setError({ error: err }));
+	};
+
+	useEffect(() => {
+		getUserInfo();
+	}, []);
+
+	userInfo !== undefined && console.log(userInfo.userName);
+
 	return (
 		<SideNavStyle>
 			<div className='wrap'>
 				<div className='userInfo'>
 					<div className='prof-img'>
-						<img src={exampleImg} alt='' />
+						{userInfo !== undefined && userInfo.userRole === "teacher" ? (
+							<img src={exampleImgTeacher} alt='' />
+						) : (
+							<img src={exampleImgStudent} alt='' />
+						)}
 					</div>
-					<p className='user-name'>{props.userName}</p>
-					<p className='user-type'>{props.role}</p>
+
+					<p className='user-name'>
+						{userInfo !== undefined && userInfo.userName}
+					</p>
+
+					<p className='user-type'>
+						{userInfo !== undefined && userInfo.userRole}
+					</p>
 				</div>
 				<div className='links'>
-					<Link to='/somewhere'>Link</Link>
+					{userInfo !== undefined && userInfo.userRole === "teacher" ? (
+						<Link to={`/${userInfo.userName}/dashboard`}>Dashboard</Link>
+					) : (
+						<Link to={`/${userInfo.userName}/studentdashboard`}>Dashboard</Link>
+					)}
+
+					<Link to={`/${userInfo.userName}/assignments`}>Assignments</Link>
+					{userInfo !== undefined && userInfo.userRole === "teacher" ? (
+						<Link to={`/${userInfo.userName}/grades`}>Grades</Link>
+					) : (
+						<Link to={`/${userInfo.userName}/my-grades`}>Grades</Link>
+					)}
+
+					{userInfo !== undefined && userInfo.userRole === "teacher" && (
+						<Link to={`/${userInfo.userName}/feedback`}>Feedback</Link>
+					)}
 				</div>
 			</div>
 		</SideNavStyle>
