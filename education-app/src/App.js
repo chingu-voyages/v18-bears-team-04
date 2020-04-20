@@ -7,7 +7,7 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import Grades from "./pages/teacher/Grades";
-import AssignmentSubmission from "./pages/student/AssignmentSubmission"
+import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 
 import ResetCSS from "./ResetCSS";
 import TokenService from "./services/token-service";
@@ -20,13 +20,18 @@ const App = () => {
 				<TopNav />
 				{/* {TokenService.hasAuthToken() && <SideNav />} */}
 				{/* Shouldn't be seen on dashboard */}
-				<AssignmentSubmission />
+
 				<Switch>
 					<Route path='/' exact component={Homepage} />
 					<Route
 						exact
 						path='/:userName/studentdashboard'
 						render={(routeProps) => <StudentDashboard {...routeProps} />}
+					/>
+					<Route
+						exact
+						path='/:assignmentName/submission'
+						component={AssignmentSubmission}
 					/>
 					<Route
 						exact
