@@ -23,6 +23,10 @@ const TokenService = {
 		//boolean
 		return !!TokenService.getAuthToken();
 	},
+	hasClassToken() {
+		//boolean
+		return !!TokenService.getClassToken();
+	},
 };
 
 export default TokenService;

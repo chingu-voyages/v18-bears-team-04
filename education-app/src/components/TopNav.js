@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { Modal } from "react-responsive-modal";
 import TokenService from "../services/token-service";
 import SignUpForm from "./SignUpForm";
@@ -93,7 +93,9 @@ const TopNav = (props) => {
 
 	return (
 		<NavStyle>
-			<h1>iScholars</h1>
+			<Link to={`/`}>
+				<h1>iScholars</h1>
+			</Link>
 			<Modal
 				open={showModal}
 				onClose={() => setForm({ showModal: false })}
