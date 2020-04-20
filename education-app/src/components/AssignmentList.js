@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import ApiService from "../services/api-services";
 import styled from "styled-components";
 
-const AssignmentList = () => {
+const AssignmentList = (props) => {
+	const [assignments, setAssignments] = useState();
+
+	getAssignments = () => {
+		//will change to get assignments by userId
+		ApiService.getAssignments().then((res) => console.log(res));
+	};
 	const examples = [
 		{
 			name: "Assignment-A",
@@ -88,4 +96,4 @@ const AssignmentListStyle = styled.main`
 	}
 `;
 
-export default SAssignmentList;
+export default AssignmentList;
