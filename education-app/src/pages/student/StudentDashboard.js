@@ -15,7 +15,9 @@ const StudentDashboard = (props) => {
 					<p className='user-name'>{props.match.params.userName}</p>
 				</div>
 				<div className='links'>
-					<Link>Assignments</Link>
+					<Link to={`/${props.match.params.userName}/assignments`}>
+						Assignments
+					</Link>
 					<Link>Grades</Link>
 				</div>
 			</div>

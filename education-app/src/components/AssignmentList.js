@@ -4,42 +4,51 @@ import ApiService from "../services/api-services";
 import styled from "styled-components";
 
 const AssignmentList = (props) => {
-	const [assignments, setAssignments] = useState();
+	//Add get array of user Assignments & Class Ids
+	//Match classIds to class name
 
-	getAssignments = () => {
-		//will change to get assignments by userId
-		ApiService.getAssignments().then((res) => console.log(res));
+	const [{ error }, setError] = useState({ error: false });
+	const [assignments, setAssignments] = useState(null);
+	const [classInfo, setClasses] = useState(null);
+
+	const getAllApiInfo = () => {
+		Promise.all([ApiService.getClasses(), ApiService.getAssignments()])
+			.then((res) => {
+				console.log(res[0], res[1]);
+				const filteredClasses = res[0].filter((a) =>
+					res[1].some((b) => a._id === b.classId)
+				);
+				const filteredAssignments = res[1].filter((a) =>
+					res[0].some((b) => a.classId === b._id)
+				);
+				setClasses(filteredClasses);
+				setAssignments(filteredAssignments);
+			})
+			.catch((err) => setError({ error: err }));
 	};
-	const examples = [
-		{
-			name: "Assignment-A",
-		},
-		{
-			name: "Assignment-B",
-		},
-		{
-			name: "Assignment-C",
-		},
-		{
-			name: "Assignment-D",
-		},
-	];
-	const assignments = examples.map((assign) => {
-		return (
-			<>
-				<div className='assignment'>
-					<h4 className='assignment-title'>{assign.name}</h4>
+
+	useEffect(() => {
+		getAllApiInfo();
+	}, []);
+
+	const displayedAssignments =
+		assignments != null &&
+		assignments.map((assign) => {
+			return (
+				<div key={assign._id} className='assignment'>
+					<h4 className='assignment-title'>{assign.title}</h4>
 				</div>
-			</>
-		);
-	});
+			);
+		});
+
+	console.log(displayedAssignments);
 
 	return (
 		<AssignmentListStyle>
 			<div className='wrap'>
 				<h2 className='page-title'>Assignments List</h2>
 				<h3>Your Assignments</h3>
-				<div className='assignment-table'>{assignments}</div>
+				<div className='assignment-table'>{displayedAssignments}</div>
 			</div>
 		</AssignmentListStyle>
 	);

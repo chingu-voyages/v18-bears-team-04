@@ -8,6 +8,7 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import Grades from "./pages/teacher/Grades";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
+import AssignmentList from "./components/AssignmentList";
 
 import ResetCSS from "./ResetCSS";
 import TokenService from "./services/token-service";
@@ -27,6 +28,11 @@ const App = () => {
 						exact
 						path='/:userName/studentdashboard'
 						render={(routeProps) => <StudentDashboard {...routeProps} />}
+					/>
+					<Route
+						exact
+						path='/:userName/assignments'
+						render={(routeProps) => <AssignmentList {...routeProps} />}
 					/>
 					<Route
 						exact
