@@ -6,16 +6,24 @@ const assignmentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Class",
     },
-    userId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    }],
+    assignmentResults: {
+        type: String,
+        enum: ["A", "B", "C", "D", "E", "F"],
+    },
+    studentFeedback: {
+        type: String,
+        default: null
+    },
+    teacherFeedback: {
+        type: String,
+        default: null
+    },
       title: {
           type: String,
           required: true,
          
       },
-      description:{
+      instructions:{
           type: String,
           required: true,
       },
@@ -23,9 +31,17 @@ const assignmentSchema = new Schema({
           type: Date,
           default: null
       },
-      endDate: {
+      dueDate: {
           type: Date,
           default: null
+      }, 
+      submitted: {
+          type: Boolean,
+          default: false
+      },
+      status: {
+        type: Date,
+        default: null
       }
 });
 

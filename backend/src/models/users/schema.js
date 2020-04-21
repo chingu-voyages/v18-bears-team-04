@@ -30,6 +30,12 @@ const userSchema = new Schema({
       ref: "Class",
     },
   ],
+  assignmentIds: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Assignment",
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
