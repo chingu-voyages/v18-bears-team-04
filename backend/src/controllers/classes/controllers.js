@@ -74,31 +74,63 @@ export const createClass = async (req, res, next) => {
 
 export const addStudentToClass = async (req, res, next) => {
   try {
-    const { studentName } = req.params;
+    const { studentId } = req.params;
     const { classId } = req.params;
 
     //Check if Class Exists
     const existingClass = await Class.findById(classId);
     if (!existingClass)
-      throw createError(404, `Class (${existingClass}) not Found`);
+      throw createError(404, `Class with id (${classId}) not Found`);
 
-    //Check if Student Exists in the User Table
-    const user = await User.findOne({ userName: studentName });
-    if (!user) throw createError(404, `Student (${studentName}) not Found`);
+    //Add ClassId to User Table's Class Ids Array
+    const existingStudent = await User.findOneAndUpdate(
+      { _id: studentId, role: userRole.STUDENT },
+      { $addToSet: { classIds: classId } }
+    );
 
-    //Check if User is a Student
-    if (user.role != userRole.STUDENT)
-      throw createError(404, `User ${studentName} is not a Student`);
+    if (!existingStudent)
+      throw createError(404, `Student with id (${studentId}) not Found`);
 
-    //Add StudentName to Class Table's studentNames Array
-    existingClass.studentNames.push(studentName); // To Do use FindByIdAndUpdate
-    await existingClass.save();
+    //Add StudentId to Class Table's studentIds Array
+    const newClass = await Class.findOneAndUpdate(
+      { _id: classId },
+      { $addToSet: { studentIds: studentId } },
+      { new: true }
+    );
 
-    //Add ClassId to User Table's Class Id's Array
-    user.classIds.push(classId);
-    await user.save();
+    res.status(201).json(newClass);
+  } catch (err) {
+    next(err);
+  }
+};
 
-    res.status(201).json(existingClass);
+export const deleteStudentFromClass = async (req, res, next) => {
+  try {
+    const { studentId } = req.params;
+    const { classId } = req.params;
+
+    //Check if Class Exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass)
+      throw createError(404, `Class with id (${classId}) not Found`);
+
+    //Delete ClassId From User Table's Class Ids Array
+    const existingStudent = await User.findOneAndUpdate(
+      { _id: studentId, role: userRole.STUDENT },
+      { $pull: { classIds: classId } }
+    );
+
+    if (!existingStudent)
+      throw createError(404, `Student with id (${studentId}) not Found`);
+
+    //Delete StudentId From Class Table's StudentIds Array
+    const newClass = await Class.findOneAndUpdate(
+      { _id: classId },
+      { $pull: { studentIds: studentId } },
+      { new: true }
+    );
+
+    res.status(201).json(newClass);
   } catch (err) {
     next(err);
   }
