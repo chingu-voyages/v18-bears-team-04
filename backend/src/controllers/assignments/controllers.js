@@ -105,6 +105,7 @@ export const updateAssignment = async (req, res, next) => {
 };
 
 export const submitAssignment = async (req, res, next) => {
+<<<<<<< HEAD
     try {
         const { studentName, assignmentId } = req.params;
         //Date function to help update the date of assignment submission
@@ -158,9 +159,28 @@ export const submitAssignment = async (req, res, next) => {
               });
           }
     } catch (err) {
-    next(err)
+    next(err);
     }
-  
+    //Submit an assignment
+    const submitAssignment = await Assignment.findOneAndUpdate(
+      { _id: assignmentId },
+      { $set: req.body },
+      { new: true }
+    );
+    if (true) {
+      await notifications.sendStudentsNotification(
+        submitAssignment.assignmentId,
+        submitAssignment.userId[0],
+        submitAssignment.title
+      );
+      res.status(200).json({
+        msg: "Assignment Updated Successfully",
+        submitAssignment,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 export const deleteSingleAssignmentById = async (req, res, next) => {
   try {
