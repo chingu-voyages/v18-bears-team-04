@@ -9,11 +9,7 @@ const gradesSchema = new Schema({
       ref: "Class",
     },
   ],
-  assignmentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Assignment",
-  },
-  userId: {
+  studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
