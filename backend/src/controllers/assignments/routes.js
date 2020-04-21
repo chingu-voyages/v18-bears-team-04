@@ -7,7 +7,9 @@ updateAssignment,
 deleteSingleAssignmentById,
 deleteAllAssignment,
 submitAssignment,
-getAllAssignmentByStatus 
+getAllAssignmentByStatus,
+grade,
+getAllResultForAStudent 
 } from './controllers';
 
 const router = Router();
@@ -17,6 +19,9 @@ router.get("", getAllAssignment);
 
 //Get all assignment status by adding true or false as a status
 router.get("/assignment/:status", getAllAssignmentByStatus)
+router.get("/grade/:studentName", getAllResultForAStudent)
+//Grade an assignment
+router.post("/:assignmentId/teacher/:teacherName", grade);
 
 //Update an assignment
 router.put("/:assignmentId/teacher/:teacherName", updateAssignment);

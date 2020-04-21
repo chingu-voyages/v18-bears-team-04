@@ -4,7 +4,7 @@ import createError from "http-errors";
 
 export const createGrade = async (req, res, next) => {
   try {
-    const { teacherName, assignmentId, userId } = req.body;
+    const { teacherName, classId, studentId } = req.body;
     //User validation
     const user = await User.findOne({ userName: teacherName });
     if (!user) throw createError(404, `Teacher ${teacherName} not found`);
