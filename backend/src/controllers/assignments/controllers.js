@@ -110,44 +110,43 @@ export const updateAssignment = async (req, res, next) => {
 };
 
 export const submitAssignment = async (req, res, next) => {
-    try {
-        const { studentName } = req.body;
-        const { assignmentId } = req.params;
-      
-        //validate if assignment exist in DB
-        const validateId = await Assignment.findById(assignmentId);
-        if (!validateId)
-          throw createError(404, `Assignment id ${assignmentId} does not exist`);
-      
-        //User validation
-        const user = await User.findOne({ userName: studentName });
-        if (!user) throw createError(404, `Student ${studentName} not found`);
-      
-        //Authorization Validation
-        if (user.role != userRole.STUDENT) {
-          throw createError(404, `User ${studentName} is not a Student`);
-        }
-        //Submit an assignment
-          const submitAssignment = await Assignment.findOneAndUpdate(
-            { _id: assignmentId },
-            { $set: req.body},
-            { new: true }
-          );
-          if (true) {
-              await notifications.sendStudentsNotification(
-                  submitAssignment.assignmentId,
-                  submitAssignment.userId[0],
-                  submitAssignment.title
-          );
-            res.status(200).json({
-              msg: "Assignment Updated Successfully",
-              submitAssignment,
-            });
-          }
-    } catch (err) {
-    next(err)
+  try {
+    const { studentName } = req.body;
+    const { assignmentId } = req.params;
+
+    //validate if assignment exist in DB
+    const validateId = await Assignment.findById(assignmentId);
+    if (!validateId)
+      throw createError(404, `Assignment id ${assignmentId} does not exist`);
+
+    //User validation
+    const user = await User.findOne({ userName: studentName });
+    if (!user) throw createError(404, `Student ${studentName} not found`);
+
+    //Authorization Validation
+    if (user.role != userRole.STUDENT) {
+      throw createError(404, `User ${studentName} is not a Student`);
     }
-  
+    //Submit an assignment
+    const submitAssignment = await Assignment.findOneAndUpdate(
+      { _id: assignmentId },
+      { $set: req.body },
+      { new: true }
+    );
+    if (true) {
+      await notifications.sendStudentsNotification(
+        submitAssignment.assignmentId,
+        submitAssignment.userId[0],
+        submitAssignment.title
+      );
+      res.status(200).json({
+        msg: "Assignment Updated Successfully",
+        submitAssignment,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 export const deleteSingleAssignmentById = async (req, res, next) => {
   try {
