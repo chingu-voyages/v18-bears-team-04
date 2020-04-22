@@ -2,7 +2,8 @@ import { Router } from "express";
 import UserController from "../controllers/users";
 import ClassController from "../controllers/classes";
 import AssignmentController from "../controllers/assignments";
-import NotificationController from '../controllers/notifications';
+import UploadFileController from "../controllers/uploadFile";
+import NotificationController from "../controllers/notifications";
 
 const router = Router();
 
