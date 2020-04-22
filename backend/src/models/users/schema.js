@@ -23,7 +23,9 @@ const userSchema = new Schema({
     enum: [userRole.TEACHER, userRole.STUDENT],
     default: userRole.STUDENT,
   },
-
+  userProfileLink: {
+    type: String,
+  },
   classIds: [
     {
       type: mongoose.Types.ObjectId,
