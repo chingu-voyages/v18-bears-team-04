@@ -26,7 +26,7 @@ const TopNav = (props) => {
 		setForm({ loggedIn: true, showModal: false });
 
 		if (type === "teacher") {
-			history.push(`/${username}/dashboard`);
+			history.push(`/${username}/${type}/dashboard`);
 		} else {
 			history.push(`/${username}/studentdashboard`);
 		}

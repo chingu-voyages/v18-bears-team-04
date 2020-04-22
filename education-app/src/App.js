@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
 import SideNav from "./components/SideNav";
@@ -21,7 +26,6 @@ const App = () => {
 				<TopNav />
 
 				{/* Order matters! */}
-				<Route exact path='/' component={Homepage} />
 				<Route
 					exact
 					path='/:userName/studentdashboard'
@@ -29,10 +33,10 @@ const App = () => {
 				/>
 				<Route
 					exact
-					path='/:userName/dashboard'
+					path='/:userName/:userType/dashboard'
 					render={(routeProps) => <TeacherDashboard {...routeProps} />}
 				/>
-
+				<Route exact path='/' component={Homepage} />
 				{TokenService.hasAuthToken() && <SideNav />}
 
 				<Switch>

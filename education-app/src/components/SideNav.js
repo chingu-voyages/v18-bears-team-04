@@ -36,8 +36,6 @@ const SideNav = (props) => {
 		getUserInfo();
 	}, []);
 
-	userInfo !== undefined && console.log(userInfo.userName);
-
 	return (
 		<SideNavStyle>
 			<div className='wrap'>

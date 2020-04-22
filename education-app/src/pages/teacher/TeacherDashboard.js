@@ -3,6 +3,7 @@ import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
 
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
+import EditClassForm from "../../components/EditClassForm";
 import CreateClassForm from "../../components/CreateClassForm";
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -20,16 +21,20 @@ const TeacherDashboard = (props) => {
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
 	const [{ error }, setError] = useState({ error: false });
 	const [{ showClassModal, showAssignmentModal }, setModal] = useState({
-		showClassModal: false,
+		showClassModal: true,
 		showAssignmentModal: false,
 	});
 
 	function getUserInfo() {
-		ApiService.getClassById(TokenService.getClassToken())
-			.then((res) => {
-				setClassInfo({ currClass: res.className });
-			})
-			.catch((err) => setError({ error: err }));
+		const classId = TokenService.getClassToken();
+		if (classId) {
+			ApiService.getClassById(TokenService.getClassToken())
+				.then((res) => {
+					setClassInfo({ currClass: res.className });
+				})
+				.catch((err) => setError({ error: err }));
+		}
+		return;
 	}
 
 	useEffect(() => {
@@ -71,9 +76,20 @@ const TeacherDashboard = (props) => {
 			);
 		}
 		return (
-			<div className='class-title'>
-				<h1>{currClass}</h1>
-			</div>
+			<>
+				<div className='class-title'>
+					<h1>{currClass}</h1>
+				</div>
+				<button onClick={() => handleClassModal()}>Edit Class</button>
+
+				<Modal open={showClassModal} onClose={() => handleClassModal()} center>
+					<EditClassForm
+						userName={props.match.params.userName}
+						handleClassModal={() => handleClassModal()}
+						setClassName={(str) => setClassName(str)}
+					/>
+				</Modal>
+			</>
 		);
 	};
 
@@ -103,10 +119,14 @@ const TeacherDashboard = (props) => {
 					<p className='user-type'>{user.userType}</p>
 				</div>
 				<div className='links'>
+					{/* Class Render Only For Teachers */}
 					{renderClass()}
+
 					<button onClick={() => handleAssignmentModal()}>
 						Create An Assignment
 					</button>
+					{/* {Dashboard Links} */}
+
 					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
@@ -123,7 +143,6 @@ const TeacherDashboard = (props) => {
 							handleAssignmentModal={() => handleAssignmentModal()}
 						/>
 					</Modal>
-					<Link to={`/${props.match.params.userName}}/feedback`}>Feedback</Link>
 				</div>
 			</div>
 		</TeacherDashboardStyle>
