@@ -12,5 +12,6 @@ router.use("/user", UserController);
 router.use("/class", ClassController);
 router.use("/assignment", AssignmentController);
 router.use("/notification", NotificationController);
+router.use("/upload", UploadFileController);
 
 export default router;

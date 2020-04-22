@@ -10,7 +10,7 @@ const classSchema = new Schema({
     type: String,
     required: true,
   },
-  studentNames: [
+  studentIds: [
     {
       type: String,
       ref: "User",
