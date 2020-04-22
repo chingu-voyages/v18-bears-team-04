@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from "react";
 import ValidationError from "./ValidationError";
-import MultiSelect from "react-multi-select-component";
-
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
 
-const CreateClassForm = (props) => {
+const EditClassForm = (props) => {
 	const initialFormState = {
 		className: "",
-		classCode: "",
+		studentIds: "",
+		studentNames: "",
 	};
 	const [userInput, setInput] = useState(initialFormState);
-	const [allStudents, setStudents] = useState([]);
-	const [selected, setSelected] = useState([]);
-
-	const [{ error }, setError] = useState({ error: null });
+	const [error, setError] = useState(null);
 	const { className, classCode } = userInput;
-
-	const options = [
-		{ label: "Grapes 🍇", value: "grapes" },
-		{ label: "Mango 🥭", value: "mango" },
-		{ label: "Strawberry 🍓", value: "strawberry" },
-	];
 
 	const history = useHistory();
 
@@ -32,22 +22,15 @@ const CreateClassForm = (props) => {
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const getAllStudents = () => {
-		ApiService.getUsers().then((res) => {
-			const students = res
-				.map((a) => {
-					if (a.role === "student") {
-						return { label: a.userName, value: a._id };
-					}
-				})
-				.filter((a) => a !== undefined);
-			setStudents(students);
+	const getClassInfo = () => {
+		const classId = TokenService.getClassToken();
+		ApiService.getClassById(classId).then((res) => {
+			console.log(res);
+			setInput(res);
 		});
 	};
 
-	useEffect(() => {
-		getAllStudents();
-	}, []);
+	useEffect(() => getClassInfo(), []);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -64,7 +47,7 @@ const CreateClassForm = (props) => {
 				props.setClassName(res.className);
 				// history.push(`/${props.userName}/dashboard`);
 			})
-			.catch((err) => setError({ error: err }));
+			.catch((err) => setError(err));
 	};
 
 	const errorMessage = () => {
@@ -74,9 +57,9 @@ const CreateClassForm = (props) => {
 	};
 
 	return (
-		<CreateClassFormStyle>
+		<EditClassFormStyle>
 			<div className='create-class-box'>
-				<h1> Create Your Class</h1>
+				<h1> Edit Class</h1>
 				<form className='form-flex' onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='class-name'>
 						Class Name
@@ -102,27 +85,17 @@ const CreateClassForm = (props) => {
 						/>
 					</label>
 
-					<label htmlFor='class-name'>
-						Add Students
-						<MultiSelect
-							options={allStudents !== undefined && allStudents}
-							value={selected}
-							onChange={setSelected}
-							labelledBy={"Select"}
-						/>
-					</label>
-
 					<ValidationError message={errorMessage()} />
 					<div className='button-container'>
 						<button className='modal-btn'>Create</button>
 					</div>
 				</form>
 			</div>
-		</CreateClassFormStyle>
+		</EditClassFormStyle>
 	);
 };
 
-const CreateClassFormStyle = styled.div`
+const EditClassFormStyle = styled.div`
 	.create-class-box {
 		width: 400px;
 		height: 400px;
@@ -156,32 +129,6 @@ const CreateClassFormStyle = styled.div`
 		height: 30px;
 		width: 300px;
 	}
-	.multi-select {
-		margin-top: 10px;
-		margin-left: 20px;
-		width: 300px;
-		border-radius: 0px;
-		div.panel-content {
-			width: 300px;
-			font-size: 4rem;
-		}
-		.gray {
-			font-size: 1.75rem;
-		}
-		input[type="checkbox"] {
-			width: 15px;
-			height: 0px;
-			font-size: 4rem;
-			margin-bottom: 20px;
-		}
-		.dropdown-heading-value {
-			font-size: 2.5rem;
-		}
-		label {
-			font-size: 4rem;
-		}
-	}
-
 	.selection {
 		margin-left: 20px;
 		width: 400px;
@@ -204,4 +151,4 @@ const CreateClassFormStyle = styled.div`
 		margin: 10px;
 	}
 `;
-export default CreateClassForm;
+export default EditClassForm;
