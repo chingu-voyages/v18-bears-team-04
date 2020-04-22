@@ -70,7 +70,6 @@ export const updateAssignment = async (req, res, next) => {
 
     //validate if assignment exist in DB
     const validateId = await Assignment.findById(assignmentId);
-    console.log(validateId.submitted, "validate");
 
     if (!validateId)
       throw createError(404, `Assignment id ${assignmentId} does not exist`);
@@ -141,6 +140,8 @@ export const submitAssignment = async (req, res, next) => {
     if (user.role != userRole.STUDENT) {
       throw createError(404, `User ${studentName} is not a Student`);
     }
+    if (validateId.submitted === true)
+      throw createError(403, "You cannot submit this assignment twice");
     // Create a new note and pass the req.body to the entry
     const solveAssignemt = await Assignment.findOneAndUpdate(
       { _id: assignmentId },
@@ -186,5 +187,97 @@ export const deleteAllAssignment = async (req, res, next) => {
     });
   } catch (e) {
     next(e);
+  }
+};
+
+//Grading Asignment
+export const grade = async (req, res, next) => {
+  try {
+    const { assignmentId, teacherName } = req.params;
+
+    //validate if assignment exist in DB
+    const validateId = await Assignment.findById(assignmentId);
+
+    if (!validateId)
+      throw createError(404, `Assignment id ${assignmentId} does not exist`);
+
+    //User validation
+    const user = await User.findOne({ userName: teacherName });
+    if (!user) throw createError(404, `Teacher ${teacherName} not found`);
+
+    //Authorization Validation
+    if (user.role != userRole.TEACHER) {
+      throw createError(404, `User ${teacherName} is not a Teacher`);
+    }
+    if (validateId.submitted === true) {
+      //Grade student assignment
+      const newAssignment = await Assignment.findOneAndUpdate(
+        { _id: assignmentId },
+        { $set: req.body },
+        { new: true }
+      );
+      if (true) {
+        res.status(200).json({
+          msg: "Assignment Updated Successfully",
+          newAssignment,
+        });
+      }
+    } else {
+      throw createError(403, `You cannot edit a submiited assignment`);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Get all result for a specific student
+export const getAllGradeForAStudent = async (req, res, next) => {
+  try {
+    const { studentName } = req.params;
+
+    //Check if student exist in Database
+    await User.findOne({ userName: studentName })
+      .populate("assignmentIds") //Get all parameters from the Id
+      .exec((err, result) => {
+        if (err) {
+          if (err.kind === "ObjectId") {
+            return res.status(404).send({
+              msg: `Grades does not exist`,
+            });
+          }
+          return res.status(500).send({
+            msg: `Error retrieving Student grade`,
+          });
+        }
+        //Map out all grades for a particular student from student assignmentId
+        const getStudentGrades = result.assignmentIds
+          .map(({ assignmentResults }) => assignmentResults)
+          .filter((assignmentResults) => assignmentResults);
+        res.status(200).json({
+          msg: "Student Grades",
+          getStudentGrades,
+        });
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Get a specific grade for ana assignment by Id
+export const getASingleGradeByAssignmentId = async (req, res, next) => {
+  try {
+    const { assignmentId } = req.params;
+    //Verify if assignment exist in Database
+    const verifyAssignmentExistence = await Assignment.findById({
+      _id: assignmentId,
+    });
+    if (!verifyAssignmentExistence)
+      throw createError(404, "Assignment does not exist");
+    res.status(200).json({
+      msg: "Assignment Grade",
+      data: verifyAssignmentExistence.assignmentResults,
+    });
+  } catch (err) {
+    next(err);
   }
 };
