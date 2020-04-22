@@ -19,12 +19,6 @@ const CreateClassForm = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const { className, classCode } = userInput;
 
-	const options = [
-		{ label: "Grapes 🍇", value: "grapes" },
-		{ label: "Mango 🥭", value: "mango" },
-		{ label: "Strawberry 🍓", value: "strawberry" },
-	];
-
 	const history = useHistory();
 
 	const handleChange = (e) => {
@@ -33,16 +27,16 @@ const CreateClassForm = (props) => {
 	};
 
 	const getAllStudents = () => {
-		ApiService.getUsers().then((res) => {
-			const students = res
-				.map((a) => {
-					if (a.role === "student") {
+		ApiService.getUsers()
+			.then((res) => {
+				const students = res
+					.filter((a) => a.role === "student")
+					.map((a) => {
 						return { label: a.userName, value: a._id };
-					}
-				})
-				.filter((a) => a !== undefined);
-			setStudents(students);
-		});
+					});
+				setStudents(students);
+			})
+			.catch((err) => setError({ error: err }));
 	};
 
 	useEffect(() => {
@@ -51,10 +45,13 @@ const CreateClassForm = (props) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const studentIdArray = selected.map((a) => a.value);
+
 		const newClassObj = {
 			className,
 			classCode,
 			teacherName: props.userName,
+			studentIds: studentIdArray,
 		};
 
 		ApiService.addClass(newClassObj)
@@ -62,7 +59,7 @@ const CreateClassForm = (props) => {
 				TokenService.saveClassToken(res._id);
 				props.handleClassModal();
 				props.setClassName(res.className);
-				// history.push(`/${props.userName}/dashboard`);
+				history.push(`/${props.userName}/dashboard`);
 			})
 			.catch((err) => setError({ error: err }));
 	};
@@ -153,8 +150,10 @@ const CreateClassFormStyle = styled.div`
 		margin-top: 10px;
 		padding-left: 10px;
 		font-size: 1.75rem;
-		height: 30px;
+		height: 40px;
 		width: 300px;
+		border-radius: 5px;
+		border: 1px solid lightgray;
 	}
 	.multi-select {
 		margin-top: 10px;
@@ -173,6 +172,9 @@ const CreateClassFormStyle = styled.div`
 			height: 0px;
 			font-size: 4rem;
 			margin-bottom: 20px;
+		}
+		input[type="text"] {
+			border: none;
 		}
 		.dropdown-heading-value {
 			font-size: 2.5rem;
