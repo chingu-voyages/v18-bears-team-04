@@ -43,6 +43,34 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	addStudentToClass(classId, studentId) {
+		return fetch(
+			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			{
+				method: "PUT",
+				headers: {
+					"content-type": "application/json",
+				},
+			}
+		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+
+	deleteStudentFromClass(classId, studentId) {
+		return fetch(
+			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			{
+				method: "DELETE",
+				headers: {
+					"content-type": "application/json",
+				},
+			}
+		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+
 	getAssignments() {
 		return fetch(`${config.API_ENDPOINT}/assignment`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()

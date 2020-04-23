@@ -21,7 +21,7 @@ const TeacherDashboard = (props) => {
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
 	const [{ error }, setError] = useState({ error: false });
 	const [{ showClassModal, showAssignmentModal }, setModal] = useState({
-		showClassModal: true,
+		showClassModal: false,
 		showAssignmentModal: false,
 	});
 
@@ -93,7 +93,10 @@ const TeacherDashboard = (props) => {
 		);
 	};
 
-	const handleClassModal = () => {
+	const handleClassModal = (str) => {
+		if (str) {
+			alert(str);
+		}
 		setModal({
 			showClassModal: !showClassModal,
 			showAssignmentModal: showAssignmentModal,
@@ -116,7 +119,7 @@ const TeacherDashboard = (props) => {
 					</div>
 					{error && <ValidationError message={errorMessage()} />}
 					<p className='user-name'>{props.match.params.userName}</p>
-					<p className='user-type'>{user.userType}</p>
+					<p className='user-type'>{props.match.params.userType}</p>
 				</div>
 				<div className='links'>
 					{/* Class Render Only For Teachers */}

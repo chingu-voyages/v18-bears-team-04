@@ -10,75 +10,88 @@ import TokenService from "../services/token-service";
 const EditClassForm = (props) => {
 	const initialFormState = {
 		className: "",
+		classCode: "",
 		studentIds: "",
-		studentNames: "",
 	};
 	const [userInput, setInput] = useState(initialFormState);
 	const [allStudents, setStudents] = useState([]);
+	const [enrolled, setEnrolled] = useState([]);
 	const [selected, setSelected] = useState([]);
 	const [error, setError] = useState(null);
-	const { className, classCode } = userInput;
+	const { className } = userInput;
 
 	const history = useHistory();
 
-	const getAllStudents = () => {
-		ApiService.getUsers().then((res) => {
-			const students = res
-				.map((a) => {
-					if (a.role === "student") {
-						return { label: a.userName, value: a._id };
-					}
-				})
-				.filter((a) => a !== undefined);
-			setStudents(students);
-		});
-	};
-
-	useEffect(() => {
-		getAllStudents();
-	}, []);
-
-	const handleChange = (e) => {
-		const { value, name } = e.target;
-		setInput({ ...userInput, [name]: value });
-	};
-
 	const getClassInfo = () => {
-		// const students = res
-		// 			.filter((a) => a.role === "student")
-		// 			.map((a) => {
-		// 				return { label: a.userName, value: a._id };
-		// 			});
-		// 		setStudents(students);
 		const classId = TokenService.getClassToken();
-		ApiService.getClassById(classId).then((res) => {
-			console.log(res);
-			setInput(res);
-		});
+		Promise.all([
+			ApiService.getUsers(),
+			ApiService.getClassById(classId),
+			ApiService.getClasses(),
+		])
+			.then((res) => {
+				/*Set all students for drop down menu*/
+				const students = res[0]
+					.filter((a) => a.role === "student")
+					.map((a) => {
+						return { label: a.userName, value: a._id };
+					});
+
+				setStudents(students);
+
+				/*This will show all current students as checked in dropdown*/
+				const filteredStudents = students.filter((a) =>
+					res[1].studentIds.find((i) => i === a.value)
+				);
+
+				setSelected(filteredStudents);
+				setEnrolled(filteredStudents); //compared to selected array
+
+				//Currently no class code in req.body
+				// console.log(res[2]);
+				// const classCode = res[2].filter((c) => classId === c._id);
+				// console.log(classCode);
+
+				/*Set class information to prefilled form*/
+				setInput({
+					className: res[1].className,
+					classCode: res[1].classCode,
+					studentIds: res[1].studentIds,
+				});
+			})
+			.catch((err) => setError(err));
 	};
 
 	useEffect(() => getClassInfo(), []);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const studentIdArray = selected.map((a) => a.value);
-		const classObj = {
-			className,
-			classCode,
-			teacherName: props.userName,
-			studentIds: studentIdArray,
-		};
+		const classId = TokenService.getClassToken();
 
-		console.log(classObj);
+		const studentsToAdd = selected.filter(
+			(a) => !enrolled.some((b) => a.label === b.label)
+		);
 
-		// ApiService.addClass(classObj)
-		// 	.then((res) => {
-		// TokenService.saveClassToken(res._id);
-		// props.handleClassModal();
-		// props.setClassName(res.className);
-		// 	// history.push(`/${props.userName}/dashboard`);
-		// })
-		// .catch((err) => setError(err));
+		const studentsToDelete = enrolled.filter(
+			(a) => !selected.some((b) => a.label === b.label)
+		);
+
+		const add = studentsToAdd.map((a) =>
+			ApiService.addStudentToClass(classId, a.value)
+		);
+
+		const deleteStudent = studentsToDelete.map((a) =>
+			ApiService.deleteStudentFromClass(classId, a.value)
+		);
+
+		Promise.all([add, deleteStudent])
+			.then((res) => {
+				alert("Changes have been made.");
+				props.handleClassModal();
+				history.push(`/${props.userName}/teacher/dashboard`);
+			})
+
+			.catch((err) => setError(err));
 	};
 
 	const errorMessage = () => {
@@ -100,19 +113,8 @@ const EditClassForm = (props) => {
 							name='className'
 							placeholder='e.g. Math 101'
 							value={className}
-							onChange={(e) => handleChange(e)}
-						/>
-					</label>
-
-					<label htmlFor='classCode'>
-						Class Code
-						<br />
-						<input
-							type='text'
-							name='classCode'
-							placeholder='Create A Code'
-							value={classCode}
-							onChange={(e) => handleChange(e)}
+							// onChange={(e) => handleChange(e)}
+							disabled={true}
 						/>
 					</label>
 
@@ -128,13 +130,7 @@ const EditClassForm = (props) => {
 
 					<ValidationError message={errorMessage()} />
 					<div className='button-container'>
-						<button
-							className='modal-btn'
-							onClick={() => props.handleClassModal()}
-						>
-							Cancel
-						</button>
-						<button className='modal-btn'>Create</button>
+						<button className='modal-btn'>Submit</button>
 					</div>
 				</form>
 			</div>

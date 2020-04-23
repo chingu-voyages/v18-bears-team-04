@@ -59,7 +59,7 @@ const CreateClassForm = (props) => {
 				TokenService.saveClassToken(res._id);
 				props.handleClassModal();
 				props.setClassName(res.className);
-				history.push(`/${props.userName}/dashboard`);
+				history.push(`/${props.userName}/teacher/dashboard`);
 			})
 			.catch((err) => setError({ error: err }));
 	};
@@ -96,6 +96,7 @@ const CreateClassForm = (props) => {
 							placeholder='Create A Code'
 							value={classCode}
 							onChange={(e) => handleChange(e)}
+							required
 						/>
 					</label>
 
