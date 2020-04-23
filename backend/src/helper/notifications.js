@@ -46,76 +46,65 @@ const saveNewNotification = async (assignmentId, username, message) => {
 const sendStudentsNotification = async (
   assignmentId,
   title,
-  mailList
+  userId
 ) => {
   const studentEmails = await User.find().lean();
-  var mailList = [];
-  studentEmails.forEach(function(users){
-    if(users.role === 'student')
-                mailList.push(users.email);
-                return mailList;
-            });
-            
-  if (!mailList) throw createError(404, `Students not found`);
+  studentEmails.forEach(user => {
+    if(user.role === 'student'){
+      let templateSubject = 'New Notification has been created';
+      let templateFollowersEmail = user.email;
+      let templateMessage = `
+        <p>${
+          user.email
+        } You have a new assignment in <br> <b>${userId}</b></p>`;
   
-
-  //Email notification
-  const templateSubject = 'New notification from iScholars';
-  const templateEmail = mailList;
-  const templateMessage = `<p> ${
-    mailList
-  }, your have a new assignement with class Id " <i>${title}</i> ".</p>`;
-
-  const message = template(templateSubject, templateMessage, templateEmail);
-  sendEmail(templateEmail, templateSubject, message);
-  saveNewNotification(assignmentId, mailList, templateMessage);
-
-  // in-app notification
-  let student = [];
-  for(let item = 0; item< mailList.length; item++){
-    student.push(mailList[item])
-    return studentEmails
-  }
-  pusher.trigger(`notification-assignment-${me}`, 'new-assignment', {
-    message: `You have a new assignment with class Id ${title}`,
+      const message = template(
+        templateSubject,
+        templateMessage,
+        templateFollowersEmail
+      );
+      sendEmail(templateFollowersEmail, templateSubject, message);
+      saveNewNotification(assignmentId, userId, templateMessage);
+  console.log(title, 'userId')
+      // in-app notification
+      pusher.trigger(`notification-assignment-${title}`, 'new-assignment', {
+        message: `${
+          user.email
+        } You have a new assignment in ${userId}`,
+      });
+    }  
   });
 };
 
 const sendTeachersNotification = async (
   assignmentId,
   title,
-  mailList
+  userId
 ) => {
   const studentEmails = await User.find().lean();
-  var mailList = [];
-  studentEmails.forEach(function(users){
-    if(users.role === 'teacher')
-                mailList.push(users.email);
-                return mailList;
-            });
-            
-  if (!mailList) throw createError(404, `Teachers not found`);
+  studentEmails.forEach(user => {
+    if(user.role === 'teacher'){
+      let templateSubject = 'A student has submitted an assignment';
+      let templateFollowersEmail = user.email;
+      let templateMessage = `
+        <p>${
+          user.email
+        } You have a new assignment by <br> <b>${userId}</b> to grade. Kindly look into it</p>`;
   
-
-  //Email notification
-  const templateSubject = 'New notification from iScholars';
-  const templateEmail = mailList;
-  const templateMessage = `<p> ${
-    mailList
-  }, you have an assignment to grade from class Id " <i>${title}</i> ".</p>`;
-
-  const message = template(templateSubject, templateMessage, templateEmail);
-  sendEmail(templateEmail, templateSubject, message);
-  saveNewNotification(assignmentId, mailList, templateMessage);
-
-  // in-app notification
-  let teacher = [];
-  for(let item = 0; item< mailList.length; item++){
-    teacher.push(mailList[item])
-    return teacher;
-  }
-  pusher.trigger(`notification-assignment-${teacher}`, 'new-assignment-to-grade', {
-    message: `You have an assignment to grade with class Id ${title}`,
+      const message = template(
+        templateSubject,
+        templateMessage,
+        templateFollowersEmail
+      );
+      sendEmail(templateFollowersEmail, templateSubject, message);
+      saveNewNotification(assignmentId, userId, templateMessage);
+      // in-app notification
+      pusher.trigger(`notification-assignment-submission-${title}`, 'submitted-assignment', {
+        message: `${
+          user.email
+        } You have an assignment by ${userId} to grade. Kindly look into it.`,
+      });
+    }  
   });
 };
 const notifications = {
