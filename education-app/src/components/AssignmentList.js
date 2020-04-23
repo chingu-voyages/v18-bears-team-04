@@ -9,11 +9,11 @@ const AssignmentList = (props) => {
 	//Match classIds to class name
 	//MAKE CONDITIONAL FOR STUDENTS TO VIEW ALL ASSIGNMENTS FOR ALL CLASSES
 
-	const [{ error }, setError] = useState({ error: false });
+	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
 	const [classInfo, setClasses] = useState(null);
 	const userName = props.match.params.userName;
-	console.log(userName);
+	const classId = TokenService.getClassToken();
 
 	const getAllApiInfo = (props) => {
 		// refactor to get assignments by userId
@@ -23,7 +23,6 @@ const AssignmentList = (props) => {
 			ApiService.getUserName(props.match.params.userName),
 		])
 			.then((res) => {
-				console.log(res);
 				if (res.length === 0) {
 					setError({ error: `Looks like you don't have any assignments yet.` });
 				}
@@ -39,6 +38,10 @@ const AssignmentList = (props) => {
 			.catch((err) => setError({ error: err }));
 	};
 
+	useEffect(() => {
+		getAllApiInfo(props);
+	}, [props]);
+
 	const combinedInfo =
 		assignments != null &&
 		assignments.map((a) => {
@@ -50,13 +53,36 @@ const AssignmentList = (props) => {
 			return a;
 		});
 
-	const filteredInfo =
+	//Display only for teachers
+	const teacherAssignments =
 		assignments != null &&
 		combinedInfo.filter((a) => a.classId === TokenService.getClassToken());
 
-	useEffect(() => {
-		getAllApiInfo(props);
-	}, [props]);
+	//Display for students only
+
+	const studentClass =
+		assignments != null && classInfo.filter((a) => a.studentIds);
+
+	const currentAssignments =
+		assignments != null &&
+		studentClass
+			.filter((c) => c.studentIds.find((b) => b === "5e984d1844ba404cab0c7f47"))
+			.map((a) => a._id)
+			.map((a) => combinedInfo.filter((b) => b.classId === a));
+
+	const makeCombinedAssignments = (currentAssignments) => {
+		let list = [];
+		for (let i = 0; i < currentAssignments.length; i++) {
+			for (let x = 0; x < currentAssignments[i].length; x++) {
+				list.push(currentAssignments[i][x]);
+			}
+		}
+
+		return list;
+	};
+
+	const studentAssignments =
+		assignments != null && makeCombinedAssignments(currentAssignments);
 
 	const renderSubmittedInfo = (bool) => {
 		if (!bool) {
@@ -73,9 +99,26 @@ const AssignmentList = (props) => {
 		);
 	};
 
-	const displayedAssignments =
+	const displayedTeacherAssignments =
 		assignments != null
-			? filteredInfo.map((assign, index) => {
+			? assignments.map((assign, index) => {
+					return (
+						<div key={assign._id} className='assignment'>
+							<Link to={`/${assign.title}/submission`}>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.submitted)}
+								</div>
+							</Link>
+						</div>
+					);
+			  })
+			: null;
+
+	const displayedStudentAssignments =
+		assignments != null
+			? studentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link to={`/${assign.title}/submission`}>
@@ -95,7 +138,11 @@ const AssignmentList = (props) => {
 			<div className='wrap'>
 				<h2 className='page-title'>Assignments List</h2>
 				<h3>Your Assignments</h3>
-				<div className='assignment-table'>{displayedAssignments}</div>
+				{classId === null ? (
+					<div className='assignment-table'>{displayedStudentAssignments}</div>
+				) : (
+					<div className='assignment-table'>{displayedTeacherAssignments}</div>
+				)}
 			</div>
 		</AssignmentListStyle>
 	);

@@ -12,7 +12,7 @@ const CreateAssignmentForm = (props) => {
 	const initialFormState = {
 		assignmentName: "",
 		className: props.className,
-		endDate: "",
+		dueDate: "",
 		startDate: "",
 		files: "",
 		instructions: "",
@@ -21,7 +21,7 @@ const CreateAssignmentForm = (props) => {
 	const [userInput, setInput] = useState(initialFormState);
 
 	const [{ error }, setError] = useState({ error: null });
-	const { assignmentName, endDate, startDate, files, instructions } = userInput;
+	const { assignmentName, dueDate, startDate, files, instructions } = userInput;
 
 	const history = useHistory();
 
@@ -36,6 +36,13 @@ const CreateAssignmentForm = (props) => {
 		}
 	};
 
+	const handleFileChange = (e) => {
+		const { name } = e.target;
+		e.preventDefault();
+		console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0]);
+		setInput({ ...userInput, [name]: e.target.files[0] });
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const classId = TokenService.getClassToken();
@@ -47,23 +54,27 @@ const CreateAssignmentForm = (props) => {
 			title: assignmentName,
 			teacherName: props.userName,
 			startDate,
-			endDate,
+			dueDate,
 		};
+
+		const formData = new FormData();
+		formData.append("doc", files);
 
 		ApiService.addAssignment(newAssignmentObj)
 			//Add close modal and go to assignments list
 			.then((res) => {
+				ApiService.uploadAssignmentFile(formData, res.assignment._id);
 				setInput({
 					assignmentName: "",
 					className: props.className,
-					endDate: "",
+					dueDate: "",
 					startDate: "",
 					files: "",
 					description: "",
 				});
-
 				history.push(`/${props.userName}/assignments`);
 			})
+			//make error message for non doc or pdf files
 			.catch((err) => setError({ error: err }));
 		//awaiting startDate/endDate input
 	};
@@ -121,8 +132,7 @@ const CreateAssignmentForm = (props) => {
 						<input
 							type='file'
 							name='files'
-							value={files}
-							onChange={(e) => handleChange(e)}
+							onChange={(e) => handleFileChange(e)}
 						/>
 					</label>
 
@@ -142,8 +152,8 @@ const CreateAssignmentForm = (props) => {
 						<br />
 						<input
 							type='datetime-local'
-							name='endDate'
-							value={endDate}
+							name='dueDate'
+							value={dueDate}
 							onChange={(e) => handleChange(e)}
 						/>
 					</label>

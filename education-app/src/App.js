@@ -51,13 +51,13 @@ const App = () => {
 					<Switch>
 						<Route
 							exact
-							path='/:userName/:userType/dashboard'
+							path='/:userName/teacher/dashboard'
 							render={(routeProps) => <TeacherDashboard {...routeProps} />}
 						/>
 
 						<Route
 							exact
-							path='/:userName/:userType/dashboard'
+							path='/:userName/student/dashboard'
 							render={(routeProps) => <StudentDashboard {...routeProps} />}
 						/>
 						<Route

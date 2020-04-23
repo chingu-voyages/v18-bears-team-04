@@ -1,5 +1,13 @@
 import React from "react";
+import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+
+import UploadProfileForm from "../../components/UploadProfileForm";
+
+import ApiService from "../../services/api-services";
+import TokenService from "../../services/token-service";
+import ValidationError from "../../components/ValidationError";
+
 import styled from "styled-components";
 import bgImg from "../../images/Dashboard-bg.jpg";
 import exampleImg from "../../images/ProfExample.jpg";
