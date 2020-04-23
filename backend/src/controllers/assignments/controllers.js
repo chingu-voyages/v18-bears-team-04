@@ -6,7 +6,7 @@ import notifications from "../../helper/notifications";
 
 export const createAssignment = async (req, res, next) => {
   try {
-    const { teacherName, classId, title } = req.body;
+    const { teacherName, classId } = req.body;
 
     //User validation
     const user = await User.findOne({ userName: teacherName });
@@ -20,15 +20,6 @@ export const createAssignment = async (req, res, next) => {
     const existingClass = await Class.findById(classId);
     if (!existingClass)
       throw createError(404, `Claas ${classId} dose not exist`);
-    const checkIfAssignmentExist = await Assignment.findOne({title});
-    if (
-      checkIfAssignmentExist.title === req.body.title
-
-    )
-      throw createError(
-        403,
-        "You cannot create the same assignment with title and instructions twice"
-      );
     //create an new Assignment
     const assignment = await Assignment.create(req.body);
 
