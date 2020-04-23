@@ -151,6 +151,11 @@ export const submitAssignment = async (req, res, next) => {
     if (true) {
       user.assignmentIds.push(solveAssignemt);
       await user.save();
+      await notifications.sendTeachersNotification(
+        req.body.assignmentId,
+        solveAssignemt.teacherName,
+        user.userName
+      )
       return res.status(200).json({
         msg: "Assignment Updated Successfully",
         solveAssignemt,
