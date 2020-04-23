@@ -11,6 +11,7 @@ import SideNav from "./components/SideNav";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
+import EditClass from "./pages/EditClass";
 import Grades from "./pages/teacher/Grades";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./components/AssignmentList";
@@ -49,39 +50,77 @@ const App = () => {
 					{/* {TokenService.hasAuthToken() && <SideNav />} */}
 
 					<Switch>
-						<Route
-							exact
-							path='/:userName/teacher/dashboard'
-							render={(routeProps) => <TeacherDashboard {...routeProps} />}
-						/>
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/teacher/dashboard'
+								render={(routeProps) => <TeacherDashboard {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
 
-						<Route
-							exact
-							path='/:userName/student/dashboard'
-							render={(routeProps) => <StudentDashboard {...routeProps} />}
-						/>
-						<Route
-							exact
-							path='/:userName/assignments'
-							render={(routeProps) => <AssignmentList {...routeProps} />}
-						/>
-						<Route
-							exact
-							path='/:assignmentName/submission'
-							render={(routeProps) => <AssignmentSubmission {...routeProps} />}
-						/>
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/student/dashboard'
+								render={(routeProps) => <StudentDashboard {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
 
-						<Route
-							exact
-							path='/:studentUsername/assignment-view'
-							component={AssignmentView}
-						/>
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/assignments'
+								render={(routeProps) => <AssignmentList {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
 
-						<Route
-							exact
-							path='/:userName/grades'
-							render={(routeProps) => <Grades {...routeProps} />}
-						/>
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/edit-class'
+								render={(routeProps) => <EditClass {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:assignmentName/submission'
+								render={(routeProps) => (
+									<AssignmentSubmission {...routeProps} />
+								)}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:studentUsername/assignment-view'
+								component={AssignmentView}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/grades'
+								render={(routeProps) => <Grades {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
 					</Switch>
 				</Router>
 			</>
