@@ -123,18 +123,13 @@ const TeacherDashboard = (props) => {
 		});
 	};
 
-	console.log(user.userProfileLink);
-
 	return (
 		<TeacherDashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
-					{/* <img className='edit-img' src={pencilImg} alt='' /> */}
 					<div className='prof-img'>
-						<img
-							src={process.env.PUBLIC_URL + "/5ea0ca626ec8d40b3c1093e8.jpeg"}
-							alt=''
-						/>
+						{/* Figure this out later */}
+						<img src={exampleImg} alt='something that looks like you' />
 					</div>
 					<button
 						className='edit-container'
@@ -145,14 +140,10 @@ const TeacherDashboard = (props) => {
 
 					{error && <ValidationError message={errorMessage()} />}
 					<p className='user-name'>{props.match.params.userName}</p>
-					<p className='user-type'>{props.match.params.userType}</p>
 				</div>
 				<div className='links'>
 					{/* Class Render Only For Teachers */}
 					{renderClass()}
-					<button onClick={() => handleUploadProfileModal()}>
-						Update Profile
-					</button>
 
 					<Modal
 						open={showUploadProfileModal}

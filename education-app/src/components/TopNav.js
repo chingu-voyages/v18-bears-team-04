@@ -82,14 +82,14 @@ const TopNav = (props) => {
 			return (
 				<SignUpForm
 					formType={formType}
-					handleLogIn={(username, type) => handleLogIn(username, type)}
+					handleLogIn={(str) => handleLogIn(str)}
 				/>
 			);
 		} else if (str === "Log In") {
 			return (
 				<LogInForm
 					formType={formType}
-					handleLogIn={(username, type) => handleLogIn(username, type)}
+					handleLogIn={(str) => handleLogIn(str)}
 				/>
 			);
 		}

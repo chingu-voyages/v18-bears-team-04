@@ -19,9 +19,9 @@ const LogInForm = (props) => {
 		e.preventDefault();
 		ApiService.getUserName(username)
 			.then((res) => {
+				TokenService.saveAuthToken(res._id);
 				props.handleLogIn(res);
 
-				TokenService.saveAuthToken(res._id);
 				if (res.classIds) {
 					TokenService.saveClassToken(res.classIds);
 				}

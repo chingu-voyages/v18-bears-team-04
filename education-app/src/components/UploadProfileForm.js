@@ -22,14 +22,14 @@ const UploadProfileForm = (props) => {
 
 	const history = useHistory();
 
-	const handleChange = (e) => {
-		const { value, name } = e.target;
-		setInput({ ...userInput, [name]: value });
-	};
+	// const handleChange = (e) => { //username and email can't be change
+	// 	const { value, name } = e.target;
+	// 	setInput({ ...userInput, [name]: value });
+	// };
 
 	const handleImgChange = (e) => {
 		e.preventDefault();
-		console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0]);
+
 		setInput({
 			profileImgPreview: URL.createObjectURL(e.target.files[0]),
 			profileImg: e.target.files[0],
