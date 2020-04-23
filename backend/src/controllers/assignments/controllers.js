@@ -6,12 +6,11 @@ import notifications from "../../helper/notifications";
 
 export const createAssignment = async (req, res, next) => {
   try {
-    const { teacherName, classId } = req.body;
+    const { teacherName, classId, title } = req.body;
 
     //User validation
     const user = await User.findOne({ userName: teacherName });
     if (!user) throw createError(404, `Teacher ${teacherName} not found`);
-
     //Authorization Validation
     if (user.role != userRole.TEACHER) {
       throw createError(404, `User ${teacherName} is not a Teacher`);
@@ -21,15 +20,24 @@ export const createAssignment = async (req, res, next) => {
     const existingClass = await Class.findById(classId);
     if (!existingClass)
       throw createError(404, `Claas ${classId} dose not exist`);
+    const checkIfAssignmentExist = await Assignment.findOne({title});
+    if (
+      checkIfAssignmentExist.title === req.body.title
 
-    //create a new Assignment
+    )
+      throw createError(
+        403,
+        "You cannot create the same assignment with title and instructions twice"
+      );
+    //create an new Assignment
     const assignment = await Assignment.create(req.body);
-    //response object
-    // await notifications.sendStudentsNotification(
-    //   req.body.assignmentId,
-    //   assignment.userId[0],
-    //   assignment.title
-    // );
+
+    //Send both email and in-app notification
+    await notifications.sendStudentsNotification(
+      req.body.assignmentId,
+      assignment.classId,
+      assignment.title
+    );
     res.status(201).json({
       msg: "Assignment created",
       assignment,
@@ -148,9 +156,16 @@ export const submitAssignment = async (req, res, next) => {
       { $set: req.body, submitted: true, status: daysFunction() },
       { new: true }
     );
+    console.log(solveAssignemt, "solveassignement");
     if (true) {
       user.assignmentIds.push(solveAssignemt);
       await user.save();
+      console.log(user, "user");
+      await notifications.sendTeachersNotification(
+        req.body.assignmentId,
+        solveAssignemt.classId,
+        user.userName
+      );
       return res.status(200).json({
         msg: "Assignment Updated Successfully",
         solveAssignemt,
