@@ -14,7 +14,7 @@ import AssignmentView from "./pages/teacher/AssignmentView";
 import EditClass from "./pages/EditClass";
 import Grades from "./pages/teacher/Grades";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
-import AssignmentList from "./components/AssignmentList";
+import AssignmentList from "./pages/AssignmentList";
 
 import ScholarContext from "../src/ScholarContext";
 
@@ -47,7 +47,6 @@ const App = () => {
 					{/* Order matters! */}
 
 					<Route exact path='/' component={Homepage} />
-					{/* {TokenService.hasAuthToken() && <SideNav />} */}
 
 					<Switch>
 						{TokenService.hasAuthToken() ? (
@@ -69,7 +68,11 @@ const App = () => {
 						) : (
 							<Redirect to='/' />
 						)}
+					</Switch>
 
+					{TokenService.hasAuthToken() && <SideNav />}
+
+					<Switch>
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact

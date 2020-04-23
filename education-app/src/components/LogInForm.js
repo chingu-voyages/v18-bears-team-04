@@ -22,7 +22,7 @@ const LogInForm = (props) => {
 				TokenService.saveAuthToken(res._id);
 				props.handleLogIn(res);
 
-				if (res.classIds) {
+				if (res.classIds > 0) {
 					TokenService.saveClassToken(res.classIds);
 				}
 			})
