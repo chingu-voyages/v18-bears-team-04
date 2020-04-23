@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import STORE from "../../STORE.JS";
 
+import SideNav from "../../components/SideNav";
+
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 
@@ -158,35 +160,38 @@ const Grades = (props) => {
 	});
 
 	return (
-		<GradesStyle>
-			<div className='grades-container'>
-				<div className='title-section'>
-					<h1 className='text'>Assignment Grades</h1>
-					<p className='selection-text'> View By Assignment</p>
-					<select
-						className='assignment-selection'
-						onChange={(e) => handleSelectionChange(e)}
-					>
-						{assignmentSelection}
-					</select>
-				</div>
-				<div className='grade-display'>
-					<table>
-						<tbody>
-							<tr className='grade-section-titles'>
-								<th>Name</th>
-								<th>Status</th>
-								<th>Grade</th>
-								<th>Submission</th>
-								<th>Student Comment</th>
-							</tr>
+		<>
+			<SideNav />
+			<GradesStyle>
+				<div className='grades-container'>
+					<div className='title-section'>
+						<h1 className='text'>Assignment Grades</h1>
+						<p className='selection-text'> View By Assignment</p>
+						<select
+							className='assignment-selection'
+							onChange={(e) => handleSelectionChange(e)}
+						>
+							{assignmentSelection}
+						</select>
+					</div>
+					<div className='grade-display'>
+						<table>
+							<tbody>
+								<tr className='grade-section-titles'>
+									<th>Name</th>
+									<th>Status</th>
+									<th>Grade</th>
+									<th>Submission</th>
+									<th>Student Comment</th>
+								</tr>
 
-							{displayedGrades}
-						</tbody>
-					</table>
+								{displayedGrades}
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</div>
-		</GradesStyle>
+			</GradesStyle>
+		</>
 	);
 };
 

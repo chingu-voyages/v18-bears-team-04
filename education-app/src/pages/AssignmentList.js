@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ApiService from "../services/api-services";
+import SideNav from "../components/SideNav";
 import TokenService from "../services/token-service";
 import styled from "styled-components";
 
@@ -111,7 +112,6 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
-	console.log(studentAssignments);
 	const displayedStudentAssignments =
 		assignments != null
 			? studentAssignments.map((assign, index) => {
@@ -129,18 +129,27 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
+	console.log(studentAssignments);
+
 	return (
-		<AssignmentListStyle>
-			<div className='wrap'>
-				<h2 className='page-title'>Assignments List</h2>
-				<h3>Your Assignments</h3>
-				{classId === null ? (
-					<div className='assignment-table'>{displayedStudentAssignments}</div>
-				) : (
-					<div className='assignment-table'>{displayedTeacherAssignments}</div>
-				)}
-			</div>
-		</AssignmentListStyle>
+		<>
+			<SideNav />
+			<AssignmentListStyle>
+				<div className='wrap'>
+					<h2 className='page-title'>Assignments List</h2>
+					<h3>Your Assignments</h3>
+					{classId === null ? (
+						<div className='assignment-table'>
+							{displayedStudentAssignments}
+						</div>
+					) : (
+						<div className='assignment-table'>
+							{displayedTeacherAssignments}
+						</div>
+					)}
+				</div>
+			</AssignmentListStyle>
+		</>
 	);
 };
 

@@ -27,7 +27,7 @@ const SignUpForm = (props) => {
 			.then((res) => {
 				props.handleLogIn(res.userName, res.role);
 				TokenService.saveAuthToken(res._id);
-				if (res.classIds.length === []) {
+				if (res.classIds.length === 1) {
 					TokenService.saveClassToken(res.classIds);
 				}
 			})

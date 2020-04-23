@@ -1,27 +1,30 @@
 import React from "react";
-
+import SideNav from "../../components/SideNav";
 import styled from "styled-components";
 
 const AssignmentView = (props) => {
 	return (
-		<AssignmentViewStyle>
-			<div className='assignment-view-container'>
-				<h1>Assignment View</h1>
-				<div className='submission-container'>
-					<div className='student-submission-view-container'>
-						<h2> Student: Peter Parker</h2>
-						<div className='submission-text'></div>
-						<button>Download</button>
-					</div>
+		<>
+			<SideNav />
+			<AssignmentViewStyle>
+				<div className='assignment-view-container'>
+					<h1>Assignment View</h1>
+					<div className='submission-container'>
+						<div className='student-submission-view-container'>
+							<h2> Student: Peter Parker</h2>
+							<div className='submission-text'></div>
+							<button>Download</button>
+						</div>
 
-					<div className='feedback-container'>
-						<h2>Feedback</h2>
-						<textarea className='feedback-textarea' />
-						<button>Submit</button>
+						<div className='feedback-container'>
+							<h2>Feedback</h2>
+							<textarea className='feedback-textarea' />
+							<button>Submit</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</AssignmentViewStyle>
+			</AssignmentViewStyle>
+		</>
 	);
 };
 
