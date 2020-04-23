@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
 import EditClassForm from "../../components/EditClassForm";
 import CreateClassForm from "../../components/CreateClassForm";
+import UploadProfileForm from "../../components/UploadProfileForm";
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 import ValidationError from "../../components/ValidationError";
@@ -20,9 +21,13 @@ const TeacherDashboard = (props) => {
 
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
 	const [{ error }, setError] = useState({ error: false });
-	const [{ showClassModal, showAssignmentModal }, setModal] = useState({
+	const [
+		{ showClassModal, showAssignmentModal, showUploadProfileModal },
+		setModal,
+	] = useState({
 		showClassModal: false,
 		showAssignmentModal: false,
+		showUploadProfileModal: true,
 	});
 
 	function getUserInfo() {
@@ -93,6 +98,14 @@ const TeacherDashboard = (props) => {
 		);
 	};
 
+	const handleUploadProfileModal = () => {
+		setModal({
+			showClassModal: showClassModal,
+			showAssignmentModal: showAssignmentModal,
+			showUploadProfileModal: !showUploadProfileModal,
+		});
+	};
+
 	const handleClassModal = (str) => {
 		if (str) {
 			alert(str);
@@ -124,17 +137,29 @@ const TeacherDashboard = (props) => {
 				<div className='links'>
 					{/* Class Render Only For Teachers */}
 					{renderClass()}
+					<button onClick={() => handleUploadProfileModal()}>
+						Update Profile
+					</button>
+					<Modal
+						open={showUploadProfileModal}
+						onClose={() => handleUploadProfileModal()}
+						center
+					>
+						<UploadProfileForm
+							className={currClass}
+							userName={props.match.params.userName}
+							handleUploadProfileModal={() => handleUploadProfileModal()}
+						/>
+					</Modal>
 
 					<button onClick={() => handleAssignmentModal()}>
 						Create An Assignment
 					</button>
 					{/* {Dashboard Links} */}
-
 					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
 					</Link>
-
 					<Modal
 						open={showAssignmentModal}
 						onClose={() => handleAssignmentModal()}

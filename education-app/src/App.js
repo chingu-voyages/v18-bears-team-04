@@ -33,7 +33,7 @@ const App = () => {
 				/>
 				<Route
 					exact
-					path='/:userName/:userType/dashboard'
+					path='/:userName/dashboard'
 					render={(routeProps) => <TeacherDashboard {...routeProps} />}
 				/>
 				<Route exact path='/' component={Homepage} />
