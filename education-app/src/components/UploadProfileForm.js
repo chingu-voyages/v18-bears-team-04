@@ -13,7 +13,7 @@ import exampleImg from "../images/maria-hill-teacher.jpg";
 const UploadProfileForm = (props) => {
 	const initialFormState = {
 		profileImg: "",
-		profileImgPreview: "",
+		profileImgPreview: exampleImg,
 	};
 	const [userInput, setInput] = useState(initialFormState);
 
@@ -27,6 +27,15 @@ const UploadProfileForm = (props) => {
 		setInput({ ...userInput, [name]: value });
 	};
 
+	const handleImgChange = (e) => {
+		e.preventDefault();
+		console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0]);
+		setInput({
+			profileImgPreview: URL.createObjectURL(e.target.files[0]),
+			profileImg: e.target.files[0],
+		});
+	};
+
 	const errorMessage = () => {
 		if (error != null) {
 			return `Something went wrong. Try again.`;
@@ -35,13 +44,13 @@ const UploadProfileForm = (props) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const classId = TokenService.getClassToken();
 		const userId = TokenService.getAuthToken();
+		const formData = new FormData();
+		formData.append("profile", profileImg);
 
-		console.log("clicked");
-
-		// .catch((err) => setError({ error: err }));
-		//awaiting startDate/endDate input
+		ApiService.uploadProfileImg(formData, userId)
+			.then((res) => console.log(res))
+			.catch((err) => setError({ error: err }));
 	};
 
 	return (
@@ -51,7 +60,7 @@ const UploadProfileForm = (props) => {
 
 				<form className='form-flex' onSubmit={(e) => handleSubmit(e)}>
 					<div className='preview-img'>
-						<img src={exampleImg} alt='' />
+						<img src={profileImgPreview} alt='' />
 					</div>
 
 					<label htmlFor='img' className='profile-img'>
@@ -59,9 +68,9 @@ const UploadProfileForm = (props) => {
 						<br />
 						<input
 							type='file'
-							name='files'
-							value={profileImg}
-							onChange={(e) => handleChange(e)}
+							name='profileImg'
+							accept='image/*'
+							onChange={(e) => handleImgChange(e)}
 						/>
 					</label>
 
@@ -73,7 +82,7 @@ const UploadProfileForm = (props) => {
 							name='userName'
 							placeholder='e.g. Syllabus'
 							value={props.userName}
-							// onChange={(e) => handleChange(e)}
+							readOnly={true}
 						/>
 					</label>
 
@@ -136,12 +145,21 @@ const UploadProfileFormStyle = styled.div`
 	label {
 		font-size: 2rem;
 	}
+
+	label {
+		color: #00a3ff;
+	}
 	input {
-		margin-left: 20px;
-		padding-left: 10px;
 		font-size: 1.75rem;
 		height: 30px;
 		width: 200px;
+	}
+	input[type="text"],
+	input[type="email"] {
+		border: none;
+		text-align: center;
+		margin-left: none;
+		padding-left: none;
 	}
 	.text-area-box {
 		margin-left: 20px;

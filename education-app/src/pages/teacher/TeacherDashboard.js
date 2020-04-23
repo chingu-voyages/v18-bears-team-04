@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
 
@@ -9,16 +9,18 @@ import UploadProfileForm from "../../components/UploadProfileForm";
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 import ValidationError from "../../components/ValidationError";
-import STORE from "../../STORE.JS";
+import ScholarContext from "../../ScholarContext";
 
 import styled from "styled-components";
+import pencilImg from "../../images/iconmonstr-pencil-8-32.png";
 import bgImg from "../../images/Dashboard-bg.jpg";
 import exampleImg from "../../images/maria-hill-teacher.jpg";
 
 const TeacherDashboard = (props) => {
 	//temporary
-	let user = STORE[1];
 
+	const context = useContext(ScholarContext);
+	const [userInfo, setUserInfo] = useState(null);
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
 	const [{ error }, setError] = useState({ error: false });
 	const [
@@ -27,24 +29,25 @@ const TeacherDashboard = (props) => {
 	] = useState({
 		showClassModal: false,
 		showAssignmentModal: false,
-		showUploadProfileModal: true,
+		showUploadProfileModal: false,
 	});
 
-	function getUserInfo() {
+	function getClassInfo() {
 		const classId = TokenService.getClassToken();
 		if (classId) {
-			ApiService.getClassById(TokenService.getClassToken())
-				.then((res) => {
-					setClassInfo({ currClass: res.className });
-				})
-				.catch((err) => setError({ error: err }));
+			ApiService.getClassById(classId).then((res) => {
+				setClassInfo({ currClass: res.className });
+			});
 		}
 		return;
 	}
 
 	useEffect(() => {
-		getUserInfo();
-	}, []);
+		ApiService.getUserName(props.match.params.userName).then((res) => {
+			setUserInfo({ ...res });
+			getClassInfo();
+		});
+	}, [props.match]);
 
 	const errorMessage = () => {
 		if (error != null) {
@@ -55,11 +58,6 @@ const TeacherDashboard = (props) => {
 	const setClassName = (str) => {
 		setClassInfo({ currClass: str });
 	};
-
-	// const filteredClass =
-	// 	currClass != null
-	// 		? currClass.filter((i) => i.teacherName === props.match.params.userName)
-	// 		: null;
 
 	const renderClass = () => {
 		if (currClass === null) {
@@ -116,6 +114,8 @@ const TeacherDashboard = (props) => {
 		});
 	};
 
+	const user = userInfo !== null ? userInfo : "";
+
 	const handleAssignmentModal = () => {
 		setModal({
 			showClassModal: showClassModal,
@@ -123,13 +123,26 @@ const TeacherDashboard = (props) => {
 		});
 	};
 
+	console.log(user.userProfileLink);
+
 	return (
 		<TeacherDashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
+					{/* <img className='edit-img' src={pencilImg} alt='' /> */}
 					<div className='prof-img'>
-						<img src={exampleImg} alt='' />
+						<img
+							src={process.env.PUBLIC_URL + "/5ea0ca626ec8d40b3c1093e8.jpeg"}
+							alt=''
+						/>
 					</div>
+					<button
+						className='edit-container'
+						onClick={() => handleUploadProfileModal()}
+					>
+						<img className='edit-img' src={pencilImg} alt='' />
+					</button>
+
 					{error && <ValidationError message={errorMessage()} />}
 					<p className='user-name'>{props.match.params.userName}</p>
 					<p className='user-type'>{props.match.params.userType}</p>
@@ -140,13 +153,14 @@ const TeacherDashboard = (props) => {
 					<button onClick={() => handleUploadProfileModal()}>
 						Update Profile
 					</button>
+
 					<Modal
 						open={showUploadProfileModal}
 						onClose={() => handleUploadProfileModal()}
 						center
 					>
 						<UploadProfileForm
-							className={currClass}
+							email={userInfo != null ? userInfo.email : null}
 							userName={props.match.params.userName}
 							handleUploadProfileModal={() => handleUploadProfileModal()}
 						/>
@@ -196,11 +210,38 @@ const TeacherDashboardStyle = styled.main`
 			flex-direction: column;
 			align-items: center;
 			color: #fff;
+			button:hover .edit {
+				display: none;
+			}
+			.edit-container {
+				height: 180px;
+				width: 190px;
+				position: absolute;
+				bottom: 65%;
+				opacity: 0;
+				z-index: 2;
+				transition: 0.3s ease;
+			}
+			.edit-container:hover {
+				opacity: 1;
+			}
+
+			.edit-img {
+				position: absolute;
+				left: 85%;
+				bottom: 75%;
+			}
+
+			.prof-img:hover,
+			.edit-container {
+				cursor: pointer;
+			}
 			.prof-img {
 				width: 150px;
 				height: 150px;
 				border-radius: 50%;
 				overflow: hidden;
+				z-index: 1;
 				img {
 					height: 100%;
 				}
