@@ -89,7 +89,7 @@ const sendTeachersNotification = async (
       let templateMessage = `
         <p>${
           user.email
-        } You have a new assignment by <br> <b>${userId}</b> to grade. Kindly look into it</p>`;
+        } You have a new assignment by <br> <b>${userId}</b> to be grade. Kindly look into it</p>`;
   
       const message = template(
         templateSubject,
