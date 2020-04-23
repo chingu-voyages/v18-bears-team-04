@@ -15,13 +15,13 @@ const CreateAssignmentForm = (props) => {
 		endDate: "",
 		startDate: "",
 		files: "",
-		description: "",
+		instructions: "",
 		showModal: false,
 	};
 	const [userInput, setInput] = useState(initialFormState);
 
 	const [{ error }, setError] = useState({ error: null });
-	const { assignmentName, endDate, startDate, files, description } = userInput;
+	const { assignmentName, endDate, startDate, files, instructions } = userInput;
 
 	const history = useHistory();
 
@@ -43,7 +43,7 @@ const CreateAssignmentForm = (props) => {
 		const newAssignmentObj = {
 			classId,
 			userId,
-			description,
+			instructions,
 			title: assignmentName,
 			teacherName: props.userName,
 			startDate,
@@ -108,9 +108,9 @@ const CreateAssignmentForm = (props) => {
 						<br />
 						<textarea
 							className='text-area-box'
-							name='description'
+							name='instructions'
 							placeholder='Write your instructions here'
-							value={description}
+							value={instructions}
 							onChange={(e) => handleChange(e)}
 						/>
 					</label>

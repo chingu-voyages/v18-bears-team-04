@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
 import styled from "styled-components";
 
 const AssignmentList = (props) => {
@@ -10,11 +11,18 @@ const AssignmentList = (props) => {
 	const [{ error }, setError] = useState({ error: false });
 	const [assignments, setAssignments] = useState(null);
 	const [classInfo, setClasses] = useState(null);
+	const userName = props.match.params.userName;
+	console.log(userName);
 
-	const getAllApiInfo = () => {
-		//refactor to get assignments by userId
-		Promise.all([ApiService.getClasses(), ApiService.getAssignments()])
+	const getAllApiInfo = (props) => {
+		// refactor to get assignments by userId
+		Promise.all([
+			ApiService.getClasses(),
+			ApiService.getAssignments(),
+			ApiService.getUserName(props.match.params.userName),
+		])
 			.then((res) => {
+				console.log(res);
 				if (res.length === 0) {
 					setError({ error: `Looks like you don't have any assignments yet.` });
 				}
@@ -41,9 +49,13 @@ const AssignmentList = (props) => {
 			return a;
 		});
 
+	const filteredInfo =
+		assignments != null &&
+		combinedInfo.filter((a) => a.classId === TokenService.getClassToken());
+
 	useEffect(() => {
-		getAllApiInfo();
-	}, []);
+		getAllApiInfo(props);
+	}, [props]);
 
 	const renderSubmittedInfo = (bool) => {
 		if (!bool) {
@@ -62,7 +74,7 @@ const AssignmentList = (props) => {
 
 	const displayedAssignments =
 		assignments != null
-			? combinedInfo.map((assign, index) => {
+			? filteredInfo.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link to={`/${assign.title}/submission`}>
