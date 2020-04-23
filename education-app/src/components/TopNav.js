@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { Modal } from "react-responsive-modal";
 import TokenService from "../services/token-service";
+import ScholarContext from "../ScholarContext";
 import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
@@ -9,6 +10,7 @@ import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
 
 const TopNav = (props) => {
+	const context = useContext(ScholarContext);
 	const [{ loggedIn, showModal, formType }, setForm] = useState({
 		loggedIn: false,
 		showModal: false,
@@ -22,13 +24,15 @@ const TopNav = (props) => {
 		setForm({ formType: value, showModal: true });
 	};
 
-	const handleLogIn = (username, type) => {
+	const handleLogIn = (response) => {
 		setForm({ loggedIn: true, showModal: false });
 
-		if (type === "teacher") {
-			history.push(`/${username}/${type}/dashboard`);
+		if (response.role === "teacher") {
+			context.saveUser(response);
+			history.push(`/${response.userName}/${response.role}/dashboard`);
 		} else {
-			history.push(`/${username}/studentdashboard`);
+			context.saveUser(response);
+			history.push(`/${response.userName}/${response.role}/dashboard`);
 		}
 	};
 

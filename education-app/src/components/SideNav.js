@@ -40,13 +40,7 @@ const SideNav = (props) => {
 		<SideNavStyle>
 			<div className='wrap'>
 				<div className='userInfo'>
-					<div className='prof-img'>
-						{userInfo !== undefined && userInfo.userRole === "teacher" ? (
-							<img src={exampleImgTeacher} alt='' />
-						) : (
-							<img src={exampleImgStudent} alt='' />
-						)}
-					</div>
+					<div className='prof-img'>{/* {profileImg Here} */}</div>
 
 					<p className='user-name'>
 						{userInfo !== undefined && userInfo.userName}
@@ -58,9 +52,13 @@ const SideNav = (props) => {
 				</div>
 				<div className='links'>
 					{userInfo !== undefined && userInfo.userRole === "teacher" ? (
-						<Link to={`/${userInfo.userName}/dashboard`}>Dashboard</Link>
+						<Link to={`/${userInfo.userName}/${userInfo.userRole}/dashboard`}>
+							Dashboard
+						</Link>
 					) : (
-						<Link to={`/${userInfo.userName}/studentdashboard`}>Dashboard</Link>
+						<Link to={`/${userInfo.userName}/${userInfo.userRole}/dashboard`}>
+							Dashboard
+						</Link>
 					)}
 
 					<Link to={`/${userInfo.userName}/assignments`}>Assignments</Link>

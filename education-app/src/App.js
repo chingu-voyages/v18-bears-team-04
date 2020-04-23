@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -15,56 +15,77 @@ import Grades from "./pages/teacher/Grades";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./components/AssignmentList";
 
+import ScholarContext from "../src/ScholarContext";
+
 import ResetCSS from "./ResetCSS";
 import TokenService from "./services/token-service";
 
 const App = () => {
+	/*Context Things */
+
+	const [user, setUser] = useState(null);
+
+	const saveUser = (info) => {
+		setUser({
+			user: info,
+		});
+	};
+	const contextValue = {
+		user: user,
+		saveUser: (info) => saveUser(info),
+	};
+
 	return (
-		<>
-			<Router>
-				<ResetCSS />
-				<TopNav />
+		<ScholarContext.Provider value={contextValue}>
+			<>
+				<Router>
+					<ResetCSS />
 
-				{/* Order matters! */}
-				<Route
-					exact
-					path='/:userName/studentdashboard'
-					render={(routeProps) => <StudentDashboard {...routeProps} />}
-				/>
-				<Route
-					exact
-					path='/:userName/dashboard'
-					render={(routeProps) => <TeacherDashboard {...routeProps} />}
-				/>
-				<Route exact path='/' component={Homepage} />
-				{TokenService.hasAuthToken() && <SideNav />}
+					<TopNav />
 
-				<Switch>
-					<Route
-						exact
-						path='/:userName/assignments'
-						render={(routeProps) => <AssignmentList {...routeProps} />}
-					/>
-					<Route
-						exact
-						path='/:assignmentName/submission'
-						render={(routeProps) => <AssignmentSubmission {...routeProps} />}
-					/>
+					{/* Order matters! */}
 
-					<Route
-						exact
-						path='/:studentUsername/assignment-view'
-						component={AssignmentView}
-					/>
+					<Route exact path='/' component={Homepage} />
+					{/* {TokenService.hasAuthToken() && <SideNav />} */}
 
-					<Route
-						exact
-						path='/:userName/grades'
-						render={(routeProps) => <Grades {...routeProps} />}
-					/>
-				</Switch>
-			</Router>
-		</>
+					<Switch>
+						<Route
+							exact
+							path='/:userName/:userType/dashboard'
+							render={(routeProps) => <TeacherDashboard {...routeProps} />}
+						/>
+
+						<Route
+							exact
+							path='/:userName/:userType/dashboard'
+							render={(routeProps) => <StudentDashboard {...routeProps} />}
+						/>
+						<Route
+							exact
+							path='/:userName/assignments'
+							render={(routeProps) => <AssignmentList {...routeProps} />}
+						/>
+						<Route
+							exact
+							path='/:assignmentName/submission'
+							render={(routeProps) => <AssignmentSubmission {...routeProps} />}
+						/>
+
+						<Route
+							exact
+							path='/:studentUsername/assignment-view'
+							component={AssignmentView}
+						/>
+
+						<Route
+							exact
+							path='/:userName/grades'
+							render={(routeProps) => <Grades {...routeProps} />}
+						/>
+					</Switch>
+				</Router>
+			</>
+		</ScholarContext.Provider>
 	);
 };
 

@@ -18,7 +18,7 @@ const StudentDashboard = (props) => {
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
 					</Link>
-					<Link>Grades</Link>
+					<Link to={`/grades`}>Grades</Link>
 				</div>
 			</div>
 		</StudentDashboardStyle>

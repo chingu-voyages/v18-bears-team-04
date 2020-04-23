@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import ValidationError from "./ValidationError";
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
@@ -18,7 +19,8 @@ const LogInForm = (props) => {
 		e.preventDefault();
 		ApiService.getUserName(username)
 			.then((res) => {
-				props.handleLogIn(res.userName, res.role);
+				props.handleLogIn(res);
+
 				TokenService.saveAuthToken(res._id);
 				if (res.classIds) {
 					TokenService.saveClassToken(res.classIds);
