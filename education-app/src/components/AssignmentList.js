@@ -7,6 +7,7 @@ import styled from "styled-components";
 const AssignmentList = (props) => {
 	//Add get array of user Assignments & Class Ids
 	//Match classIds to class name
+	//MAKE CONDITIONAL FOR STUDENTS TO VIEW ALL ASSIGNMENTS FOR ALL CLASSES
 
 	const [{ error }, setError] = useState({ error: false });
 	const [assignments, setAssignments] = useState(null);
