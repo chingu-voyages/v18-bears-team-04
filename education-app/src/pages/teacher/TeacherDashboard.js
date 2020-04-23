@@ -83,15 +83,17 @@ const TeacherDashboard = (props) => {
 				<div className='class-title'>
 					<h1>{currClass}</h1>
 				</div>
-				<button onClick={() => handleClassModal()}>Edit Class</button>
+				<Link to={`/${props.match.params.userName}/edit-class`}>
+					Edit Class
+				</Link>
 
-				<Modal open={showClassModal} onClose={() => handleClassModal()} center>
+				{/* <Modal open={showClassModal} onClose={() => handleClassModal()} center>
 					<EditClassForm
 						userName={props.match.params.userName}
 						handleClassModal={() => handleClassModal()}
 						setClassName={(str) => setClassName(str)}
 					/>
-				</Modal>
+				</Modal> */}
 			</>
 		);
 	};
