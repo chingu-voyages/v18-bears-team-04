@@ -1,24 +1,28 @@
 import React from "react";
 import styled from "styled-components";
+import SideNav from "../../components/SideNav";
 
 const AssignmentSubmission = (props) => {
 	return (
-		<AssignmentSubmissionStyle>
-			<div className='wrap'>
-				<h1>Assignment Submission</h1>
-				<h2 className='assignment-title'>
-					{props.match.params.assignmentName}
-				</h2>
-				<button className='download-btn'>Download File</button>
-				<form>
-					<textarea></textarea>
-					<div className='btns'>
-						<button className='submit-btn'>SUBMIT</button>
-						<button className='edit-btn'>EDIT</button>
-					</div>
-				</form>
-			</div>
-		</AssignmentSubmissionStyle>
+		<>
+			<SideNav />
+			<AssignmentSubmissionStyle>
+				<div className='wrap'>
+					<h1>Assignment Submission</h1>
+					<h2 className='assignment-title'>
+						{props.match.params.assignmentName}
+					</h2>
+					<button className='download-btn'>Download File</button>
+					<form>
+						<textarea></textarea>
+						<div className='btns'>
+							<button className='submit-btn'>SUBMIT</button>
+							<button className='edit-btn'>EDIT</button>
+						</div>
+					</form>
+				</div>
+			</AssignmentSubmissionStyle>
+		</>
 	);
 };
 

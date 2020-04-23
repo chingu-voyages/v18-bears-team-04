@@ -21,8 +21,8 @@ const LogInForm = (props) => {
 			.then((res) => {
 				TokenService.saveAuthToken(res._id);
 				props.handleLogIn(res);
-
-				if (res.classIds > 0) {
+				console.log(res.classIds);
+				if (res.classIds.length === 1) {
 					TokenService.saveClassToken(res.classIds);
 				}
 			})

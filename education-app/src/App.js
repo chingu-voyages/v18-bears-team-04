@@ -70,8 +70,6 @@ const App = () => {
 						)}
 					</Switch>
 
-					{TokenService.hasAuthToken() && <SideNav />}
-
 					<Switch>
 						{TokenService.hasAuthToken() ? (
 							<Route
