@@ -71,13 +71,56 @@ const sendStudentsNotification = async (
   saveNewNotification(assignmentId, mailList, templateMessage);
 
   // in-app notification
-  pusher.trigger(`notification-assignment-${studentNames}`, 'new-assignment', {
+  let student = [];
+  for(let item = 0; item< mailList.length; item++){
+    student.push(mailList[item])
+    return studentEmails
+  }
+  pusher.trigger(`notification-assignment-${me}`, 'new-assignment', {
     message: `You have a new assignment with class Id ${title}`,
   });
 };
 
+const sendTeachersNotification = async (
+  assignmentId,
+  title,
+  mailList
+) => {
+  const studentEmails = await User.find().lean();
+  var mailList = [];
+  studentEmails.forEach(function(users){
+    if(users.role === 'teacher')
+                mailList.push(users.email);
+                return mailList;
+            });
+            
+  if (!mailList) throw createError(404, `Teachers not found`);
+  
+
+  //Email notification
+  const templateSubject = 'New notification from iScholars';
+  const templateEmail = mailList;
+  const templateMessage = `<p> ${
+    mailList
+  }, you have an assignment to grade from class Id " <i>${title}</i> ".</p>`;
+
+  const message = template(templateSubject, templateMessage, templateEmail);
+  sendEmail(templateEmail, templateSubject, message);
+  saveNewNotification(assignmentId, mailList, templateMessage);
+
+  // in-app notification
+  let teacher = [];
+  for(let item = 0; item< mailList.length; item++){
+    teacher.push(mailList[item])
+    return teacher;
+  }
+  pusher.trigger(`notification-assignment-${teacher}`, 'new-assignment-to-grade', {
+    message: `You have an assignment to grade with class Id ${title}`,
+  });
+};
 const notifications = {
     sendStudentsNotification,
-    signupEmail
+    signupEmail,
+    sendTeachersNotification
 }
 export default notifications;
