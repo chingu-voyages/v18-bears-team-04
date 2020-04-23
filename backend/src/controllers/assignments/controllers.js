@@ -11,7 +11,6 @@ export const createAssignment = async (req, res, next) => {
     //User validation
     const user = await User.findOne({ userName: teacherName });
     if (!user) throw createError(404, `Teacher ${teacherName} not found`);
-
     //Authorization Validation
     if (user.role != userRole.TEACHER) {
       throw createError(404, `User ${teacherName} is not a Teacher`);
@@ -22,14 +21,15 @@ export const createAssignment = async (req, res, next) => {
     if (!existingClass)
       throw createError(404, `Claas ${classId} dose not exist`);
 
-    //create a new Assignment
+    //create an new Assignment
     const assignment = await Assignment.create(req.body);
-    //response object
-    // await notifications.sendStudentsNotification(
-    //   req.body.assignmentId,
-    //   assignment.userId[0],
-    //   assignment.title
-    // );
+    
+    //Send both email and in-app notification
+    await notifications.sendStudentsNotification(
+      req.body.assignmentId,
+      assignment.classId,
+      assignment.title
+    );
     res.status(201).json({
       msg: "Assignment created",
       assignment,

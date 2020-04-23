@@ -1,5 +1,6 @@
 import User from "../../models/users";
 import createError from "http-errors";
+import notifications from '../../helper/notifications'
 
 export const getEveryUser = async (_req, res, next) => {
   try {
@@ -38,6 +39,9 @@ export const createUser = async (req, res, next) => {
   try {
     //create a user
     const newUser = await User.create(req.body);
+    console.log(newUser, 'new')
+    let msg = 'Welcome'
+    await notifications.signupEmail(newUser.email, newUser.userName, msg)
     res.status(201).json(newUser);
   } catch (err) {
     next(err);
