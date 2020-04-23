@@ -5,10 +5,6 @@ import TokenService from "../services/token-service";
 import styled from "styled-components";
 
 const AssignmentList = (props) => {
-	//Add get array of user Assignments & Class Ids
-	//Match classIds to class name
-	//MAKE CONDITIONAL FOR STUDENTS TO VIEW ALL ASSIGNMENTS FOR ALL CLASSES
-
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
 	const [classInfo, setClasses] = useState(null);
@@ -16,7 +12,6 @@ const AssignmentList = (props) => {
 	const classId = TokenService.getClassToken();
 
 	const getAllApiInfo = (props) => {
-		// refactor to get assignments by userId
 		Promise.all([
 			ApiService.getClasses(),
 			ApiService.getAssignments(),
@@ -101,7 +96,7 @@ const AssignmentList = (props) => {
 
 	const displayedTeacherAssignments =
 		assignments != null
-			? assignments.map((assign, index) => {
+			? teacherAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link to={`/${assign.title}/submission`}>
@@ -116,6 +111,7 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
+	console.log(studentAssignments);
 	const displayedStudentAssignments =
 		assignments != null
 			? studentAssignments.map((assign, index) => {
