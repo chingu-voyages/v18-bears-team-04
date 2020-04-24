@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+import config from "../../config";
 
 import CreateAssignmentForm from "../../components/CreateAssignmentForm";
-import EditClassForm from "../../components/EditClassForm";
 import CreateClassForm from "../../components/CreateClassForm";
 import UploadProfileForm from "../../components/UploadProfileForm";
 import ApiService from "../../services/api-services";
@@ -14,7 +14,7 @@ import ScholarContext from "../../ScholarContext";
 import styled from "styled-components";
 import pencilImg from "../../images/iconmonstr-pencil-8-32.png";
 import bgImg from "../../images/Dashboard-bg.jpg";
-import exampleImg from "../../images/maria-hill-teacher.jpg";
+import defaultImg from "../../images/defaultImg.png";
 
 const TeacherDashboard = (props) => {
 	//temporary
@@ -86,14 +86,6 @@ const TeacherDashboard = (props) => {
 				<Link to={`/${props.match.params.userName}/edit-class`}>
 					Edit Class
 				</Link>
-
-				{/* <Modal open={showClassModal} onClose={() => handleClassModal()} center>
-					<EditClassForm
-						userName={props.match.params.userName}
-						handleClassModal={() => handleClassModal()}
-						setClassName={(str) => setClassName(str)}
-					/>
-				</Modal> */}
 			</>
 		);
 	};
@@ -116,8 +108,6 @@ const TeacherDashboard = (props) => {
 		});
 	};
 
-	const user = userInfo !== null ? userInfo : "";
-
 	const handleAssignmentModal = () => {
 		setModal({
 			showClassModal: showClassModal,
@@ -125,13 +115,17 @@ const TeacherDashboard = (props) => {
 		});
 	};
 
+	const userImage =
+		userInfo !== null
+			? config.IMG_BASE_URL + userInfo.userProfileLink
+			: defaultImg;
+
 	return (
 		<TeacherDashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
 					<div className='prof-img'>
-						{/* Figure this out later */}
-						<img src={exampleImg} alt='something that looks like you' />
+						<img src={userImage} alt='something that looks like you' />
 					</div>
 					<button
 						className='edit-container'
@@ -153,7 +147,7 @@ const TeacherDashboard = (props) => {
 						center
 					>
 						<UploadProfileForm
-							email={userInfo != null ? userInfo.email : null}
+							email={userInfo != null ? userInfo.email : " "}
 							userName={props.match.params.userName}
 							handleUploadProfileModal={() => handleUploadProfileModal()}
 						/>
@@ -163,10 +157,11 @@ const TeacherDashboard = (props) => {
 						Create An Assignment
 					</button>
 					{/* {Dashboard Links} */}
-					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
 					</Link>
+					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
+
 					<Modal
 						open={showAssignmentModal}
 						onClose={() => handleAssignmentModal()}
