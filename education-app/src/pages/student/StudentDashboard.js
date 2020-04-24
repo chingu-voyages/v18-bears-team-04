@@ -10,7 +10,7 @@ import ValidationError from "../../components/ValidationError";
 
 import styled from "styled-components";
 import bgImg from "../../images/Dashboard-bg.jpg";
-import exampleImg from "../../images/ProfExample.jpg";
+import defaultImg from "../../images/defaultImg.png";
 
 const StudentDashboard = (props) => {
 	return (
@@ -18,7 +18,10 @@ const StudentDashboard = (props) => {
 			<div className='wrap'>
 				<div className='user-info'>
 					<div className='prof-img'>
-						<img src={exampleImg} alt='' />
+						<img
+							src='http://localhost:5000/profile/5e984d1844ba404cab0c7f47/profile/5e984d1844ba404cab0c7f47.png'
+							alt=''
+						/>
 					</div>
 					<p className='user-name'>{props.match.params.userName}</p>
 				</div>
