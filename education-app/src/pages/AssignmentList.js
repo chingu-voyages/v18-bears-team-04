@@ -153,7 +153,7 @@ const AssignmentList = (props) => {
 	);
 };
 
-const AssignmentListStyle = styled.main`
+const AssignmentListStyle = styled.div`
 	padding-left: 250px;
 	padding-top: 60px;
 	width: 90vw;

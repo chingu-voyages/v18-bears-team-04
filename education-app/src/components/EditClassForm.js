@@ -39,6 +39,8 @@ const EditClassForm = (props) => {
 
 				setStudents(students);
 
+				console.log(res[1]);
+
 				/*This will show all current students as checked in dropdown*/
 				const filteredStudents = students.filter((a) =>
 					res[1].studentIds.find((i) => i === a.value)
@@ -111,7 +113,6 @@ const EditClassForm = (props) => {
 						<input
 							type='text'
 							name='className'
-							placeholder='e.g. Math 101'
 							value={className}
 							// onChange={(e) => handleChange(e)}
 							disabled={true}
