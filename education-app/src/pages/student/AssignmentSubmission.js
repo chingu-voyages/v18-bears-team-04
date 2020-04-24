@@ -1,8 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import styled from "styled-components";
+
+import ApiService from "../../services/api-services";
 import SideNav from "../../components/SideNav";
 
 const AssignmentSubmission = (props) => {
+	const initialFormState = {
+		text: "",
+	};
+	const [userInput, setInput] = useState(initialFormState);
+	const [{ error }, setError] = useState({ error: null });
+
+	const [assignment, setAssignment] = useState(null);
+	const { text } = userInput;
+
+	function getAssignment(props) {
+		ApiService.getAssignments()
+			.then((res) => {
+				const currentAssignment = res.find(
+					(a) => a._id === props.match.params.id
+				);
+				setAssignment(currentAssignment);
+			})
+			.catch((err) => setError({ error: err }));
+	}
+
+	useEffect(() => {
+		getAssignment(props);
+	}, [props]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(userInput);
+
+		ApiService.submitAssignment(
+			userInput,
+			props.match.params.id,
+			"lewis"
+		).then((res) => console.log(res));
+	};
+
+	const handleTextChange = (e) => {
+		e.preventDefault();
+		setInput({
+			text: e.target.value,
+		});
+	};
+	const stringURL =
+		assignment !== null && assignment.teacherDocLink[0] !== undefined
+			? assignment.teacherDocLink[0].toString()
+			: "null";
+
 	return (
 		<>
 			<SideNav />
@@ -10,14 +60,33 @@ const AssignmentSubmission = (props) => {
 				<div className='wrap'>
 					<h1>Assignment Submission</h1>
 					<h2 className='assignment-title'>
-						{props.match.params.assignmentName}
+						{assignment !== null && assignment.title}
 					</h2>
-					<button className='download-btn'>Download File</button>
-					<form>
-						<textarea></textarea>
+					<Link
+						className='download-btn'
+						to={stringURL}
+						target='_blank'
+						download
+					>
+						Download File
+					</Link>
+
+					<form onSubmit={(e) => handleSubmit(e)}>
+						<label htmlFor='submission'>
+							<textarea
+								className='text-area'
+								name='text'
+								value={text}
+								placeholder='Write your submission here'
+								onChange={(e) => handleTextChange(e)}
+							/>
+						</label>
 						<div className='btns'>
 							<button className='submit-btn'>SUBMIT</button>
-							<button className='edit-btn'>EDIT</button>
+							<button className='edit-btn' disabled={true}>
+								EDIT
+							</button>
+							{/* if user is a student they can't edit the assignment' */}
 						</div>
 					</form>
 				</div>
@@ -46,13 +115,14 @@ const AssignmentSubmissionStyle = styled.div`
 		margin-top: 10px;
 	}
 	.download-btn {
+		display: block;
 		width: 200px;
-		height: 30px;
+		text-align: center;
 		margin-top: 20px;
+		padding: 10px;
 		font-size: 1.6rem;
 		background-color: #00a3ff;
 		color: #fff;
-		border-radius: 10px;
 	}
 	form {
 		width: 100%;

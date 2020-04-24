@@ -117,7 +117,7 @@ const AssignmentList = (props) => {
 			? studentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<Link to={`/${assign.title}/submission`}>
+							<Link to={`/${assign.title}/${assign._id}/submission`}>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>
 									<p className='class-name'>{assign.className}</p>
