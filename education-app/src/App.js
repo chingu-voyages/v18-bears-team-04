@@ -94,7 +94,19 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:title/:id/submission'
+								path='/:title/:id/:role/submission'
+								render={(routeProps) => (
+									<AssignmentSubmission {...routeProps} />
+								)}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:title/:id/:role/assignment'
 								render={(routeProps) => (
 									<AssignmentSubmission {...routeProps} />
 								)}
