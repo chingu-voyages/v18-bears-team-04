@@ -19,6 +19,10 @@ const AssignmentSubmission = (props) => {
 	};
 	const [userInput, setInput] = useState(initialFormState);
 	const [{ error }, setError] = useState({ error: null });
+	const [{ showAssignmentModal }, setModal] = useState({
+		showAssignmentModal: true,
+	});
+	const classId = TokenService.getClassToken();
 
 	const [assignment, setAssignment] = useState(null);
 	const { text } = userInput;
@@ -32,7 +36,7 @@ const AssignmentSubmission = (props) => {
 				const currClass = res[1].filter((a) =>
 					res[1].some((b) => a._id === b.classId)
 				);
-
+				console.log(currClass);
 				setAssignment(currentAssignment);
 			})
 			.catch((err) => setError({ error: err }));
@@ -51,6 +55,12 @@ const AssignmentSubmission = (props) => {
 			props.match.params.id,
 			"lewis"
 		).then((res) => console.log(res));
+	};
+
+	const handleAssignmentModal = () => {
+		setModal({
+			showAssignmentModal: !showAssignmentModal,
+		});
 	};
 
 	const handleTextChange = (e) => {
@@ -140,6 +150,27 @@ const AssignmentSubmission = (props) => {
 							</div>
 						)}
 					</form>
+					{props.match.params.role === "teacher" && (
+						<div className='btns'>
+							<button
+								className='edit-btn'
+								onClick={() => handleAssignmentModal()}
+							>
+								EDIT
+							</button>
+						</div>
+					)}
+					<Modal
+						open={showAssignmentModal}
+						onClose={() => handleAssignmentModal()}
+						center
+					>
+						<CreateAssignmentForm
+							className={classId}
+							userName={props.match.params.userName}
+							handleAssignmentModal={() => handleAssignmentModal()}
+						/>
+					</Modal>
 				</div>
 			</AssignmentSubmissionStyle>
 		</>

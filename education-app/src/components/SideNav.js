@@ -35,7 +35,6 @@ const SideNav = (props) => {
 			? config.IMG_BASE_URL + userInfo.userProfileLink
 			: defaultImg;
 
-	userInfo !== null && console.log(userInfo);
 	return (
 		<SideNavStyle>
 			<div className='wrap'>

@@ -8,8 +8,8 @@ import styled from "styled-components";
 const AssignmentList = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
+	const [userInfo, setUser] = useState(null);
 	const [classInfo, setClasses] = useState(null);
-	const userName = props.match.params.userName;
 	const classId = TokenService.getClassToken();
 
 	const getAllApiInfo = (props) => {
@@ -28,6 +28,8 @@ const AssignmentList = (props) => {
 				const filteredAssignments = res[1].filter((a) =>
 					res[0].some((b) => a.classId === b._id)
 				);
+
+				setUser(res[2]);
 				setClasses(filteredClasses);
 				setAssignments(filteredAssignments);
 			})
@@ -100,7 +102,9 @@ const AssignmentList = (props) => {
 			? teacherAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<Link to={`/${assign.title}/submission`}>
+							<Link
+								to={`/${assign.title}/${assign._id}/${userInfo.role}/assignment`}
+							>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>
 									<p className='class-name'>{assign.className}</p>
@@ -117,7 +121,9 @@ const AssignmentList = (props) => {
 			? studentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<Link to={`/${assign.title}/${assign._id}/submission`}>
+							<Link
+								to={`/${assign.title}/${assign._id}/${userInfo.role}/submission`}
+							>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>
 									<p className='class-name'>{assign.className}</p>

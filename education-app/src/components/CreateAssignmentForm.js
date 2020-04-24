@@ -39,7 +39,7 @@ const CreateAssignmentForm = (props) => {
 	const handleFileChange = (e) => {
 		const { name } = e.target;
 		e.preventDefault();
-		console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0]);
+
 		setInput({ ...userInput, [name]: e.target.files[0] });
 	};
 
