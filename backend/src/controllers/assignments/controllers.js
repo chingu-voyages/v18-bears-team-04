@@ -4,17 +4,12 @@ import User, { userRole } from "../../models/users";
 import Class from "../../models/classes";
 import notifications from "../../helper/notifications";
 
+//Request Body must contain classId, title and dueDate
+//Given the Assignment is a part of the Class, all students of the Class
+//are added to the Assignment (in the Assignment Results object).
 export const createAssignment = async (req, res, next) => {
   try {
-    const { teacherName, classId } = req.body;
-
-    //User validation
-    const user = await User.findOne({ userName: teacherName });
-    if (!user) throw createError(404, `Teacher ${teacherName} not found`);
-    //Authorization Validation
-    if (user.role != userRole.TEACHER) {
-      throw createError(404, `User ${teacherName} is not a Teacher`);
-    }
+    const { classId } = req.body;
 
     //validate if class exist
     const existingClass = await Class.findById(classId);
@@ -22,6 +17,24 @@ export const createAssignment = async (req, res, next) => {
       throw createError(404, `Claas ${classId} dose not exist`);
     //create an new Assignment
     const assignment = await Assignment.create(req.body);
+
+    //Add all the StudentIds in the Given Class to the AssignmentResults objects
+    const studentIds = existingClass.studentIds;
+    console.log("Class Student Ids here below");
+    console.log(studentIds);
+    let assignmentResults = [];
+
+    studentIds.forEach((studentId) => {
+      let assignmentResult = { studentId: null };
+      assignmentResult.studentId = studentId;
+      assignmentResults.push(assignmentResult);
+    });
+
+    const updatedAssignment = await Assignment.findOneAndUpdate(
+      { _id: assignment._id },
+      { assignmentResults: assignmentResults },
+      { new: true }
+    );
 
     //Send both email and in-app notification
     await notifications.sendStudentsNotification(
@@ -31,7 +44,7 @@ export const createAssignment = async (req, res, next) => {
     );
     res.status(201).json({
       msg: "Assignment created",
-      assignment,
+      updatedAssignment,
     });
   } catch (err) {
     next(err);
@@ -41,7 +54,6 @@ export const createAssignment = async (req, res, next) => {
 export const getAllAssignment = async (_req, res, next) => {
   try {
     const assignments = await Assignment.find().lean();
-    if (!assignments) throw err;
     res.status(200).json(assignments);
   } catch (err) {
     next(err);

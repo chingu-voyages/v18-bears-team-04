@@ -31,6 +31,7 @@ export const getClassesByUserName = async (req, res, next) => {
 
     const classIds = user.classIds;
 
+    //TODO: Use Populate method instead
     const classArray = await Promise.all(
       classIds.map(async (classId) => {
         try {
