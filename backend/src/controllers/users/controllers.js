@@ -11,11 +11,15 @@ export const getEveryUser = async (_req, res, next) => {
   }
 };
 
-export const getUserByName = async (req, res, next) => {
+export const getUserByParams = async (req, res, next) => {
   try {
-    //Find the username
-    const { userName } = req.params;
-    const user = await User.findOne({ userName });
+    let { userName } = req.query;
+    let { userId } = req.query;
+
+    const user = await User.findOne({
+      $or: [{ _id: userId }, { userName: userName }],
+    });
+
     res.status(200).json(user);
   } catch (err) {
     next(err);
