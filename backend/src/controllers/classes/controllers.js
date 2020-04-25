@@ -135,3 +135,5 @@ export const deleteStudentFromClass = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getAllStudentsInClass = async (req, res, next) => {};

@@ -1,23 +1,18 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
+import { assignmentResultsSchema } from "../assignmentResults";
+
+//delete mongoose.connection.models["Assignment"];
 
 const assignmentSchema = new Schema({
   classId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Class",
+    required: true,
   },
-  assignmentResults: {
-    type: String,
-    enum: ["A", "B", "C", "D", "E", "F"],
-  },
-  studentFeedback: {
-    type: String,
-    default: null,
-  },
-  teacherFeedback: {
-    type: String,
-    default: null,
-  },
+
+  assignmentResults: [assignmentResultsSchema],
+
   title: {
     type: String,
     required: true,
@@ -27,19 +22,11 @@ const assignmentSchema = new Schema({
   },
   startDate: {
     type: Date,
-    default: null,
+    default: Date.now,
   },
   dueDate: {
     type: Date,
-    default: null,
-  },
-  submitted: {
-    type: Boolean,
-    default: false,
-  },
-  status: {
-    type: Date,
-    default: null,
+    required: true,
   },
   teacherDocLink: [
     {
@@ -47,6 +34,12 @@ const assignmentSchema = new Schema({
     },
   ],
 });
+// let Assignment;
+// try {,
+//   Assignment = mongoose.model("Assignment");
+// } catch (error) {
+//   Assignment = mongoose.model("Assignment", assignmentSchema);
+// }
 
 const Assignment = mongoose.model("Assignment", assignmentSchema);
 export default Assignment;
