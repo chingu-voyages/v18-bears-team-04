@@ -8,8 +8,8 @@ import {
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
 import SideNav from "./components/SideNav";
-import StudentDashboard from "./pages/student/StudentDashboard";
-import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+// import StudentDashboard from "./pages/student/StudentDashboard";
+import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import EditClass from "./pages/EditClass";
 import Grades from "./pages/teacher/Grades";
@@ -52,14 +52,14 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:userName/teacher/dashboard'
-								render={(routeProps) => <TeacherDashboard {...routeProps} />}
+								path='/:userName/:role/dashboard'
+								render={(routeProps) => <Dashboard {...routeProps} />}
 							/>
 						) : (
 							<Redirect to='/' />
 						)}
 
-						{TokenService.hasAuthToken() ? (
+						{/* {TokenService.hasAuthToken() ? (
 							<Route
 								exact
 								path='/:userName/student/dashboard'
@@ -67,7 +67,7 @@ const App = () => {
 							/>
 						) : (
 							<Redirect to='/' />
-						)}
+						)} */}
 					</Switch>
 
 					<Switch>

@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
-import config from "../../config";
+import config from "../config";
 
-import CreateAssignmentForm from "../../components/CreateAssignmentForm";
-import CreateClassForm from "../../components/CreateClassForm";
-import UploadProfileForm from "../../components/UploadProfileForm";
-import ApiService from "../../services/api-services";
-import TokenService from "../../services/token-service";
-import ValidationError from "../../components/ValidationError";
-import ScholarContext from "../../ScholarContext";
+import CreateAssignmentForm from "../components/CreateAssignmentForm";
+import CreateClassForm from "../components/CreateClassForm";
+import UploadProfileForm from "../components/UploadProfileForm";
+import ApiService from "../services/api-services";
+import TokenService from "../services/token-service";
+import ValidationError from "../components/ValidationError";
+import ScholarContext from "../ScholarContext";
 
 import styled from "styled-components";
-import pencilImg from "../../images/iconmonstr-pencil-8-32.png";
-import bgImg from "../../images/Dashboard-bg.jpg";
-import defaultImg from "../../images/defaultImg.png";
+import pencilImg from "../images/iconmonstr-pencil-8-32.png";
+import bgImg from "../images/Dashboard-bg.jpg";
+import defaultImg from "../images/defaultImg.png";
 
-const TeacherDashboard = (props) => {
+const Dashboard = (props) => {
 	//temporary
 
 	const context = useContext(ScholarContext);
@@ -59,26 +59,19 @@ const TeacherDashboard = (props) => {
 		setClassInfo({ currClass: str });
 	};
 
-	const renderClass = () => {
-		if (currClass === null) {
-			return (
-				<>
-					<button onClick={() => handleClassModal()}>Create Your Class</button>
-					<Modal
-						open={showClassModal}
-						onClose={() => handleClassModal()}
-						center
-					>
-						<CreateClassForm
-							userName={props.match.params.userName}
-							handleClassModal={() => handleClassModal()}
-							setClassName={(str) => setClassName(str)}
-						/>
-					</Modal>
-				</>
-			);
-		}
-		return (
+	const renderClass =
+		currClass === null && userInfo !== null && userInfo.role === "teacher" ? (
+			<>
+				<button onClick={() => handleClassModal()}>Create Your Class</button>
+				<Modal open={showClassModal} onClose={() => handleClassModal()} center>
+					<CreateClassForm
+						userName={props.match.params.userName}
+						handleClassModal={() => handleClassModal()}
+						setClassName={(str) => setClassName(str)}
+					/>
+				</Modal>
+			</>
+		) : userInfo !== null && userInfo.role === "teacher" ? (
 			<>
 				<div className='class-title'>
 					<h1>{currClass}</h1>
@@ -87,8 +80,9 @@ const TeacherDashboard = (props) => {
 					Edit Class
 				</Link>
 			</>
+		) : (
+			" "
 		);
-	};
 
 	const handleUploadProfileModal = () => {
 		setModal({
@@ -116,12 +110,12 @@ const TeacherDashboard = (props) => {
 	};
 
 	const userImage =
-		userInfo !== null
-			? config.IMG_BASE_URL + userInfo.userProfileLink
-			: defaultImg;
+		userInfo === null || !userInfo.userProfileLink
+			? defaultImg
+			: config.IMG_BASE_URL + userInfo.userProfileLink;
 
 	return (
-		<TeacherDashboardStyle bgImg={bgImg}>
+		<DashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
 					<div className='prof-img'>
@@ -139,7 +133,7 @@ const TeacherDashboard = (props) => {
 				</div>
 				<div className='links'>
 					{/* Class Render Only For Teachers */}
-					{renderClass()}
+					{renderClass}
 
 					<Modal
 						open={showUploadProfileModal}
@@ -149,13 +143,16 @@ const TeacherDashboard = (props) => {
 						<UploadProfileForm
 							email={userInfo != null ? userInfo.email : " "}
 							userName={props.match.params.userName}
+							profileImgPreview={userImage}
 							handleUploadProfileModal={() => handleUploadProfileModal()}
 						/>
 					</Modal>
 
-					<button onClick={() => handleAssignmentModal()}>
-						Create An Assignment
-					</button>
+					{props.match.params.role === "teacher" && (
+						<button onClick={() => handleAssignmentModal()}>
+							Create An Assignment
+						</button>
+					)}
 					{/* {Dashboard Links} */}
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
@@ -175,11 +172,11 @@ const TeacherDashboard = (props) => {
 					</Modal>
 				</div>
 			</div>
-		</TeacherDashboardStyle>
+		</DashboardStyle>
 	);
 };
 
-const TeacherDashboardStyle = styled.main`
+const DashboardStyle = styled.main`
 	padding-top: 60px;
 	width: 100%;
 	height: 100vh;
@@ -272,4 +269,4 @@ const TeacherDashboardStyle = styled.main`
 	}
 `;
 
-export default TeacherDashboard;
+export default Dashboard;

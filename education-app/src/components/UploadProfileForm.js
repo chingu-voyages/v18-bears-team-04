@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 
@@ -8,19 +7,15 @@ import ValidationError from "./ValidationError";
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
 
-import exampleImg from "../images/maria-hill-teacher.jpg";
-
 const UploadProfileForm = (props) => {
 	const initialFormState = {
 		profileImg: "",
-		profileImgPreview: exampleImg,
+		profileImgPreview: props.profileImgPreview,
 	};
 	const [userInput, setInput] = useState(initialFormState);
 
 	const [{ error }, setError] = useState({ error: null });
 	const { profileImg, profileImgPreview } = userInput;
-
-	const history = useHistory();
 
 	// const handleChange = (e) => { //username and email can't be change
 	// 	const { value, name } = e.target;
