@@ -11,6 +11,7 @@ import {
   getAllGradeForAStudent,
   getASingleGradeByAssignmentId,
   getAllAssignmentsForClass,
+  teacherGivesFeedback,
 } from "./controllers";
 
 const router = Router();
@@ -28,6 +29,9 @@ router.put("/submit", studentSubmitsAssignment);
 
 //Grade an assignment
 router.put("/grade", teacherGradesAssignment);
+
+//Teacher gives Feedback for assignment
+router.put("/feedback", teacherGivesFeedback);
 
 //Get all Assignments For a Class
 router.get("/class/:classId", getAllAssignmentsForClass);
