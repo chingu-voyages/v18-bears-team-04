@@ -14,6 +14,7 @@ const AssignmentList = (props) => {
 	const [userInfo, setUser] = useState(null);
 	const [classInfo, setClasses] = useState(null);
 	const classId = TokenService.getClassToken();
+	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
 		Promise.all([
@@ -32,7 +33,6 @@ const AssignmentList = (props) => {
 					res[0].some((b) => a.classId === b._id)
 				);
 
-				console.log(res[0], res[1], res[2]);
 				setUser(res[2]);
 				setClasses(filteredClasses);
 				setAssignments(filteredAssignments);
@@ -70,11 +70,12 @@ const AssignmentList = (props) => {
 
 	const studentClass =
 		assignments != null && classInfo.filter((a) => a.studentIds);
+	assignments !== null && console.log(combinedInfo);
 
 	const currentAssignments =
 		assignments != null &&
 		studentClass
-			.filter((c) => c.studentIds.find((b) => b === "5e984d1844ba404cab0c7f47"))
+			.filter((c) => c.studentIds.find((b) => b === userId))
 			.map((a) => a._id)
 			.map((a) => combinedInfo.filter((b) => b.classId === a));
 
@@ -144,6 +145,7 @@ const AssignmentList = (props) => {
 					);
 			  })
 			: null;
+	console.log(displayedStudentAssignments);
 
 	return (
 		<>
@@ -236,7 +238,7 @@ const AssignmentListStyle = styled.div`
 				color: #5e5e5e;
 				top: 10%;
 				left: 5%;
-				font-size: 4rem;
+				font-size: 2.75rem;
 			}
 			.class-name-container {
 				display: flex;
@@ -246,7 +248,8 @@ const AssignmentListStyle = styled.div`
 			.class-name {
 				width: 150px;
 				height: 50px;
-				font-size: 2.5rem;
+				text-align: center;
+				font-size: 2rem;
 				border: 1px solid black;
 				border-radius: 10px;
 				display: flex;
