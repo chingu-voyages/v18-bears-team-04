@@ -48,6 +48,7 @@ const AssignmentList = (props) => {
 		if (error != null) {
 			return `Something went wrong.`;
 		}
+		console.log(error);
 	};
 
 	const combinedInfo =
@@ -117,9 +118,11 @@ const AssignmentList = (props) => {
 								to={`/${assign.title}/${assign._id}/${userInfo.role}/assignment`}
 							>
 								<h4 className='assignment-title'>{assign.title}</h4>
-								<div key={index} className='class-name-container'>
+								<div
+									key={index}
+									className='class-name-container teacher-class-name'
+								>
 									<p className='class-name'>{assign.className}</p>
-									{renderSubmittedInfo(assign.submitted)}
 								</div>
 							</Link>
 						</div>
@@ -145,7 +148,6 @@ const AssignmentList = (props) => {
 					);
 			  })
 			: null;
-	console.log(displayedStudentAssignments);
 
 	return (
 		<>
@@ -154,7 +156,7 @@ const AssignmentList = (props) => {
 				<div className='wrap'>
 					<h2 className='page-title'>Assignments List</h2>
 					<h3>Your Assignments</h3>
-					{error && <ValidationError message={errorMessage()} />}
+					{error !== null && <ValidationError message={errorMessage()} />}
 					{classId === null ? (
 						<div className='assignment-table'>
 							{displayedStudentAssignments}
@@ -257,6 +259,10 @@ const AssignmentListStyle = styled.div`
 				align-items: center;
 			}
 		}
+	}
+	.teacher-class-name {
+		position: relative;
+		bottom: 20px;
 	}
 `;
 
