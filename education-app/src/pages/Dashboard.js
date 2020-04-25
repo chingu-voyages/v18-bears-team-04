@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
 import config from "../config";
@@ -9,7 +9,6 @@ import UploadProfileForm from "../components/UploadProfileForm";
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
 import ValidationError from "../components/ValidationError";
-import ScholarContext from "../ScholarContext";
 
 import styled from "styled-components";
 import pencilImg from "../images/iconmonstr-pencil-8-32.png";
@@ -17,12 +16,9 @@ import bgImg from "../images/Dashboard-bg.jpg";
 import defaultImg from "../images/defaultImg.png";
 
 const Dashboard = (props) => {
-	//temporary
-
-	const context = useContext(ScholarContext);
 	const [userInfo, setUserInfo] = useState(null);
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
-	const [{ error }, setError] = useState({ error: false });
+	const [{ error }, setError] = useState({ error: null });
 	const [
 		{ showClassModal, showAssignmentModal, showUploadProfileModal },
 		setModal,
@@ -43,10 +39,12 @@ const Dashboard = (props) => {
 	}
 
 	useEffect(() => {
-		ApiService.getUserName(props.match.params.userName).then((res) => {
-			setUserInfo({ ...res });
-			getClassInfo();
-		});
+		ApiService.getUserName(props.match.params.userName)
+			.then((res) => {
+				setUserInfo({ ...res });
+				getClassInfo();
+			})
+			.then((err) => setError({ error: err }));
 	}, [props.match]);
 
 	const errorMessage = () => {

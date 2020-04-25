@@ -56,25 +56,25 @@ const Homepage = () => {
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
-						<a href=''>About us</a>
+						<a href='/about'>About us</a>
 					</li>
 					<li>
-						<a href=''>Support</a>
+						<a href='/support'>Support</a>
 					</li>
 				</ul>
 				<ul className='social-media'>
 					<li>
-						<a href=''>
+						<a href='/facebook'>
 							<img src={fbIcon} alt='facebook' />
 						</a>
 					</li>
 					<li>
-						<a href=''>
+						<a href='/instagram'>
 							<img src={instaIcon} alt='instagram' />
 						</a>
 					</li>
 					<li>
-						<a href=''>
+						<a href='/linkedin'>
 							<img src={linkedinIcon} alt='linkedin' />
 						</a>
 					</li>

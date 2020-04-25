@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 
-import CreateAssignmentForm from "../../components/CreateAssignmentForm";
-import { Modal } from "react-responsive-modal";
-
 import config from "../../config";
-import ApiService from "../../services/api-services";
+import ValidationError from "../../components/ValidationError";
 import SideNav from "../../components/SideNav";
-import TokenService from "../../services/token-service";
+
+import ApiService from "../../services/api-services";
+// import TokenService from "../../services/token-service";
 
 const AssignmentSubmission = (props) => {
 	const initialFormState = {
@@ -29,9 +28,9 @@ const AssignmentSubmission = (props) => {
 				const currentAssignment = res[0].find(
 					(a) => a._id === props.match.params.id
 				);
-				const currClass = res[1].filter((a) =>
-					res[1].some((b) => a._id === b.classId)
-				);
+				// const currClass = res[1].filter((a) =>
+				// 	res[1].some((b) => a._id === b.classId)
+				// );
 
 				setAssignment(currentAssignment);
 			})
@@ -41,6 +40,12 @@ const AssignmentSubmission = (props) => {
 	useEffect(() => {
 		getAssignment(props);
 	}, [props]);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
 
 	const handleSubmit = (e) => {
 		//update
@@ -139,6 +144,7 @@ const AssignmentSubmission = (props) => {
 								{/* if user is a student they can't edit the assignment' */}
 							</div>
 						)}
+						{error && <ValidationError message={errorMessage()} />}
 					</form>
 				</div>
 			</AssignmentSubmissionStyle>

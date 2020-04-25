@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
-import SideNav from "./components/SideNav";
 // import StudentDashboard from "./pages/student/StudentDashboard";
 import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
