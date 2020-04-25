@@ -66,7 +66,10 @@ export const createClass = async (req, res, next) => {
     user.classIds.push(classId);
     await user.save();
 
-    res.status(201).json(newClass);
+    res.status(201).json({
+      msg: "New class Created",
+      newClass,
+    });
   } catch (err) {
     next(err);
   }
@@ -74,8 +77,8 @@ export const createClass = async (req, res, next) => {
 
 export const addStudentToClass = async (req, res, next) => {
   try {
-    const { studentId } = req.params;
-    const { classId } = req.params;
+    const { studentId } = req.query;
+    const { classId } = req.query;
 
     //Check if Class Exists
     const existingClass = await Class.findById(classId);
@@ -83,22 +86,27 @@ export const addStudentToClass = async (req, res, next) => {
       throw createError(404, `Class with id (${classId}) not Found`);
 
     //Add ClassId to User Table's Class Ids Array
-    const existingStudent = await User.findOneAndUpdate(
+    const updatedStudent = await User.findOneAndUpdate(
       { _id: studentId, role: userRole.STUDENT },
-      { $addToSet: { classIds: classId } }
+      { $addToSet: { classIds: classId } },
+      { new: true }
     );
 
-    if (!existingStudent)
+    if (!updatedStudent)
       throw createError(404, `Student with id (${studentId}) not Found`);
 
     //Add StudentId to Class Table's studentIds Array
-    const newClass = await Class.findOneAndUpdate(
+    const updatedClass = await Class.findOneAndUpdate(
       { _id: classId },
       { $addToSet: { studentIds: studentId } },
       { new: true }
     );
 
-    res.status(201).json(newClass);
+    res.status(200).json({
+      msg: "Student sucessfully added to Class",
+      updatedStudent,
+      updatedClass,
+    });
   } catch (err) {
     next(err);
   }
@@ -106,8 +114,8 @@ export const addStudentToClass = async (req, res, next) => {
 
 export const deleteStudentFromClass = async (req, res, next) => {
   try {
-    const { studentId } = req.params;
-    const { classId } = req.params;
+    const { studentId } = req.query;
+    const { classId } = req.query;
 
     //Check if Class Exists
     const existingClass = await Class.findById(classId);
@@ -115,22 +123,53 @@ export const deleteStudentFromClass = async (req, res, next) => {
       throw createError(404, `Class with id (${classId}) not Found`);
 
     //Delete ClassId From User Table's Class Ids Array
-    const existingStudent = await User.findOneAndUpdate(
+    const updatedStudent = await User.findOneAndUpdate(
       { _id: studentId, role: userRole.STUDENT },
-      { $pull: { classIds: classId } }
+      { $pull: { classIds: classId } },
+      { new: true }
     );
 
-    if (!existingStudent)
+    if (!updatedStudent)
       throw createError(404, `Student with id (${studentId}) not Found`);
 
     //Delete StudentId From Class Table's StudentIds Array
-    const newClass = await Class.findOneAndUpdate(
+    const updatedClass = await Class.findOneAndUpdate(
       { _id: classId },
       { $pull: { studentIds: studentId } },
       { new: true }
     );
 
-    res.status(201).json(newClass);
+    res.status(201).json({
+      msg: "Student sucessfully Deleted From Class",
+      updatedStudent,
+      updatedClass,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateClassName = async (req, res, next) => {
+  try {
+    const { className } = req.body;
+    const { classId } = req.params;
+
+    //Check if Class Exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass)
+      throw createError(404, `Class with id (${classId}) not Found`);
+
+    //Delete StudentId From Class Table's StudentIds Array
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId },
+      { className: className },
+      { new: true }
+    );
+
+    res.status(201).json({
+      msg: "ClassName sucessfully Updated",
+      updatedClass,
+    });
   } catch (err) {
     next(err);
   }
