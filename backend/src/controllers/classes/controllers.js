@@ -23,11 +23,11 @@ export const getClassFromId = async (req, res, next) => {
   }
 };
 
-export const getClassesByUserName = async (req, res, next) => {
+export const getClassesByUserId = async (req, res, next) => {
   try {
-    const { userName } = req.params;
-    const user = await User.findOne({ userName: userName });
-    if (!user) throw createError(404, `User (${userName}) not Found`);
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) throw createError(404, `User with id (${userId}) not Found`);
 
     const classIds = user.classIds;
 

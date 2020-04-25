@@ -3,13 +3,14 @@ import { Router } from "express";
 import {
   createAssignment,
   getAllAssignment,
-  updateAssignment,
+  teacherUpdatesAssignment,
   deleteSingleAssignmentById,
   deleteAllAssignment,
   studentSubmitsAssignment,
   teacherGradesAssignment,
   getAllGradeForAStudent,
   getASingleGradeByAssignmentId,
+  getAllAssignmentsForClass,
 } from "./controllers";
 
 const router = Router();
@@ -28,19 +29,22 @@ router.put("/submit", studentSubmitsAssignment);
 //Grade an assignment
 router.put("/grade", teacherGradesAssignment);
 
-//Get a singles student grades
-router.get("/grade/:studentName", getAllGradeForAStudent);
+//Get all Assignments For a Class
+router.get("/class/:classId", getAllAssignmentsForClass);
 
-//Get a single grade by an assignment Id
-router.get("/grade/assignment/:assignmentId", getASingleGradeByAssignmentId);
-
-//Update an assignment
-router.put("/:assignmentId/teacher/:teacherName", updateAssignment);
+//Teacher Updates assignment's Title or Instructions
+router.put("/:assignmentId", teacherUpdatesAssignment);
 
 //Teacher delete an assignment
 router.delete("/:assignmentId", deleteSingleAssignmentById);
 
 //Teacher delete all assignment
 router.delete("", deleteAllAssignment);
+
+//Get a singles student grades
+router.get("/grade/:studentName", getAllGradeForAStudent);
+
+//Get a single grade by an assignment Id
+router.get("/grade/assignment/:assignmentId", getASingleGradeByAssignmentId);
 
 export default router;

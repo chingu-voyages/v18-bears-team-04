@@ -12,10 +12,10 @@ export const createAssignment = async (req, res, next) => {
   try {
     const { classId } = req.body;
 
-    //validate if class exist
+    //validate if class exists
     const existingClass = await Class.findById(classId);
     if (!existingClass)
-      throw createError(404, `Claas ${classId} dose not exist`);
+      throw createError(404, `Class with id ${classId} dose not exist`);
     //create an new Assignment
     const assignment = await Assignment.create(req.body);
 
@@ -58,38 +58,29 @@ export const getAllAssignment = async (_req, res, next) => {
   }
 };
 
-export const updateAssignment = async (req, res, next) => {
+export const teacherUpdatesAssignment = async (req, res, next) => {
   try {
-    const { assignmentId, teacherName } = req.params;
+    const { assignmentId } = req.params;
+    const { title, instructions } = req.body;
 
-    //validate if assignment exist in DB
-    const validateId = await Assignment.findById(assignmentId);
+    //validate if assignment exists in DB
+    const assignment = await Assignment.findById(assignmentId);
 
-    if (!validateId)
+    if (!assignment)
       throw createError(404, `Assignment id ${assignmentId} does not exist`);
 
-    //User validation
-    const user = await User.findOne({ userName: teacherName });
-    if (!user) throw createError(404, `Teacher ${teacherName} not found`);
+    //Update Title and Instructions only if they were passed
+    assignment.title = title != null ? title : assignment.title;
+    assignment.instructions =
+      instructions != null ? instructions : assignment.instructions;
 
-    //Authorization Validation
-    if (user.role != userRole.TEACHER) {
-      throw createError(404, `User ${teacherName} is not a Teacher`);
-    }
-    if (validateId.submitted === true)
-      throw createError(403, `You cannot edit a submiited assignment`);
+    await assignment.save();
+
     //Update the existing assignment
-    const newAssignment = await Assignment.findOneAndUpdate(
-      { _id: assignmentId },
-      { $set: req.body },
-      { new: true }
-    );
-    if (true) {
-      res.status(200).json({
-        msg: "Assignment Updated Successfully",
-        newAssignment,
-      });
-    }
+    res.status(200).json({
+      msg: "Assignment Updated Successfully",
+      assignment,
+    });
   } catch (err) {
     next(err);
   }
@@ -162,6 +153,23 @@ export const studentSubmitsAssignment = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getAllAssignmentsForClass = async (req, res, next) => {
+  try {
+    const { classId } = req.params;
+    //validate if class exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass)
+      throw createError(404, `Class with id ${classId} dose not exist`);
+
+    const assignments = await Assignment.find({ classId: classId });
+
+    res.status(200).json(assignments);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const deleteSingleAssignmentById = async (req, res, next) => {
   try {
     const { assignmentId } = req.params;
