@@ -6,8 +6,7 @@ import {
   updateAssignment,
   deleteSingleAssignmentById,
   deleteAllAssignment,
-  submitAssignment,
-  getAllAssignmentByStatus,
+  studentSubmitsAssignment,
   teacherGradesAssignment,
   getAllGradeForAStudent,
   getASingleGradeByAssignmentId,
@@ -23,14 +22,11 @@ router.get("/all", getAllAssignment);
 //dueDate must be in format ISO 8601/JSON date eg. "2020-05-26T07:56:00.123Z"
 router.post("/", createAssignment);
 
-//Student submit an assignment
-router.post("/:assignmentId/student/:studentName", submitAssignment);
+//Student submits an assignment
+router.put("/submit", studentSubmitsAssignment);
 
 //Grade an assignment
 router.put("/grade", teacherGradesAssignment);
-
-//Get all assignment status by adding true or false as a status
-router.get("/assignment/:status", getAllAssignmentByStatus);
 
 //Get a singles student grades
 router.get("/grade/:studentName", getAllGradeForAStudent);
