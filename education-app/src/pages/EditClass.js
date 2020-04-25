@@ -39,7 +39,6 @@ const EditClass = (props) => {
 					res[1].studentIds.find((i) => i === a.value)
 				);
 
-				console.log(filteredStudents);
 				setEnrolled(filteredStudents); //will show in enrolled panel that can be deleted
 				setInput({
 					className: res[1].className,
@@ -73,12 +72,15 @@ const EditClass = (props) => {
 	const handleAddSubmit = (e) => {
 		e.preventDefault();
 		const classId = TokenService.getClassToken();
-		const add = selected.map((a) =>
+
+		const studentToAdd = selected.filter((a) => !enrolled.some((b) => a === b));
+
+		const add = studentToAdd.map((a) =>
 			ApiService.addStudentToClass(classId, a.value)
 		);
 
 		Promise.all([add]).then((res) => {
-			setEnrolled([...selected, ...enrolled]);
+			setEnrolled([...studentToAdd, ...enrolled]);
 			setSelected([]);
 		});
 	};
@@ -160,16 +162,15 @@ const EditClassStyle = styled.div`
 		height: 90vh;
 	}
 	h1 {
-		text-align: center;
-		font-size: 4rem;
-		margin: 20px;
+		font-size: 3.8rem;
+		margin: 20px auto;
+		color: #00a3ff;
 	}
 	.form-grid {
 		background-clip: content-box;
 		display: grid;
 		height: 500px;
 		padding: 20px;
-		border: 1px solid black;
 		grid-template-rows: 1fr 1fr 0.5fr;
 		grid-template-columns: 1fr 1fr;
 	}
@@ -276,9 +277,6 @@ const EditClassStyle = styled.div`
 
 	.delete-button:hover {
 		cursor: pointer;
-		box-shadow: 2px 2px 2px gray;
-		margin-right: 20px;
-		margin-left: 20px;
 	}
 
 	.delete-student-item {
