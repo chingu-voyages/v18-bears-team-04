@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MultiSelect from "react-multi-select-component";
-import { useHistory } from "react-router-dom";
 
 import ValidationError from "../components/ValidationError";
 import SideNav from "../components/SideNav";
@@ -21,16 +20,10 @@ const EditClass = (props) => {
 	const [error, setError] = useState(null);
 	const { className } = userInput;
 
-	const history = useHistory();
-
 	const getClassInfo = () => {
 		const classId = TokenService.getClassToken();
 
-		Promise.all([
-			ApiService.getUsers(),
-			ApiService.getClassById(classId),
-			ApiService.getClasses(),
-		])
+		Promise.all([ApiService.getUsers(), ApiService.getClassById(classId)])
 			.then((res) => {
 				/*Set student options for drop down menu*/
 				const students = res[0]
@@ -58,6 +51,12 @@ const EditClass = (props) => {
 	};
 
 	useEffect(() => getClassInfo(), []);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
 
 	const handleDelete = (e) => {
 		e.preventDefault();
@@ -136,12 +135,13 @@ const EditClass = (props) => {
 								labelledBy={"Select"}
 							/>
 						</label>
-						{/* <ValidationError message={errorMessage()} /> */}
+
 						<div className='button-container'>
 							<button className='modal-btn' onClick={(e) => handleAddSubmit(e)}>
 								Submit
 							</button>
 						</div>
+						{error && <ValidationError message={errorMessage()} />}
 					</form>
 				</div>
 			</EditClassStyle>

@@ -5,16 +5,14 @@ import styled from "styled-components";
 import bgImg from "../images/Dashboard-bg.jpg";
 import defaultImg from "../images/defaultImg.png";
 import config from "../../src/config";
-import exampleImgStudent from "../images/ProfExample.jpg";
-import exampleImgTeacher from "../images/maria-hill-teacher.jpg";
 
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
+import ValidationError from "./ValidationError";
 
 const SideNav = (props) => {
 	const [userInfo, setUserInfo] = useState(null);
 	const [{ error }, setError] = useState({ error: null });
-	const id = TokenService.getAuthToken();
 
 	const getUserInfo = (props) => {
 		const userId = TokenService.getAuthToken();
@@ -30,6 +28,12 @@ const SideNav = (props) => {
 		getUserInfo();
 	}, []);
 
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
+
 	const userImage =
 		userInfo === null || !userInfo.userProfileLink
 			? defaultImg
@@ -42,6 +46,7 @@ const SideNav = (props) => {
 					<div className='prof-img'>
 						<img src={userImage} alt='something that looks like you' />
 					</div>
+					{error && <ValidationError message={errorMessage()} />}
 
 					<p className='user-name'>{userInfo !== null && userInfo.userName}</p>
 

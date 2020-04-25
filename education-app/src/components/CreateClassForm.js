@@ -56,9 +56,9 @@ const CreateClassForm = (props) => {
 
 		ApiService.addClass(newClassObj)
 			.then((res) => {
-				TokenService.saveClassToken(res._id);
+				TokenService.saveClassToken(res.newClass._id);
 				props.handleClassModal();
-				props.setClassName(res.className);
+				props.setClassName(res.newClass.className);
 				history.push(`/${props.userName}/teacher/dashboard`);
 			})
 			.catch((err) => setError({ error: err }));
