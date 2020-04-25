@@ -67,7 +67,7 @@ const ApiService = {
 	},
 	addStudentToClass(classId, studentId) {
 		return fetch(
-			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			`${config.API_ENDPOINT}/class/student/?classId=${classId}&studentId=${studentId}`,
 			{
 				method: "PUT",
 				headers: {
@@ -78,10 +78,9 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
-
 	deleteStudentFromClass(classId, studentId) {
 		return fetch(
-			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			`${config.API_ENDPOINT}/class/student/?classId=${classId}&studentId=${studentId}`,
 			{
 				method: "DELETE",
 				headers: {
