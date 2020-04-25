@@ -219,7 +219,7 @@ export const teacherGradesAssignment = async (req, res, next) => {
     if (!user)
       throw createError(404, `Student with Id (${studentId}) not Found`);
 
-    //Check if User is a Teacher
+    //Check if User is a Student
     if (user.role != userRole.STUDENT)
       throw createError(404, `User with id (${studentId}) is not a Student`);
 
@@ -242,6 +242,56 @@ export const teacherGradesAssignment = async (req, res, next) => {
 
     res.status(200).json({
       msg: "Assignment Graded Successfully",
+      assignment,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Grading Asignment
+export const teacherGivesFeedback = async (req, res, next) => {
+  try {
+    const { assignmentId, studentId, teacherFeedback } = req.body;
+
+    //validate whether assignment exists in the DB
+    const assignment = await Assignment.findById(assignmentId);
+
+    if (!assignment)
+      throw createError(
+        404,
+        `Assignment with id ${assignmentId} does not exist`
+      );
+
+    //Validate the studentId
+    const user = await User.findById(studentId);
+    if (!user)
+      throw createError(404, `Student with Id (${studentId}) not Found`);
+
+    //Check if User is a Student
+    if (user.role != userRole.STUDENT)
+      throw createError(404, `User with id (${studentId}) is not a Student`);
+
+    const assignmentResults = assignment.assignmentResults;
+
+    //Find the Index of the assignmentResult Object that matches the passed studentId
+    let assgnResultIndex = assignmentResults.findIndex(
+      (assignmentResultObj) => assignmentResultObj.studentId == studentId
+    );
+
+    if (assgnResultIndex === -1)
+      throw createError(
+        404,
+        `Student with id ${studentId} is not Assigned this Assignment`
+      );
+
+    assignment.assignmentResults[
+      assgnResultIndex
+    ].teacherFeedback = teacherFeedback;
+    await assignment.save();
+
+    res.status(200).json({
+      msg: "Teacher Added FeedBack to Assignment Successfully",
       assignment,
     });
   } catch (err) {
