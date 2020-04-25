@@ -4,7 +4,7 @@ import {
   addStudentToClass,
   getAllClasses,
   getClassFromId,
-  getClassesByUserName,
+  getClassesByUserId,
   deleteStudentFromClass,
   updateClassName,
   //getAllStudentsInClass
@@ -15,7 +15,7 @@ router.get("/all", getAllClasses);
 
 router.get("/:classId", getClassFromId);
 
-router.get("/user/:userName", getClassesByUserName);
+router.get("/user/:userId", getClassesByUserId);
 
 //The Request Body must contain className and teacherName
 router.post("", createClass);
