@@ -31,9 +31,9 @@ const SideNav = (props) => {
 	}, []);
 
 	const userImage =
-		userInfo !== null
-			? config.IMG_BASE_URL + userInfo.userProfileLink
-			: defaultImg;
+		userInfo === null || !userInfo.userProfileLink
+			? defaultImg
+			: config.IMG_BASE_URL + userInfo.userProfileLink;
 
 	return (
 		<SideNavStyle>
