@@ -58,22 +58,6 @@ export const getAllAssignment = async (_req, res, next) => {
   }
 };
 
-export const getAllAssignmentByStatus = async (req, res, next) => {
-  try {
-    const { status } = req.params;
-    let assignments = await Assignment.findOne({ submitted: status });
-    if (!assignments) throw createError(404, `Assignment ${status} not found`);
-    if (assignments.submitted === true) {
-      return res.status(200).json(assignments);
-    }
-    if (assignments.submitted === false) {
-      return res.status(200).json(assignments);
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const updateAssignment = async (req, res, next) => {
   try {
     const { assignmentId, teacherName } = req.params;
@@ -111,35 +95,68 @@ export const updateAssignment = async (req, res, next) => {
   }
 };
 
-export const submitAssignment = async (req, res, next) => {
+export const studentSubmitsAssignment = async (req, res, next) => {
   try {
-    const { studentId, assignmentId } = req.params;
-
+    const {
+      studentId,
+      assignmentId,
+      studentAnswers,
+      studentFeedback,
+    } = req.body;
+    console.log("Assignment ID");
+    console.log(studentFeedback);
     //validate if assignment exists in DB
-    const validateId = await Assignment.findById(assignmentId);
-    if (!validateId)
-      throw createError(404, `Assignment id ${assignmentId} does not exist`);
+    const assignment = await Assignment.findById(assignmentId);
+    if (!assignment)
+      throw createError(
+        404,
+        `Assignment with id ${assignmentId} does not exist`
+      );
 
     //User validation
-    const user = await User.findOne({ userName: studentName });
-    if (!user) throw createError(404, `Student ${studentName} not found`);
+    const user = await User.findById(studentId);
+    if (!user) throw createError(404, `Student with id ${studentId} not found`);
 
     //Authorization Validation
     if (user.role != userRole.STUDENT) {
-      throw createError(404, `User ${studentName} is not a Student`);
+      throw createError(404, `User with id ${studentId} is not a Student`);
     }
-    if (validateId.submitted === true)
-      throw createError(403, "You cannot submit this assignment twice");
-    // Create a new note and pass the req.body to the entry
+
+    let assignmentResults = assignment.assignmentResults;
+
+    let assgnResultIndex = assignmentResults.findIndex(
+      (assignmentResult) => assignmentResult.studentId == studentId
+    );
+
+    if (assgnResultIndex === -1)
+      throw createError(
+        404,
+        `Student with id ${studentId} is not Assigned this Assignment`
+      );
+
+    //Update the Assignment
+    assignment.assignmentResults[assgnResultIndex].status = status.SUBMITTED;
+    assignment.assignmentResults[assgnResultIndex].submittedOnDate = Date.now();
+    if (studentAnswers != null) {
+      assignment.assignmentResults[
+        assgnResultIndex
+      ].studentAnswers = studentAnswers;
+    }
+    if (studentFeedback != null) {
+      assignment.assignmentResults[
+        assgnResultIndex
+      ].studentFeedback = studentFeedback;
+    }
+    await assignment.save();
 
     await notifications.sendTeachersNotification(
       req.body.assignmentId,
-      solveAssignemt.classId,
+      assignment.classId,
       user.userName
     );
     return res.status(200).json({
       msg: "Assignment Updated Successfully",
-      solveAssignemt,
+      assignment,
     });
   } catch (err) {
     next(err);
@@ -204,6 +221,12 @@ export const teacherGradesAssignment = async (req, res, next) => {
     let assgnResultIndex = assignmentResults.findIndex(
       (assignmentResultObj) => assignmentResultObj.studentId == studentId
     );
+
+    if (assgnResultIndex === -1)
+      throw createError(
+        404,
+        `Student with id ${studentId} is not Assigned this Assignment`
+      );
 
     assignment.assignmentResults[assgnResultIndex].grade = grade;
     assignment.assignmentResults[assgnResultIndex].status = status.GRADED;

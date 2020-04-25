@@ -5,6 +5,7 @@ const PUBLIC_FOLDER_URL = "./public/uploads";
 const PROFILE_URL = "/profile";
 const TEACHER_ASSIGNMENT_URL = "/teacher/assignment";
 const STUDENT_ASSIGNMENT_URL = "/student/assignment";
+import createError from "http-errors";
 
 export const uploadUserProfilePict = async (req, res, next) => {
   try {
