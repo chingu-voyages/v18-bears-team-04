@@ -56,7 +56,7 @@ const ApiService = {
 		);
 	},
 	getClasses() {
-		return fetch(`${config.API_ENDPOINT}/class`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/class/all`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
@@ -93,7 +93,7 @@ const ApiService = {
 	},
 
 	getAssignments() {
-		return fetch(`${config.API_ENDPOINT}/assignment`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/assignment/all`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},

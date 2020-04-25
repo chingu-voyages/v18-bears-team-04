@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import ApiService from "../services/api-services";
-import SideNav from "../components/SideNav";
 import TokenService from "../services/token-service";
+
+import SideNav from "../components/SideNav";
+import ValidationError from "../components/ValidationError";
 import styled from "styled-components";
 
 const AssignmentList = (props) => {
@@ -29,6 +32,7 @@ const AssignmentList = (props) => {
 					res[0].some((b) => a.classId === b._id)
 				);
 
+				console.log(res[0], res[1], res[2]);
 				setUser(res[2]);
 				setClasses(filteredClasses);
 				setAssignments(filteredAssignments);
@@ -39,6 +43,12 @@ const AssignmentList = (props) => {
 	useEffect(() => {
 		getAllApiInfo(props);
 	}, [props]);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
 
 	const combinedInfo =
 		assignments != null &&
@@ -135,8 +145,6 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
-	console.log(studentAssignments);
-
 	return (
 		<>
 			<SideNav />
@@ -144,6 +152,7 @@ const AssignmentList = (props) => {
 				<div className='wrap'>
 					<h2 className='page-title'>Assignments List</h2>
 					<h3>Your Assignments</h3>
+					{error && <ValidationError message={errorMessage()} />}
 					{classId === null ? (
 						<div className='assignment-table'>
 							{displayedStudentAssignments}
