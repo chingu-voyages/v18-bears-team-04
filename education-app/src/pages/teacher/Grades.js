@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import STORE from "../../STORE.JS";
 
 import SideNav from "../../components/SideNav";
 
@@ -14,150 +13,179 @@ const Grades = (props) => {
 
 	const infoObj = {
 		users: [],
-		grades: [],
-		classes: [],
+		classInfo: "",
 		assignments: [],
 	};
 	const [apiInfo, setApiInfo] = useState({ infoObj });
 	const [selection, setSelection] = useState({});
-	const { users, grades, classes, assignments } = apiInfo;
-	//temporary
-	const gradesList = STORE[1].assignmentGrades;
-	const assignmentList = [
-		"Pick An Assignment",
-		"Algebra Take Home Quiz #1",
-		"Polynomial Drills",
-	];
-	const filteredGrades = gradesList.filter(
-		(a) => a.assignmentName === selection.value
-	);
-
-	//if assignment is part of the class - pull the assignment and make a list
-	//fetch - get all assignments created by teacher
+	const [error, setError] = useState({ error: null });
+	const { users, classInfo, assignments } = apiInfo;
 
 	const getAllApiInfo = () => {
 		Promise.all([
-			ApiService.getClasses(),
 			ApiService.getUsers(),
-			ApiService.getGrades(),
+			ApiService.getClassById("5ea401ea13455e72b16c8b13"),
+			//TokenService.getClassToken()
 			ApiService.getAssignments(),
-		]).then((res) =>
-			setApiInfo({
-				users: res[1],
-				grades: res[2].grades,
-				classes: res[0],
-				assignments: res[3],
-			})
-		);
+		])
+			.then((res) =>
+				setApiInfo({
+					users: res[0],
+					classInfo: res[1],
+					assignments: res[2],
+				})
+			)
+			.catch((err) => setError({ error: err }));
 	};
 
 	useEffect(() => {
 		getAllApiInfo();
 	}, []);
 
-	/* API Functionality */
+	const filteredAssignments =
+		assignments !== undefined &&
+		assignments.filter((a) => a.classId === classInfo._id);
 
-	// const titles = assignment
-	// 	.filter((i) => grades.some((k) => k.assignmentId === i._id))
-	// 	.map((a) => a.title);
+	const formattedAssignments =
+		assignments !== undefined &&
+		filteredAssignments.map((a) => ({
+			title: a.title,
+			assignmentResults: a.assignmentResults,
+		}));
 
-	// console.log(users, classes, grades, assignments);
+	const makeListWithTitles = (arr) => {
+		const list = [];
+		arr.map((a) =>
+			a.assignmentResults.forEach((b) => list.push({ ...b, title: a.title }))
+		);
 
-	// const filteredAssignments =
-	// 	assignments != null
-	// 		? assignments.map((a) => a.classId === TokenService.getClassToken())
-	// 		: null;
+		//make an array of assignment titles
+		return list;
+	};
 
-	// const assignmentSelection = //need to change to filter out by classId
-	// assignments != null
-	// 	? assignments.map((a) => (
-	// 			<option key={a._id} value={a.title}>
-	// 				{a.title}
-	// 			</option>
-	// 	  ))
-	// 	: " ";
+	const assignmentListWithTitles =
+		assignments !== undefined && makeListWithTitles(formattedAssignments);
 
-	/* API Functionality */
+	const displayedAssignments =
+		assignments !== undefined &&
+		assignmentListWithTitles.map(function (a) {
+			let result = users.find((b) => a.studentId === b._id);
+			a.studentUserName = result.userName;
+			return a;
+		});
+
+	const filteredView =
+		assignments !== undefined &&
+		displayedAssignments.filter((a) => a.title === selection.value);
+
+	assignments !== undefined && console.log(filteredView);
 
 	const handleSelectionChange = (e) => {
 		const { value } = e.target;
 		setSelection({ value });
 	};
 
-	const assignmentSelection = assignmentList.map((a) => (
-		<option key={a + `1`} value={a}>
-			{a}
-		</option>
-	));
-
-	const displayedGrades = filteredGrades.map((s) => {
-		if (s.status === "Submitted") {
+	const assignmentSelection =
+		assignments !== undefined &&
+		filteredAssignments.map((a, index) => {
 			return (
-				<tr key={s.studentUserName}>
+				<option key={index} value={a.title}>
+					{a.title}
+				</option>
+			);
+		});
+
+	const displayedGrades =
+		assignments !== undefined &&
+		error !== null &&
+		filteredView.map((s, index) => {
+			if (s.status === "SUBMITTED" || s.status === "GRADED") {
+				return (
+					<tr key={index}>
+						<td>{s.studentUserName}</td>
+						<td>
+							<span className='indicator-yes'>&#10004; </span>
+						</td>
+
+						<td>
+							<label htmlFor='grade' className='grade-label'>
+								{!s.grade ? (
+									<input
+										type='text'
+										className='grade-selection'
+										value={s.grade}
+										disabled={true}
+									/>
+								) : (
+									<input type='text' className='grade-selection' />
+								)}
+								/100
+							</label>
+							{!s.grade && (
+								<button className='submit-grade-btn'>Submit Grade</button>
+							)}
+						</td>
+						<td>
+							<Link to={`/${s.userName}/assignment-view`}>
+								<button className='view-assignment-btn' value={s.title}>
+									View
+								</button>
+							</Link>
+						</td>
+						<td className='comment'>
+							{!s.studentFeedback ? (
+								" "
+							) : (
+								<span className='comment'>
+									{" "}
+									&#128681;
+									<span className='comment-text'>{s.studentFeedback}</span>
+								</span>
+							)}
+						</td>
+					</tr>
+				);
+			}
+			return (
+				<tr key={index}>
 					<td>{s.studentUserName}</td>
+
 					<td>
 						<span className='indicator-no'>&#10008; </span>
 					</td>
+
 					<td>
-						<select className='grade-selection'>
-							<option value='A'>A</option>
-							<option value='B'>By</option>
-							<option value='C'>C</option>
-							<option value='D'>D</option>
-							<option value='F'>F</option>
-						</select>
+						<label htmlFor='grade' className='grade-label'>
+							<input type='text' className='grade-selection' />
+							/100
+						</label>
+						<button className='submit-grade-btn'>Submit Grade</button>
 					</td>
 					<td>
 						<Link to={`/assignment-view`}>
-							<button className='view-assignment-btn' value={s.assignmentName}>
-								View
+							<button
+								className='view-assignment-btn'
+								value={s.title}
+								disabled={true}
+							>
+								None
 							</button>
 						</Link>
 					</td>
 					<td className='comment'>
-						{!s.studentComment ? (
+						{!s.studentFeedback ? (
 							" "
 						) : (
 							<span className='comment'>
 								{" "}
 								&#128681;
-								<span className='comment-text'>{s.studentComment}</span>
+								<span className='comment-text'>{s.studentFeedback}</span>
 							</span>
 						)}
 					</td>
 				</tr>
 			);
-		}
-		return (
-			<tr key={s.studentUserName}>
-				<td>{s.studentUserName}</td>
-				<td>
-					<span className='indicator-yes'>&#10004; </span>
-				</td>
-				<td>
-					<span className='completed-grade'>{s.grade}</span>
-				</td>
-				<td>
-					<Link to={`/assignment-view`}>
-						<button className='view-assignment-btn' value={s.assignmentName}>
-							View
-						</button>
-					</Link>
-				</td>
-				<td className='comment'>
-					{!s.studentComment ? (
-						" "
-					) : (
-						<span className='comment'>
-							{" "}
-							&#128681;
-							<span className='comment-text'>{s.studentComment}</span>
-						</span>
-					)}
-				</td>
-			</tr>
-		);
-	});
+		});
 
 	return (
 		<>
@@ -167,10 +195,12 @@ const Grades = (props) => {
 					<div className='title-section'>
 						<h1 className='text'>Assignment Grades</h1>
 						<p className='selection-text'> View By Assignment</p>
+
 						<select
 							className='assignment-selection'
 							onChange={(e) => handleSelectionChange(e)}
 						>
+							<option>Pick An Assignment</option>
 							{assignmentSelection}
 						</select>
 					</div>
@@ -302,6 +332,20 @@ const GradesStyle = styled.div`
 	}
 	.comment:hover .comment-text {
 		visibility: visible;
+	}
+
+	label {
+		display: block;
+		position: relative;
+		bottom: 5px;
+		font-size: 2rem;
+		input {
+			width: 50px;
+		}
+	}
+	.submit-grade-btn:hover {
+		color: green;
+		cursor: pointer;
 	}
 `;
 

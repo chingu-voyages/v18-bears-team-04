@@ -9,29 +9,33 @@ import ValidationError from "../../components/ValidationError";
 import SideNav from "../../components/SideNav";
 
 import ApiService from "../../services/api-services";
-// import TokenService from "../../services/token-service";
+import TokenService from "../../services/token-service";
 
 const AssignmentSubmission = (props) => {
 	const initialFormState = {
 		text: "",
-		file: "",
 	};
 	const [userInput, setInput] = useState(initialFormState);
 	const [{ error }, setError] = useState({ error: null });
-
+	const [user, setUser] = useState(null);
+	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const { text } = userInput;
 
 	function getAssignment(props) {
-		Promise.all([ApiService.getAssignments(), ApiService.getClasses()])
+		Promise.all([
+			ApiService.getAssignments(),
+			ApiService.getClasses(),
+			ApiService.getUsers(),
+		])
 			.then((res) => {
-				const currentAssignment = res[0].find(
-					(a) => a._id === props.match.params.id
-				);
-				// const currClass = res[1].filter((a) =>
-				// 	res[1].some((b) => a._id === b.classId)
-				// );
+				const newLocal = (a) => a._id === props.match.params.assignmentId;
+				const currentAssignment = res[0].find(newLocal);
 
+				const getUser = (a) => a._id === TokenService.getAuthToken();
+				const currentUser = res[2].find(getUser);
+
+				setUser(currentUser);
 				setAssignment(currentAssignment);
 			})
 			.catch((err) => setError({ error: err }));
@@ -48,13 +52,19 @@ const AssignmentSubmission = (props) => {
 	};
 
 	const handleSubmit = (e) => {
-		//update
+		//refactor
 		e.preventDefault();
 
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.append("text", userInput.text);
+
+		console.log(file, userInput.text);
+
 		ApiService.submitAssignment(
-			userInput,
-			props.match.params.id,
-			"lewis"
+			formData,
+			props.match.params.assignmentId,
+			user.userName
 		).then((res) => console.log(res));
 	};
 
@@ -66,14 +76,15 @@ const AssignmentSubmission = (props) => {
 	};
 
 	const handleFileChange = (e) => {
-		const { name } = e.target;
 		e.preventDefault();
+		const { name } = e.target;
+		console.log(e.target.files[0]);
 
-		setInput({ ...userInput, [name]: e.target.files[0] });
+		setFile(e.target.files[0]);
 	};
 
 	const stringURL =
-		assignment !== null && assignment.teacherDocLink[0] !== undefined
+		assignment !== null && assignment.teacherDocLink.length > 0
 			? config.DOC_BASE_URL + assignment.teacherDocLink[0]
 			: null;
 
@@ -134,13 +145,20 @@ const AssignmentSubmission = (props) => {
 							<span className='upload-file-title'>Upload File</span>
 							<input
 								type='file'
-								name='files'
+								name='file'
 								onChange={(e) => handleFileChange(e)}
 							/>
 						</label>
 						{props.match.params.role === "student" && (
 							<div className='btns'>
-								(<button className='submit-btn'>SUBMIT</button>)
+								<button className='submit-btn'>SUBMIT</button>
+								<button className='edit-btn'>EDIT</button>
+								{/* if user is a student they can't edit the assignment' */}
+							</div>
+						)}
+						{props.match.params.role === "teacher" && (
+							<div className='btns'>
+								<button className='edit-btn'>EDIT</button>
 								{/* if user is a student they can't edit the assignment' */}
 							</div>
 						)}
@@ -185,7 +203,7 @@ const AssignmentSubmissionStyle = styled.div`
 			width: 100%;
 			background-color: #888;
 			line-height: 40px;
-			width: 120px;
+			width: 200px;
 			text-align: center;
 			font-size: 2rem;
 			padding: 0px 10px 0px 10px;
