@@ -114,15 +114,15 @@ const App = () => {
 							<Redirect to='/' />
 						)}
 
-						{/* {TokenService.hasAuthToken() ? (
+						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:studentUsername/:assignmentId/assignment'
+								path='/:studentUsername/:assignmentId/submitted-assignment-view'
 								component={AssignmentView}
 							/>
 						) : (
 							<Redirect to='/' />
-						)} */}
+						)}
 
 						{TokenService.hasAuthToken() ? (
 							<Route

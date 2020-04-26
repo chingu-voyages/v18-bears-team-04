@@ -164,7 +164,9 @@ const Grades = (props) => {
 							)}
 						</td>
 						<td>
-							<Link to={`/${s.studentUserName}/${s._id}/assignment-view`}>
+							<Link
+								to={`/${s.studentUserName}/${s._id}/submitted-assignment-view`}
+							>
 								<button className='view-assignment-btn'>View</button>
 							</Link>
 						</td>
@@ -198,7 +200,9 @@ const Grades = (props) => {
 						<button className='submit-grade-btn'>Submit Grade</button>
 					</td>
 					<td>
-						<Link to={`/assignment-view`}>
+						<Link
+							to={`/${s.studentUserName}/${s._id}/submitted-assignment-view`}
+						>
 							<button
 								className='view-assignment-btn'
 								value={s.title}
