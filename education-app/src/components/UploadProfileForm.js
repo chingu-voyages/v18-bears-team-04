@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import ValidationError from "./ValidationError";
+import defaultImg from "../images/defaultImg.png";
 
 import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
@@ -40,9 +41,11 @@ const UploadProfileForm = (props) => {
 
 		ApiService.uploadProfileImg(formData, userId)
 			.then((res) => {
-				alert("Profile image has been updated.");
+				props.updateUserProfile(`/profile/${res.data.name}`);
+				console.log(`/profile/${res.data.name}`);
+				props.handleUploadProfileModal();
 			})
-			.catch((err) => setError({ error: err }));
+			.catch((err) => console.log(err));
 	};
 
 	return (
@@ -67,7 +70,7 @@ const UploadProfileForm = (props) => {
 					</label>
 
 					<label htmlFor='username' className='username'>
-						Username
+						{props.userName}
 						<br />
 						<input
 							type='text'
@@ -92,7 +95,7 @@ const UploadProfileForm = (props) => {
 
 					<button className='modal-btn'>Save</button>
 				</form>
-				<ValidationError message={errorMessage()} />
+				{error !== null && <ValidationError message={errorMessage()} />}
 			</div>
 		</UploadProfileFormStyle>
 	);
