@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MultiSelect from "react-multi-select-component";
-import { useHistory } from "react-router-dom";
 
 import ValidationError from "../components/ValidationError";
 import SideNav from "../components/SideNav";
@@ -21,16 +20,10 @@ const EditClass = (props) => {
 	const [error, setError] = useState(null);
 	const { className } = userInput;
 
-	const history = useHistory();
-
 	const getClassInfo = () => {
 		const classId = TokenService.getClassToken();
 
-		Promise.all([
-			ApiService.getUsers(),
-			ApiService.getClassById(classId),
-			ApiService.getClasses(),
-		])
+		Promise.all([ApiService.getUsers(), ApiService.getClassById(classId)])
 			.then((res) => {
 				/*Set student options for drop down menu*/
 				const students = res[0]
@@ -46,7 +39,6 @@ const EditClass = (props) => {
 					res[1].studentIds.find((i) => i === a.value)
 				);
 
-				console.log(filteredStudents);
 				setEnrolled(filteredStudents); //will show in enrolled panel that can be deleted
 				setInput({
 					className: res[1].className,
@@ -58,6 +50,12 @@ const EditClass = (props) => {
 	};
 
 	useEffect(() => getClassInfo(), []);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
 
 	const handleDelete = (e) => {
 		e.preventDefault();
@@ -74,12 +72,15 @@ const EditClass = (props) => {
 	const handleAddSubmit = (e) => {
 		e.preventDefault();
 		const classId = TokenService.getClassToken();
-		const add = selected.map((a) =>
+
+		const studentToAdd = selected.filter((a) => !enrolled.some((b) => a === b));
+
+		const add = studentToAdd.map((a) =>
 			ApiService.addStudentToClass(classId, a.value)
 		);
 
 		Promise.all([add]).then((res) => {
-			setEnrolled([...selected, ...enrolled]);
+			setEnrolled([...studentToAdd, ...enrolled]);
 			setSelected([]);
 		});
 	};
@@ -136,12 +137,13 @@ const EditClass = (props) => {
 								labelledBy={"Select"}
 							/>
 						</label>
-						{/* <ValidationError message={errorMessage()} /> */}
+
 						<div className='button-container'>
 							<button className='modal-btn' onClick={(e) => handleAddSubmit(e)}>
 								Submit
 							</button>
 						</div>
+						{error && <ValidationError message={errorMessage()} />}
 					</form>
 				</div>
 			</EditClassStyle>
@@ -160,16 +162,15 @@ const EditClassStyle = styled.div`
 		height: 90vh;
 	}
 	h1 {
-		text-align: center;
-		font-size: 4rem;
-		margin: 20px;
+		font-size: 3.8rem;
+		margin: 20px auto;
+		color: #00a3ff;
 	}
 	.form-grid {
 		background-clip: content-box;
 		display: grid;
 		height: 500px;
 		padding: 20px;
-		border: 1px solid black;
 		grid-template-rows: 1fr 1fr 0.5fr;
 		grid-template-columns: 1fr 1fr;
 	}
@@ -276,9 +277,6 @@ const EditClassStyle = styled.div`
 
 	.delete-button:hover {
 		cursor: pointer;
-		box-shadow: 2px 2px 2px gray;
-		margin-right: 20px;
-		margin-left: 20px;
 	}
 
 	.delete-student-item {

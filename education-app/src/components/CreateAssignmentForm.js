@@ -63,7 +63,7 @@ const CreateAssignmentForm = (props) => {
 		ApiService.addAssignment(newAssignmentObj)
 			//Add close modal and go to assignments list
 			.then((res) => {
-				ApiService.uploadAssignmentFile(formData, res.assignment._id);
+				ApiService.uploadAssignmentFile(formData, res.updatedAssignment._id);
 				setInput({
 					assignmentName: "",
 					className: props.className,

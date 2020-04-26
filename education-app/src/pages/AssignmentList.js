@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import ApiService from "../services/api-services";
-import SideNav from "../components/SideNav";
 import TokenService from "../services/token-service";
+
+import SideNav from "../components/SideNav";
+import ValidationError from "../components/ValidationError";
 import styled from "styled-components";
 
 const AssignmentList = (props) => {
@@ -11,6 +14,7 @@ const AssignmentList = (props) => {
 	const [userInfo, setUser] = useState(null);
 	const [classInfo, setClasses] = useState(null);
 	const classId = TokenService.getClassToken();
+	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
 		Promise.all([
@@ -40,6 +44,13 @@ const AssignmentList = (props) => {
 		getAllApiInfo(props);
 	}, [props]);
 
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+		console.log(error);
+	};
+
 	const combinedInfo =
 		assignments != null &&
 		assignments.map((a) => {
@@ -60,11 +71,12 @@ const AssignmentList = (props) => {
 
 	const studentClass =
 		assignments != null && classInfo.filter((a) => a.studentIds);
+	assignments !== null && console.log(combinedInfo);
 
 	const currentAssignments =
 		assignments != null &&
 		studentClass
-			.filter((c) => c.studentIds.find((b) => b === "5e984d1844ba404cab0c7f47"))
+			.filter((c) => c.studentIds.find((b) => b === userId))
 			.map((a) => a._id)
 			.map((a) => combinedInfo.filter((b) => b.classId === a));
 
@@ -106,9 +118,11 @@ const AssignmentList = (props) => {
 								to={`/${assign.title}/${assign._id}/${userInfo.role}/assignment`}
 							>
 								<h4 className='assignment-title'>{assign.title}</h4>
-								<div key={index} className='class-name-container'>
+								<div
+									key={index}
+									className='class-name-container teacher-class-name'
+								>
 									<p className='class-name'>{assign.className}</p>
-									{renderSubmittedInfo(assign.submitted)}
 								</div>
 							</Link>
 						</div>
@@ -135,8 +149,6 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
-	console.log(studentAssignments);
-
 	return (
 		<>
 			<SideNav />
@@ -144,6 +156,7 @@ const AssignmentList = (props) => {
 				<div className='wrap'>
 					<h2 className='page-title'>Assignments List</h2>
 					<h3>Your Assignments</h3>
+					{error !== null && <ValidationError message={errorMessage()} />}
 					{classId === null ? (
 						<div className='assignment-table'>
 							{displayedStudentAssignments}
@@ -227,7 +240,7 @@ const AssignmentListStyle = styled.div`
 				color: #5e5e5e;
 				top: 10%;
 				left: 5%;
-				font-size: 4rem;
+				font-size: 2.75rem;
 			}
 			.class-name-container {
 				display: flex;
@@ -237,7 +250,8 @@ const AssignmentListStyle = styled.div`
 			.class-name {
 				width: 150px;
 				height: 50px;
-				font-size: 2.5rem;
+				text-align: center;
+				font-size: 2rem;
 				border: 1px solid black;
 				border-radius: 10px;
 				display: flex;
@@ -245,6 +259,10 @@ const AssignmentListStyle = styled.div`
 				align-items: center;
 			}
 		}
+	}
+	.teacher-class-name {
+		position: relative;
+		bottom: 20px;
 	}
 `;
 

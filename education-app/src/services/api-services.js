@@ -2,12 +2,14 @@ import config from "../config";
 
 const ApiService = {
 	getUsers() {
-		return fetch(`${config.API_ENDPOINT}/user`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/user/all`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
 	getUserName(userName) {
-		return fetch(`${config.API_ENDPOINT}/user/name/${userName}`).then((res) =>
+		return fetch(
+			`${config.API_ENDPOINT}/user/?userName=${userName}`
+		).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
@@ -54,7 +56,7 @@ const ApiService = {
 		);
 	},
 	getClasses() {
-		return fetch(`${config.API_ENDPOINT}/class`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/class/all`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
@@ -65,7 +67,7 @@ const ApiService = {
 	},
 	addStudentToClass(classId, studentId) {
 		return fetch(
-			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			`${config.API_ENDPOINT}/class/student/?classId=${classId}&studentId=${studentId}`,
 			{
 				method: "PUT",
 				headers: {
@@ -76,10 +78,9 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
-
 	deleteStudentFromClass(classId, studentId) {
 		return fetch(
-			`${config.API_ENDPOINT}/class/${classId}/student/${studentId}`,
+			`${config.API_ENDPOINT}/class/student/?classId=${classId}&studentId=${studentId}`,
 			{
 				method: "DELETE",
 				headers: {
@@ -92,7 +93,7 @@ const ApiService = {
 	},
 
 	getAssignments() {
-		return fetch(`${config.API_ENDPOINT}/assignment`).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/assignment/all`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
@@ -111,6 +112,17 @@ const ApiService = {
 		return fetch(
 			`${config.API_ENDPOINT}/assignment/${assignmentId}`
 		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	gradeAssignment(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/grade`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
