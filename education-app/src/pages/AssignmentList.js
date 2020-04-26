@@ -48,7 +48,6 @@ const AssignmentList = (props) => {
 		if (error != null) {
 			return `Something went wrong.`;
 		}
-		console.log(error);
 	};
 
 	const combinedInfo =
@@ -71,7 +70,6 @@ const AssignmentList = (props) => {
 
 	const studentClass =
 		assignments != null && classInfo.filter((a) => a.studentIds);
-	assignments !== null && console.log(combinedInfo);
 
 	const currentAssignments =
 		assignments != null &&
@@ -109,6 +107,8 @@ const AssignmentList = (props) => {
 		);
 	};
 
+	// Map for render - TEACHERS
+
 	const displayedTeacherAssignments =
 		assignments != null
 			? teacherAssignments.map((assign, index) => {
@@ -129,6 +129,25 @@ const AssignmentList = (props) => {
 					);
 			  })
 			: null;
+
+	//Get Assignments Submitted By Student
+
+	// const makeListWithTitles = (arr) => {
+	// 	const list = [];
+	// 	arr.map((a) =>
+	// 		a.assignmentResults.forEach((b) =>
+	// 			list.push({ ...b, title: a.title, assignmentId: a.assignmentId })
+	// 		)
+	// 	);
+
+	// 	//make an array of assignment titles
+	// 	return list;
+	// };
+
+	// const assignmentListWithTitles =
+	// 	assignments !== undefined && makeListWithTitles(formattedAssignments);
+
+	// Map for render - STUDENTS
 
 	const displayedStudentAssignments =
 		assignments != null
