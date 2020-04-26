@@ -1,8 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import ApiService from "../../services/api-services";
+
 import SideNav from "../../components/SideNav";
+
 import styled from "styled-components";
 
 const AssignmentView = (props) => {
+	const [assignmentInfo, setInfo] = useState(null);
+	const [error, setError] = useState(null);
+
+	const getAssignmentInfo = (props) => {
+		ApiService.getAssignments()
+			.then((res) => {
+				const filterAssignment = (a) =>
+					a.assignmentResults.find((b) => b._id === "5ea4454a7d3f1d9a33716818");
+				const filteredAssignment = res.find((a) => filterAssignment(a));
+				const currentAssignment = filteredAssignment.assignmentResults.find(
+					(a) => a._id === "5ea4454a7d3f1d9a33716818"
+				);
+
+				setInfo(currentAssignment);
+			})
+
+			.catch((err) => setError({ error: err }));
+	};
+
+	const handleFeedbackChange = (e) => {
+		e.preventDefault();
+		setInfo({
+			...assignmentInfo,
+			teacherFeedback: e.target.value,
+		});
+	};
+
+	useEffect(
+		(props) => {
+			getAssignmentInfo(props);
+		},
+		[props]
+	);
+
 	return (
 		<>
 			<SideNav />
@@ -11,15 +49,30 @@ const AssignmentView = (props) => {
 					<h1>Assignment View</h1>
 					<div className='submission-container'>
 						<div className='student-submission-view-container'>
-							<h2> Student: Peter Parker</h2>
-							<div className='submission-text'></div>
-							<button>Download</button>
+							<h2> Student: {props.match.params.studentUsername}</h2>
+							<div className='submission-text'>
+								{assignmentInfo !== null && assignmentInfo.studentAnswers}
+							</div>
+							<button>Attached File Download</button>
+							{/* Add Link to download document */}
 						</div>
 
 						<div className='feedback-container'>
 							<h2>Feedback</h2>
-							<textarea className='feedback-textarea' />
-							<button>Submit</button>
+							<textarea
+								className='feedback-textarea'
+								value={
+									assignmentInfo !== null && assignmentInfo.teacherFeedback
+								}
+								onChange={(e) => handleFeedbackChange(e)}
+							/>
+							<button
+								disabled={
+									assignmentInfo !== null && assignmentInfo.teacherFeedback
+								}
+							>
+								Submit
+							</button>
 						</div>
 					</div>
 				</div>
@@ -68,6 +121,8 @@ const AssignmentViewStyle = styled.div`
 		height: 800px;
 		border: 1px solid #a9a9a9;
 		border-radius: 10px;
+		font-size: 2rem;
+		padding: 10px;
 	}
 	button {
 		background-color: #00a3ff;

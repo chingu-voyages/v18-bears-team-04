@@ -74,10 +74,11 @@ const SideNav = (props) => {
 							<Link to={`/${userInfo.userName}/my-grades`}>Grades</Link>
 						)
 					)}
-					{userInfo !== null && userInfo.role === "teacher" && (
-						<Link to={`/${userInfo.userName}/feedback`}>Feedback</Link>
+					{userInfo !== null && userInfo.role === "student" && (
+						<Link to={`/${userInfo.userName}/${userInfo.role}/evaluation`}>
+							Class Evaluation
+						</Link>
 					)}
-					}
 				</div>
 			</div>
 		</SideNavStyle>
