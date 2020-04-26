@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import EditClass from "./pages/EditClass";
 import Grades from "./pages/teacher/Grades";
+import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
 
@@ -108,6 +109,18 @@ const App = () => {
 								path='/:title/:assignmentId/assignment'
 								render={(routeProps) => (
 									<AssignmentSubmission {...routeProps} />
+								)}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:title/:assignmentId/:role/edit-assignment'
+								render={(routeProps) => (
+									<EditAssignmentSubmission {...routeProps} />
 								)}
 							/>
 						) : (

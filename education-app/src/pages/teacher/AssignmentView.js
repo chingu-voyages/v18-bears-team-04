@@ -22,6 +22,8 @@ const AssignmentView = (props) => {
 					(a) => a._id === props.match.params.assignmentId
 				);
 
+				console.log(currentAssignment);
+
 				setInfo(currentAssignment);
 			})
 

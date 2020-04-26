@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -21,6 +21,7 @@ const AssignmentSubmission = (props) => {
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const { text } = userInput;
+	const history = useHistory();
 
 	function getAssignment(props) {
 		Promise.all([
@@ -51,6 +52,13 @@ const AssignmentSubmission = (props) => {
 		}
 	};
 
+	// Teacher Delete
+	const handleDelete = () => {
+		ApiService.deleteAssignmentById(
+			props.match.params.assignmentId
+		).then((res) => props.history.goBack());
+	};
+
 	const handleSubmit = (e) => {
 		//refactor
 		e.preventDefault();
@@ -77,8 +85,6 @@ const AssignmentSubmission = (props) => {
 
 	const handleFileChange = (e) => {
 		e.preventDefault();
-
-		console.log(e.target.files[0]);
 
 		setFile(e.target.files[0]);
 	};
@@ -152,19 +158,28 @@ const AssignmentSubmission = (props) => {
 						{user !== null && user.role === "student" && (
 							<div className='btns'>
 								<button className='submit-btn'>SUBMIT</button>
-								<button className='edit-btn'>EDIT</button>
-								{/* if user is a student they can't edit the assignment' */}
+								<Link
+									to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
+								>
+									<button className='edit-btn'>EDIT</button>
+								</Link>
 							</div>
 						)}
-						{user !== null && user.role === "teacher" && (
-							<div className='btns'>
-								<button className='edit-btn'>EDIT</button>
-								<button className='delete-btn'>DELETE</button>
-								{/* if user is a student they can't edit the assignment' */}
-							</div>
-						)}
+
 						{error && <ValidationError message={errorMessage()} />}
 					</form>
+					{user !== null && user.role === "teacher" && (
+						<div className='btns'>
+							<button className='delete-btn' onClick={() => handleDelete()}>
+								DELETE
+							</button>
+							<Link
+								to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
+							>
+								<button className='edit-btn'>EDIT</button>
+							</Link>
+						</div>
+					)}
 				</div>
 			</AssignmentSubmissionStyle>
 		</>
@@ -238,22 +253,6 @@ const AssignmentSubmissionStyle = styled.div`
 			min-height: 250px;
 			border-radius: 10px;
 		}
-		.btns {
-			width: 100%;
-			display: flex;
-			justify-content: space-evenly;
-			margin-top: 30px;
-			.submit-btn,
-			.edit-btn,
-			.delete-btn {
-				width: 200px;
-				height: 40px;
-				font-size: 1.8rem;
-				border-radius: 10px;
-				background-color: #00a3ff;
-				color: #fff;
-			}
-		}
 		.upload-file-label {
 			display: block;
 			width: 100%;
@@ -274,13 +273,19 @@ const AssignmentSubmissionStyle = styled.div`
 		justify-content: space-evenly;
 		margin-top: 30px;
 		.submit-btn,
-		.edit-btn {
+		.edit-btn,
+		.delete-btn {
 			width: 200px;
 			height: 40px;
 			font-size: 1.8rem;
 			border-radius: 10px;
 			background-color: #00a3ff;
 			color: #fff;
+		}
+		.submit-btn:hover,
+		.edit-btn:hover,
+		.delete-btn:hover {
+			cursor: pointer;
 		}
 	}
 `;

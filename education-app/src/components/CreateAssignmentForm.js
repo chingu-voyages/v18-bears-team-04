@@ -61,9 +61,8 @@ const CreateAssignmentForm = (props) => {
 		formData.append("doc", files);
 
 		ApiService.addAssignment(newAssignmentObj)
-			//Add close modal and go to assignments list
 			.then((res) => {
-				ApiService.uploadAssignmentFile(formData, res.updatedAssignment._id);
+				ApiService.uploadAssignmentFile(formData, res.assignment._id);
 				setInput({
 					assignmentName: "",
 					className: props.className,
@@ -74,9 +73,10 @@ const CreateAssignmentForm = (props) => {
 				});
 				history.push(`/${props.userName}/assignments`);
 			})
-			//make error message for non doc or pdf files
-			.catch((err) => setError({ error: err }));
-		//awaiting startDate/endDate input
+			// TO DO: make error message for non doc or pdf files
+			.catch((err) => {
+				setError({ error: err });
+			});
 	};
 
 	return (
@@ -127,7 +127,7 @@ const CreateAssignmentForm = (props) => {
 					</label>
 
 					<label htmlFor='files'>
-						Files
+						File
 						<br />
 						<input
 							type='file'
@@ -140,7 +140,7 @@ const CreateAssignmentForm = (props) => {
 						Start Date
 						<br />
 						<input
-							type='datetime-local'
+							type='date'
 							name='startDate'
 							value={startDate}
 							onChange={(e) => handleChange(e)}
@@ -151,7 +151,7 @@ const CreateAssignmentForm = (props) => {
 						Due Date
 						<br />
 						<input
-							type='datetime-local'
+							type='date'
 							name='dueDate'
 							value={dueDate}
 							onChange={(e) => handleChange(e)}
