@@ -105,7 +105,7 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:studentUsername/:assignmentId/assignment-view'
+								path='/:studentUsername/:assignmentId/assignment'
 								component={AssignmentView}
 							/>
 						) : (
