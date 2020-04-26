@@ -41,11 +41,12 @@ const Dashboard = (props) => {
 	useEffect(() => {
 		ApiService.getUserName(props.match.params.userName)
 			.then((res) => {
+				console.log(res);
 				setUserInfo({ ...res });
 				getClassInfo();
 			})
 			.then((err) => setError({ error: err }));
-	}, [props.match]);
+	}, [props]);
 
 	const errorMessage = () => {
 		if (error != null) {
@@ -107,17 +108,23 @@ const Dashboard = (props) => {
 		});
 	};
 
-	const userImage =
-		userInfo === null || !userInfo.userProfileLink
-			? defaultImg
-			: config.IMG_BASE_URL + userInfo.userProfileLink;
+	let userImage =
+		userInfo !== null
+			? config.IMG_BASE_URL + userInfo.userProfileLink
+			: defaultImg;
+
+	const handleImageError = (e) => (e.target.src = defaultImg);
 
 	return (
 		<DashboardStyle bgImg={bgImg}>
 			<div className='wrap'>
 				<div className='user-info'>
 					<div className='prof-img'>
-						<img src={userImage} alt='something that looks like you' />
+						<img
+							onError={(e) => handleImageError(e)}
+							src={userImage}
+							alt='something that looks like you'
+						/>
 					</div>
 					<button
 						className='edit-container'

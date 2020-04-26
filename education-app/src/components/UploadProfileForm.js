@@ -17,11 +17,6 @@ const UploadProfileForm = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const { profileImg, profileImgPreview } = userInput;
 
-	// const handleChange = (e) => { //username and email can't be change
-	// 	const { value, name } = e.target;
-	// 	setInput({ ...userInput, [name]: value });
-	// };
-
 	const handleImgChange = (e) => {
 		e.preventDefault();
 
@@ -44,7 +39,9 @@ const UploadProfileForm = (props) => {
 		formData.append("profile", profileImg);
 
 		ApiService.uploadProfileImg(formData, userId)
-			.then((res) => console.log(res))
+			.then((res) => {
+				alert("Profile image has been updated.");
+			})
 			.catch((err) => setError({ error: err }));
 	};
 
