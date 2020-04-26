@@ -8,9 +8,8 @@ import {
   deleteAllAssignment,
   studentSubmitsAssignment,
   teacherGradesAssignment,
-  getAllGradeForAStudent,
-  getASingleGradeByAssignmentId,
-  getAllAssignmentsForClass,
+  getResultsForAStudentInAllAssignments,
+  getAStudentResultByAssignmentId,
   teacherGivesFeedback,
 } from "./controllers";
 
@@ -27,28 +26,25 @@ router.post("/", createAssignment);
 //Student submits an assignment
 router.put("/submit", studentSubmitsAssignment);
 
+//Get a single student results in All Assignment
+router.get("/all/result/:studentId", getResultsForAStudentInAllAssignments);
+
+//Get a single grade by an assignment Id
+router.get("/:assignmentId/result/:studentId", getAStudentResultByAssignmentId);
+
 //Grade an assignment
-router.put("/grade", teacherGradesAssignment);
+router.put("/grade", teacherGradesAssignment); //same
 
 //Teacher gives Feedback for assignment
-router.put("/feedback", teacherGivesFeedback);
-
-//Get all Assignments For a Class
-router.get("/class/:classId", getAllAssignmentsForClass);
+router.put("/feedback", teacherGivesFeedback); //same
 
 //Teacher Updates assignment's Title or Instructions
-router.put("/:assignmentId", teacherUpdatesAssignment);
+router.put("/:assignmentId", teacherUpdatesAssignment); //same
 
-//Teacher delete an assignment
+//Teacher deletes an assignment
 router.delete("/:assignmentId", deleteSingleAssignmentById);
 
 //Teacher delete all assignment
-router.delete("", deleteAllAssignment);
-
-//Get a singles student grades
-router.get("/grade/:studentName", getAllGradeForAStudent);
-
-//Get a single grade by an assignment Id
-router.get("/grade/assignment/:assignmentId", getASingleGradeByAssignmentId);
+router.delete("/all", deleteAllAssignment);
 
 export default router;

@@ -1,4 +1,5 @@
 import Class from "../../models/classes";
+import Assignment from "../../models/assignments";
 import createError from "http-errors";
 import User, { userRole } from "../../models/users";
 
@@ -44,6 +45,22 @@ export const getClassesByUserId = async (req, res, next) => {
     );
 
     res.status(200).json(classArray);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllAssignmentsForClass = async (req, res, next) => {
+  try {
+    const { classId } = req.params;
+    //validate if class exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass)
+      throw createError(404, `Class with id ${classId} dose not exist`);
+
+    const assignments = await Assignment.find({ classId: classId });
+
+    res.status(200).json(assignments);
   } catch (err) {
     next(err);
   }

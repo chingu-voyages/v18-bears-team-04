@@ -94,8 +94,7 @@ export const studentSubmitsAssignment = async (req, res, next) => {
       studentAnswers,
       studentFeedback,
     } = req.body;
-    console.log("Assignment ID");
-    console.log(studentFeedback);
+
     //validate if assignment exists in DB
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment)
@@ -149,22 +148,6 @@ export const studentSubmitsAssignment = async (req, res, next) => {
       msg: "Assignment Updated Successfully",
       assignment,
     });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getAllAssignmentsForClass = async (req, res, next) => {
-  try {
-    const { classId } = req.params;
-    //validate if class exists
-    const existingClass = await Class.findById(classId);
-    if (!existingClass)
-      throw createError(404, `Class with id ${classId} dose not exist`);
-
-    const assignments = await Assignment.find({ classId: classId });
-
-    res.status(200).json(assignments);
   } catch (err) {
     next(err);
   }
@@ -300,53 +283,87 @@ export const teacherGivesFeedback = async (req, res, next) => {
 };
 
 //Get all result for a specific student
-export const getAllGradeForAStudent = async (req, res, next) => {
+export const getResultsForAStudentInAllAssignments = async (req, res, next) => {
   try {
-    const { studentName } = req.params;
+    const { studentId } = req.params;
+    //Validate the studentId
+    const user = await User.findById(studentId);
+    if (!user)
+      throw createError(404, `Student with Id (${studentId}) not Found`);
 
-    //Check if student exist in Database
-    await User.findOne({ userName: studentName })
-      .populate("assignmentIds") //Get all parameters from the Id
-      .exec((err, result) => {
-        if (err) {
-          if (err.kind === "ObjectId") {
-            return res.status(404).send({
-              msg: `Grades does not exist`,
-            });
-          }
-          return res.status(500).send({
-            msg: `Error retrieving Student grade`,
-          });
-        }
-        //Map out all grades for a particular student from student assignmentId
-        const getStudentGrades = result.assignmentIds
-          .map(({ assignmentResults }) => assignmentResults)
-          .filter((assignmentResults) => assignmentResults);
-        res.status(200).json({
-          msg: "Student Grades",
-          getStudentGrades,
-        });
-      });
+    //Check if User is a Student
+    if (user.role != userRole.STUDENT)
+      throw createError(404, `User with id (${studentId}) is not a Student`);
+
+    const classIds = await getClassIdsByUserId(studentId);
+
+    //All these assignments have a the student with the given student id,
+    const assignments = await Assignment.find({ classId: { $in: classIds } });
+
+    let assignmentResults = [];
+
+    assignments.forEach((assgn) => {
+      let currAssgnResults = assgn.assignmentResults;
+      assignmentResults.push(...currAssgnResults);
+    });
+
+    const studentAssgnResults = assignmentResults.filter((assgnResult) => {
+      return (
+        assgnResult.studentId == studentId &&
+        assgnResult.status == status.GRADED
+      );
+    });
+
+    res.status(200).json({
+      results: studentAssgnResults,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-//Get a specific grade for ana assignment by Id
-export const getASingleGradeByAssignmentId = async (req, res, next) => {
+//Get a specific grade for a Single Student for a single assignment
+export const getAStudentResultByAssignmentId = async (req, res, next) => {
   try {
-    const { assignmentId } = req.params;
+    const { assignmentId, studentId } = req.params;
     //Verify if assignment exist in Database
-    const verifyAssignmentExistence = await Assignment.findById({
-      _id: assignmentId,
-    });
-    if (!verifyAssignmentExistence)
-      throw createError(404, "Assignment does not exist");
+    //validate whether assignment exists in the DB
+    const assignment = await Assignment.findById(assignmentId);
+
+    if (!assignment)
+      throw createError(
+        404,
+        `Assignment with id ${assignmentId} does not exist`
+      );
+
+    //Validate the studentId
+    const user = await User.findById(studentId);
+    if (!user)
+      throw createError(404, `Student with Id (${studentId}) not Found`);
+
+    //Check if User is a Student
+    if (user.role != userRole.STUDENT)
+      throw createError(404, `User with id (${studentId}) is not a Student`);
+
+    const assignmentResults = assignment.assignmentResults;
+
+    //Find the Index of the assignmentResult Object that matches the passed studentId
+    let assgnResult = assignmentResults.filter(
+      (assignmentResultObj) => assignmentResultObj.studentId == studentId
+    );
+
     res.status(200).json({
-      msg: "Assignment Grade",
-      data: verifyAssignmentExistence.assignmentResults,
+      result: assgnResult,
     });
   } catch (err) {
     next(err);
   }
+};
+
+const getClassIdsByUserId = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) throw createError(404, `User with id (${userId}) not Found`);
+
+  const classIds = user.classIds;
+  return classIds;
 };

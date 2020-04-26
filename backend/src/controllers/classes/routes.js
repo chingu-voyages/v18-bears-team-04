@@ -7,7 +7,7 @@ import {
   getClassesByUserId,
   deleteStudentFromClass,
   updateClassName,
-  //getAllStudentsInClass
+  getAllAssignmentsForClass,
 } from "./controllers";
 const router = Router();
 
@@ -16,6 +16,9 @@ router.get("/all", getAllClasses);
 router.get("/:classId", getClassFromId);
 
 router.get("/user/:userId", getClassesByUserId);
+
+//Get all Assignments For a Class
+router.get("/:classId/assignment", getAllAssignmentsForClass);
 
 //The Request Body must contain className and teacherName
 router.post("", createClass);
@@ -33,7 +36,6 @@ router.put("/:classId", updateClassName);
 //Routes to Add:
 //1) Delete all students in a given class. Cascading change to Students must be made
 //2) Delete A Class by its id. Cascading change to the Students must be made
-//3) Update ClassName
-//4) Update TeacherName. Cascading change must be made to Teacher
+//3) Update TeacherName. Cascading change must be made to Teacher
 
 export default router;
