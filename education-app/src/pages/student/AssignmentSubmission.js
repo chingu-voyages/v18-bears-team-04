@@ -30,7 +30,6 @@ const AssignmentSubmission = (props) => {
 		])
 			.then((res) => {
 				const newLocal = (a) => a._id === props.match.params.assignmentId;
-				console.log(props.match.params.assignmentId);
 				const currentAssignment = res[0].find(newLocal);
 
 				const getUser = (a) => a._id === TokenService.getAuthToken();
@@ -150,16 +149,17 @@ const AssignmentSubmission = (props) => {
 								onChange={(e) => handleFileChange(e)}
 							/>
 						</label>
-						{props.match.params.role === "student" && (
+						{user !== null && user.role === "student" && (
 							<div className='btns'>
 								<button className='submit-btn'>SUBMIT</button>
 								<button className='edit-btn'>EDIT</button>
 								{/* if user is a student they can't edit the assignment' */}
 							</div>
 						)}
-						{props.match.params.role === "teacher" && (
+						{user !== null && user.role === "teacher" && (
 							<div className='btns'>
 								<button className='edit-btn'>EDIT</button>
+								<button className='delete-btn'>DELETE</button>
 								{/* if user is a student they can't edit the assignment' */}
 							</div>
 						)}
@@ -244,7 +244,8 @@ const AssignmentSubmissionStyle = styled.div`
 			justify-content: space-evenly;
 			margin-top: 30px;
 			.submit-btn,
-			.edit-btn {
+			.edit-btn,
+			.delete-btn {
 				width: 200px;
 				height: 40px;
 				font-size: 1.8rem;
