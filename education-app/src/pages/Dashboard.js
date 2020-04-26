@@ -41,7 +41,6 @@ const Dashboard = (props) => {
 	useEffect(() => {
 		ApiService.getUserName(props.match.params.userName)
 			.then((res) => {
-				console.log(res);
 				setUserInfo({ ...res });
 				getClassInfo();
 			})
@@ -57,31 +56,6 @@ const Dashboard = (props) => {
 	const setClassName = (str) => {
 		setClassInfo({ currClass: str });
 	};
-
-	const renderClass =
-		currClass === null && userInfo !== null && userInfo.role === "teacher" ? (
-			<>
-				<button onClick={() => handleClassModal()}>Create Your Class</button>
-				<Modal open={showClassModal} onClose={() => handleClassModal()} center>
-					<CreateClassForm
-						userName={props.match.params.userName}
-						handleClassModal={() => handleClassModal()}
-						setClassName={(str) => setClassName(str)}
-					/>
-				</Modal>
-			</>
-		) : userInfo !== null && userInfo.role === "teacher" ? (
-			<>
-				<div className='class-title'>
-					<h1>{currClass}</h1>
-				</div>
-				<Link to={`/${props.match.params.userName}/edit-class`}>
-					Edit Class
-				</Link>
-			</>
-		) : (
-			" "
-		);
 
 	const handleUploadProfileModal = () => {
 		setModal({
@@ -108,12 +82,42 @@ const Dashboard = (props) => {
 		});
 	};
 
+	const updateUserProfile = (str) => {
+		setUserInfo({ ...userInfo, userProfileLink: str });
+		window.location.reload();
+	};
+
+	const handleImageError = (e) => (e.target.src = defaultImg);
+
 	let userImage =
 		userInfo !== null
 			? config.IMG_BASE_URL + userInfo.userProfileLink
 			: defaultImg;
 
-	const handleImageError = (e) => (e.target.src = defaultImg);
+	const renderClass =
+		currClass === null && userInfo !== null && userInfo.role === "teacher" ? (
+			<>
+				<button onClick={() => handleClassModal()}>Create Your Class</button>
+				<Modal open={showClassModal} onClose={() => handleClassModal()} center>
+					<CreateClassForm
+						userName={props.match.params.userName}
+						handleClassModal={() => handleClassModal()}
+						setClassName={(str) => setClassName(str)}
+					/>
+				</Modal>
+			</>
+		) : userInfo !== null && userInfo.role === "teacher" ? (
+			<>
+				<div className='class-title'>
+					<h1>{currClass}</h1>
+				</div>
+				<Link to={`/${props.match.params.userName}/edit-class`}>
+					Edit Class
+				</Link>
+			</>
+		) : (
+			" "
+		);
 
 	return (
 		<DashboardStyle bgImg={bgImg}>
@@ -147,9 +151,10 @@ const Dashboard = (props) => {
 					>
 						<UploadProfileForm
 							email={userInfo != null ? userInfo.email : " "}
-							userName={props.match.params.userName}
 							profileImgPreview={userImage}
 							handleUploadProfileModal={() => handleUploadProfileModal()}
+							updateUserProfile={(str) => updateUserProfile(str)}
+							userInfo={userInfo}
 						/>
 					</Modal>
 
