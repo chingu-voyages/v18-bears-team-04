@@ -30,6 +30,7 @@ const AssignmentSubmission = (props) => {
 		])
 			.then((res) => {
 				const newLocal = (a) => a._id === props.match.params.assignmentId;
+				console.log(props.match.params.assignmentId);
 				const currentAssignment = res[0].find(newLocal);
 
 				const getUser = (a) => a._id === TokenService.getAuthToken();

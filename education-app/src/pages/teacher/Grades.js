@@ -53,12 +53,15 @@ const Grades = (props) => {
 		filteredAssignments.map((a) => ({
 			title: a.title,
 			assignmentResults: a.assignmentResults,
+			assignmentId: a._id,
 		}));
 
 	const makeListWithTitles = (arr) => {
 		const list = [];
 		arr.map((a) =>
-			a.assignmentResults.forEach((b) => list.push({ ...b, title: a.title }))
+			a.assignmentResults.forEach((b) =>
+				list.push({ ...b, title: a.title, assignmentId: a.assignmentId })
+			)
 		);
 
 		//make an array of assignment titles
@@ -91,14 +94,14 @@ const Grades = (props) => {
 	};
 
 	const handleSubmit = (e) => {
-		const { value } = e.target;
 		e.preventDefault();
+		const { value } = e.target;
 		const splitInfo = value.split(",");
 		const assignmentId = splitInfo[0];
 		const studentId = splitInfo[1];
 
-		console.log(value);
 		const validatedChar = assignments !== null && newGrade.match(/^[0-9]*$/g);
+
 		if (validatedChar) {
 			const gradeObj = {
 				studentId: studentId,
@@ -138,15 +141,14 @@ const Grades = (props) => {
 						<td>
 							<label htmlFor='grade' className='grade-label'>
 								{!s.grade ? (
+									<input type='text' readOnly={true} />
+								) : (
 									<input
 										type='text'
 										className='grade-selection'
 										value={s.grade}
-										readOnly={s.status === "GRADED" ? true : false}
 										onChange={(e) => handleGradeChange(e)}
 									/>
-								) : (
-									<input type='text' className='grade-selection' />
 								)}
 								/100
 							</label>
@@ -154,7 +156,7 @@ const Grades = (props) => {
 							{!s.grade && (
 								<button
 									className='submit-grade-btn'
-									value={s._id + "," + s.studentId}
+									value={s.assignmentId + "," + s.studentId}
 									onClick={(e) => handleSubmit(e)}
 								>
 									Submit Grade
