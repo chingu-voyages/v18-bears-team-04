@@ -25,7 +25,7 @@ const SignUpForm = (props) => {
 		};
 		ApiService.addUser(newUser)
 			.then((res) => {
-				props.handleLogIn(res.userName, res.role);
+				props.handleLogIn(res);
 				TokenService.saveAuthToken(res._id);
 				if (res.classIds.length === 1) {
 					TokenService.saveClassToken(res.classIds);
