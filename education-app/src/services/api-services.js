@@ -115,6 +115,17 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	gradeAssignment(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/grade`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	getAssignmentByUserId(userId) {
 		return fetch(`${config.API_ENDPOINT}/assignment/${userId}`).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()

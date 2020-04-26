@@ -155,7 +155,17 @@ const Dashboard = (props) => {
 					<Link to={`/${props.match.params.userName}/assignments`}>
 						Assignments
 					</Link>
-					<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
+					{userInfo !== null && userInfo.role === "student" ? (
+						<Link to={`/${props.match.params.userName}/my-grades`}>Grades</Link>
+					) : (
+						<Link to={`/${props.match.params.userName}/grades`}>Grades</Link>
+					)}
+
+					{userInfo !== null && userInfo.role === "student" && (
+						<Link to={`/${userInfo.userName}/${userInfo.role}/evaluation`}>
+							Class Evaluation
+						</Link>
+					)}
 
 					<Modal
 						open={showAssignmentModal}

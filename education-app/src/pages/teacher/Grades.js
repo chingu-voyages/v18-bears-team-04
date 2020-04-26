@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import SideNav from "../../components/SideNav";
+import ValidationError from "../../components/ValidationError";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -17,6 +18,7 @@ const Grades = (props) => {
 		assignments: [],
 	};
 	const [apiInfo, setApiInfo] = useState({ infoObj });
+	const [newGrade, setGrade] = useState(null);
 	const [selection, setSelection] = useState({});
 	const [error, setError] = useState({ error: null });
 	const { users, classInfo, assignments } = apiInfo;
@@ -78,11 +80,38 @@ const Grades = (props) => {
 		assignments !== undefined &&
 		displayedAssignments.filter((a) => a.title === selection.value);
 
-	assignments !== undefined && console.log(filteredView);
-
 	const handleSelectionChange = (e) => {
 		const { value } = e.target;
 		setSelection({ value });
+	};
+
+	const handleGradeChange = (e) => {
+		const { value } = e.target;
+		setGrade(value);
+	};
+
+	const handleSubmit = (e) => {
+		const { value } = e.target;
+		e.preventDefault();
+		const splitInfo = value.split(",");
+		const assignmentId = splitInfo[0];
+		const studentId = splitInfo[1];
+
+		console.log(value);
+		const validatedChar = assignments !== null && newGrade.match(/^[0-9]*$/g);
+		if (validatedChar) {
+			const gradeObj = {
+				studentId: studentId,
+				assignmentId: assignmentId,
+				grade: newGrade,
+			};
+
+			ApiService.gradeAssignment(gradeObj)
+				.then((res) => getAllApiInfo())
+				.catch((err) => setError({ error: "Can't upload" }));
+		} else {
+			alert(`You can only submit numbers.`);
+		}
 	};
 
 	const assignmentSelection =
@@ -97,7 +126,6 @@ const Grades = (props) => {
 
 	const displayedGrades =
 		assignments !== undefined &&
-		error !== null &&
 		filteredView.map((s, index) => {
 			if (s.status === "SUBMITTED" || s.status === "GRADED") {
 				return (
@@ -114,22 +142,28 @@ const Grades = (props) => {
 										type='text'
 										className='grade-selection'
 										value={s.grade}
-										disabled={true}
+										readOnly={s.status === "GRADED" ? true : false}
+										onChange={(e) => handleGradeChange(e)}
 									/>
 								) : (
 									<input type='text' className='grade-selection' />
 								)}
 								/100
 							</label>
+
 							{!s.grade && (
-								<button className='submit-grade-btn'>Submit Grade</button>
+								<button
+									className='submit-grade-btn'
+									value={s._id + "," + s.studentId}
+									onClick={(e) => handleSubmit(e)}
+								>
+									Submit Grade
+								</button>
 							)}
 						</td>
 						<td>
-							<Link to={`/${s.userName}/assignment-view`}>
-								<button className='view-assignment-btn' value={s.title}>
-									View
-								</button>
+							<Link to={`/${s.studentUserName}/${s._id}/assignment-view`}>
+								<button className='view-assignment-btn'>View</button>
 							</Link>
 						</td>
 						<td className='comment'>
@@ -211,6 +245,7 @@ const Grades = (props) => {
 									<th>Name</th>
 									<th>Status</th>
 									<th>Grade</th>
+
 									<th>Submission</th>
 									<th>Student Comment</th>
 								</tr>
