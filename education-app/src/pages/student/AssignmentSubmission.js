@@ -78,7 +78,7 @@ const AssignmentSubmission = (props) => {
 
 	const handleFileChange = (e) => {
 		e.preventDefault();
-		const { name } = e.target;
+
 		console.log(e.target.files[0]);
 
 		setFile(e.target.files[0]);

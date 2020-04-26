@@ -114,9 +114,7 @@ const AssignmentList = (props) => {
 			? teacherAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<Link
-								to={`/${assign.title}/${assign._id}/${userInfo.role}/assignment`}
-							>
+							<Link to={`/${assign.title}/${assign._id}/assignment`}>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div
 									key={index}

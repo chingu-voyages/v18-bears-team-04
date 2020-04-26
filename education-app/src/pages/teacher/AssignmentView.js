@@ -14,10 +14,12 @@ const AssignmentView = (props) => {
 		ApiService.getAssignments()
 			.then((res) => {
 				const filterAssignment = (a) =>
-					a.assignmentResults.find((b) => b._id === "5ea4454a7d3f1d9a33716818");
+					a.assignmentResults.find(
+						(b) => b._id === props.match.params.assignmentId
+					);
 				const filteredAssignment = res.find((a) => filterAssignment(a));
 				const currentAssignment = filteredAssignment.assignmentResults.find(
-					(a) => a._id === "5ea4454a7d3f1d9a33716818"
+					(a) => a._id === props.match.params.assignmentId
 				);
 
 				setInfo(currentAssignment);
@@ -62,7 +64,7 @@ const AssignmentView = (props) => {
 							<textarea
 								className='feedback-textarea'
 								value={
-									assignmentInfo !== null && assignmentInfo.teacherFeedback
+									assignmentInfo !== null ? assignmentInfo.teacherFeedback : " "
 								}
 								onChange={(e) => handleFeedbackChange(e)}
 							/>
