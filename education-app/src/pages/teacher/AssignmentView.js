@@ -36,12 +36,9 @@ const AssignmentView = (props) => {
 		});
 	};
 
-	useEffect(
-		(props) => {
-			getAssignmentInfo(props);
-		},
-		[props]
-	);
+	useEffect(() => {
+		getAssignmentInfo(props);
+	}, [props]);
 
 	return (
 		<>
