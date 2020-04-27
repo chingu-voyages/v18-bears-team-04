@@ -34,17 +34,23 @@ const SideNav = (props) => {
 		}
 	};
 
-	const userImage =
-		userInfo === null || !userInfo.userProfileLink
-			? defaultImg
-			: config.IMG_BASE_URL + userInfo.userProfileLink;
+	let userImage =
+		userInfo !== null
+			? config.IMG_BASE_URL + userInfo.userProfileLink
+			: defaultImg;
+
+	const handleImageError = (e) => (e.target.src = defaultImg);
 
 	return (
 		<SideNavStyle>
 			<div className='wrap'>
 				<div className='userInfo'>
 					<div className='prof-img'>
-						<img src={userImage} alt='something that looks like you' />
+						<img
+							onError={(e) => handleImageError(e)}
+							src={userImage}
+							alt='something that looks like you'
+						/>
 					</div>
 					{error && <ValidationError message={errorMessage()} />}
 
