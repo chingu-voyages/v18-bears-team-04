@@ -249,7 +249,7 @@ const AssignmentListStyle = styled.div`
 			&:before {
 				content: "";
 				display: block;
-				margin-top: 30%;
+				margin-top: 150px;
 			}
 			.assignment-title {
 				width: 100%;
