@@ -92,8 +92,8 @@ const AssignmentList = (props) => {
 	const studentAssignments =
 		assignments != null && makeCombinedAssignments(currentAssignments);
 
-	const renderSubmittedInfo = (bool) => {
-		if (!bool) {
+	const renderSubmittedInfo = (str) => {
+		if (str === "NOT SUBMITTED") {
 			return (
 				<div className='status-container'>
 					<p className='status no'>&#10008;</p>
@@ -128,28 +128,27 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
-	//Get Assignments Submitted By Student
+	// Get Assignments Submitted By Student
 
-	// const makeListWithTitles = (arr) => {
-	// 	const list = [];
-	// 	arr.map((a) =>
-	// 		a.assignmentResults.forEach((b) =>
-	// 			list.push({ ...b, title: a.title, assignmentId: a.assignmentId })
-	// 		)
-	// 	);
+	const list = [];
+	assignments != null &&
+		studentAssignments.map((a) =>
+			a.assignmentResults.forEach((b) =>
+				list.push({
+					...b,
+					title: a.title,
+					assignmentId: a.assignmentId,
+					className: a.className,
+				})
+			)
+		);
 
-	// 	//make an array of assignment titles
-	// 	return list;
-	// };
-
-	// const assignmentListWithTitles =
-	// 	assignments !== undefined && makeListWithTitles(formattedAssignments);
-
-	// Map for render - STUDENTS
+	const studentCurrentAssignments =
+		assignments != null && list.filter((a) => a.studentId === userId);
 
 	const displayedStudentAssignments =
 		assignments != null
-			? studentAssignments.map((assign, index) => {
+			? studentCurrentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link
@@ -158,7 +157,7 @@ const AssignmentList = (props) => {
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>
 									<p className='class-name'>{assign.className}</p>
-									{renderSubmittedInfo(assign.submitted)}
+									{renderSubmittedInfo(assign.status)}
 								</div>
 							</Link>
 						</div>
