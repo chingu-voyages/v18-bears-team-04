@@ -4,7 +4,6 @@ import User, { userRole } from '../models/users';
 import Assignment from '../models/assignments';
 import { pusher } from '../config/pusher';
 import Notifications from '../models/notifications';
-import createError from 'http-errors';
 
 /**
  *
@@ -37,8 +36,7 @@ const saveNewNotification = async (assignmentId, username, message) => {
     const title = 'Welcome to iScholars';
     const body = `<p>Dear ${name},</p>
     <p>We are thrilled to have you.</p>
-    <p>At iScholars, we know how much you love to learn. We are her to make it easy and fun.</p>
-        <a href="${link}" class="button">Confirm email</a>`;
+    <p>At iScholars, we know how much you love to learn. We are her to make it easy and fun.</p>`;
     const message = template(title, body, email);
     sendEmail(email, title, message);
   };
