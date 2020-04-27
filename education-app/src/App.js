@@ -46,7 +46,6 @@ const App = () => {
 
 					<TopNav />
 					{/* Order matters! */}
-					<Evaluation/>
 					<Route exact path='/' component={Homepage} />
 
 					<Switch>
