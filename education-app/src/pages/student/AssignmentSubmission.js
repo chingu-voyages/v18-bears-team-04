@@ -12,15 +12,16 @@ import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 
 const AssignmentSubmission = (props) => {
-	const initialFormState = {
-		text: "",
-	};
-	const [userInput, setInput] = useState(initialFormState);
+	// TO DO: Download file from download button
+	const [userInput, setInput] = useState({
+		studentAnswers: "",
+		studentFeedback: "",
+	});
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
-	const { text } = userInput;
+	const { studentAnswers, studentFeedback } = userInput;
 	const history = useHistory();
 
 	function getAssignment(props) {
@@ -35,6 +36,12 @@ const AssignmentSubmission = (props) => {
 
 				const getUser = (a) => a._id === TokenService.getAuthToken();
 				const currentUser = res[2].find(getUser);
+
+				const assignmentContent = currentAssignment.assignmentResults.find(
+					(a) => a.studentId === currentUser._id
+				);
+
+				setInput(assignmentContent);
 
 				setUser(currentUser);
 				setAssignment(currentAssignment);
@@ -59,35 +66,41 @@ const AssignmentSubmission = (props) => {
 		).then((res) => props.history.goBack());
 	};
 
+	//FOR STUDENT SUBMISSION START//
+	const handleTextChange = (e) => {
+		e.preventDefault();
+		const { value, name } = e.target;
+
+		setInput({ ...userInput, [name]: value });
+	};
+
 	const handleSubmit = (e) => {
 		//refactor
 		e.preventDefault();
 
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("text", userInput.text);
+		const obj = {
+			studentFeedback,
+			studentAnswers,
+			studentId: user._id,
+			assignmentId: assignment._id,
+		};
 
-		console.log(file, userInput.text);
-
-		ApiService.submitAssignment(
-			formData,
-			props.match.params.assignmentId,
-			user.userName
-		).then((res) => console.log(res));
+		ApiService.submitAssignment(obj).then((res) => props.history.goBack());
 	};
 
-	const handleTextChange = (e) => {
-		e.preventDefault();
-		setInput({
-			text: e.target.value,
-		});
-	};
+	//FOR STUDENT SUBMISSION END//
 
+	// TO DO: Upload a file - need upload route for student submission in API
 	const handleFileChange = (e) => {
 		e.preventDefault();
 
 		setFile(e.target.files[0]);
 	};
+
+	const assignmentResult =
+		assignment !== null && assignment.assignmentResults !== undefined
+			? assignment.assignmentResults.find((a) => a.studentId === user._id)
+			: null;
 
 	const stringURL =
 		assignment !== null && assignment.teacherDocLink.length > 0
@@ -98,88 +111,169 @@ const AssignmentSubmission = (props) => {
 		if (assignment.dueDate === null) {
 			return "Due Date Unavailable";
 		}
-		return moment(assignment.startDate).format("MMMM Do YYYY, h:mm:ss a");
+		return moment(assignment.startDate).format("MMMM DD, YYYY");
 	};
+
+	const renderStudentSubmissionView = assignment !== null &&
+		user.role === "student" && (
+			<>
+				<h1> {assignment.title}</h1>
+
+				<div className='assignment-details'>
+					<div className='instructions'>
+						Instructions:
+						<div className='instructions-container'>
+							{assignment !== null
+								? assignment.instructions
+								: "Instructions Unavailable"}{" "}
+						</div>
+					</div>
+					<div className='assignment-dates'>
+						<div>
+							Due Date:{" "}
+							<span className='date-string'>
+								{assignment !== null && formatDate()}
+							</span>
+						</div>
+					</div>
+				</div>
+				{stringURL !== null && (
+					<Link
+						className='download-btn'
+						to={stringURL}
+						target='_blank'
+						download
+					>
+						Download File
+					</Link>
+				)}
+
+				<form onSubmit={(e) => handleSubmit(e)}>
+					<label htmlFor='submission'>
+						<h2>Type Answers or Upload a File Below</h2>
+						<textarea
+							className='text-area'
+							name='studentAnswers'
+							value={studentAnswers}
+							placeholder='Write your submission here'
+							onChange={(e) => handleTextChange(e)}
+						/>
+					</label>
+
+					<label htmlFor='feedback'>
+						<h2>Feedback</h2>
+						<textarea
+							className='feedback'
+							name='studentFeedback'
+							value={studentFeedback}
+							placeholder='Feedback details '
+							onChange={(e) => handleTextChange(e)}
+						/>
+					</label>
+
+					<label htmlFor='files' className='upload-file-label'>
+						<span className='upload-file-title'>Upload File</span>
+						<input
+							type='file'
+							name='file'
+							onChange={(e) => handleFileChange(e)}
+						/>
+					</label>
+					{user !== null &&
+					user.role === "student" &&
+					props.match.params.status === "GRADED" ? (
+						<div className='graded-class-message'>Class is already graded.</div>
+					) : (
+						<div className='btns'>
+							<Link
+								to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
+							>
+								<button className='edit-btn'>EDIT</button>
+							</Link>
+							<button className='submit-btn'>SUBMIT</button>
+						</div>
+					)}
+
+					{error && <ValidationError message={errorMessage()} />}
+				</form>
+			</>
+		);
+
+	const renderTeacherSubmissionView = assignment !== null &&
+		user.role === "student" && (
+			<>
+				{" "}
+				<h1> assignment.title</h1>
+				<div className='assignment-details'>
+					<div className='instructions'>
+						Instructions:
+						<div className='instructions-container'>
+							{assignment !== null
+								? assignment.instructions
+								: "Instructions Unavailable"}{" "}
+						</div>
+					</div>
+					<div className='assignment-dates'>
+						<div>
+							Due Date:{" "}
+							<span className='date-string'>
+								{assignment !== null && formatDate()}
+							</span>
+						</div>
+					</div>
+				</div>
+				{stringURL !== null && (
+					<Link
+						className='download-btn'
+						to={stringURL}
+						target='_blank'
+						download
+					>
+						Download File
+					</Link>
+				)}
+				<form onSubmit={(e) => handleSubmit(e)}>
+					<label htmlFor='submission'>
+						<textarea
+							className='text-area'
+							placeholder='Write your submission here'
+							onChange={(e) => handleTextChange(e)}
+						/>
+					</label>
+					<label htmlFor='files' className='upload-file-label'>
+						<span className='upload-file-title'>Upload File</span>
+						<input
+							type='file'
+							name='file'
+							onChange={(e) => handleFileChange(e)}
+						/>
+					</label>
+
+					{error && <ValidationError message={errorMessage()} />}
+				</form>
+				{user !== null && user.role === "teacher" && (
+					<div className='btns'>
+						<button className='delete-btn' onClick={() => handleDelete()}>
+							DELETE
+						</button>
+						<Link
+							to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
+						>
+							<button className='edit-btn'>EDIT</button>
+						</Link>
+					</div>
+				)}
+			</>
+		);
 
 	return (
 		<>
 			<SideNav />
 			<AssignmentSubmissionStyle>
 				<div className='wrap'>
-					<h1>{assignment !== null && assignment.title}</h1>
-
-					<div className='assignment-details'>
-						<div className='instructions'>
-							Instructions:
-							<div className='instructions-container'>
-								{assignment !== null
-									? assignment.instructions
-									: "Instructions Unavailable"}{" "}
-							</div>
-						</div>
-						<div className='assignment-dates'>
-							<div>
-								Due Date:{" "}
-								<span className='date-string'>
-									{assignment !== null && formatDate()}
-								</span>
-							</div>
-						</div>
-					</div>
-					{stringURL !== null && (
-						<Link
-							className='download-btn'
-							to={stringURL}
-							target='_blank'
-							download
-						>
-							Download File
-						</Link>
-					)}
-
-					<form onSubmit={(e) => handleSubmit(e)}>
-						<label htmlFor='submission'>
-							<textarea
-								className='text-area'
-								name='text'
-								value={text}
-								placeholder='Write your submission here'
-								onChange={(e) => handleTextChange(e)}
-							/>
-						</label>
-						<label htmlFor='files' className='upload-file-label'>
-							<span className='upload-file-title'>Upload File</span>
-							<input
-								type='file'
-								name='file'
-								onChange={(e) => handleFileChange(e)}
-							/>
-						</label>
-						{user !== null && user.role === "student" && (
-							<div className='btns'>
-								<button className='submit-btn'>SUBMIT</button>
-								<Link
-									to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
-								>
-									<button className='edit-btn'>EDIT</button>
-								</Link>
-							</div>
-						)}
-
-						{error && <ValidationError message={errorMessage()} />}
-					</form>
-					{user !== null && user.role === "teacher" && (
-						<div className='btns'>
-							<button className='delete-btn' onClick={() => handleDelete()}>
-								DELETE
-							</button>
-							<Link
-								to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
-							>
-								<button className='edit-btn'>EDIT</button>
-							</Link>
-						</div>
-					)}
+					{user !== null && user.role === "student"
+						? renderStudentSubmissionView
+						: renderTeacherSubmissionView}
 				</div>
 			</AssignmentSubmissionStyle>
 		</>
@@ -199,6 +293,11 @@ const AssignmentSubmissionStyle = styled.div`
 		font-size: 4rem;
 		color: #00a3ff;
 		margin-top: 20px;
+	}
+
+	h2 {
+		font-size: 1.75rem;
+		color: #00a3ff;
 	}
 	.assignment-details {
 		display: grid;
@@ -245,19 +344,25 @@ const AssignmentSubmissionStyle = styled.div`
 		background-color: #00a3ff;
 		color: #fff;
 	}
+	.feedback {
+		height: 50px;
+	}
 	form {
 		width: 100%;
 		textarea {
-			margin-top: 40px;
+			font-size: 1.5rem;
+			padding-left: 10px;
+			margin-top: 10px;
+			margin-bottom: 10px;
 			width: 100%;
-			min-height: 250px;
+			height: 250px;
 			border-radius: 10px;
 		}
+
 		.upload-file-label {
 			display: block;
 			width: 100%;
 			padding: 5px;
-
 			background-color: #c4c4c4;
 			border-radius: 5px;
 			span {
@@ -287,6 +392,12 @@ const AssignmentSubmissionStyle = styled.div`
 		.delete-btn:hover {
 			cursor: pointer;
 		}
+	}
+	.graded-class-message {
+		font-color: #878787;
+		font-size: 2rem;
+		text-align: center;
+		margin: 10px;
 	}
 `;
 

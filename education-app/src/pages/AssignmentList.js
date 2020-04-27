@@ -137,7 +137,7 @@ const AssignmentList = (props) => {
 				list.push({
 					...b,
 					title: a.title,
-					assignmentId: a.assignmentId,
+					assignmentId: a._id,
 					className: a.className,
 				})
 			)
@@ -146,13 +146,15 @@ const AssignmentList = (props) => {
 	const studentCurrentAssignments =
 		assignments != null && list.filter((a) => a.studentId === userId);
 
+	assignments != null && console.log(studentCurrentAssignments);
+
 	const displayedStudentAssignments =
 		assignments != null
 			? studentCurrentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link
-								to={`/${assign.title}/${assign._id}/${userInfo.role}/submission`}
+								to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
 							>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>

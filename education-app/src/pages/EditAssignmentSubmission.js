@@ -32,6 +32,12 @@ const EditAssignmentSubmission = (props) => {
 				const getUser = (a) => a._id === TokenService.getAuthToken();
 				const currentUser = res[2].find(getUser);
 
+				const assignmentContent = currentAssignment.assignmentResults.find(
+					(a) => a.studentId === currentUser._id
+				);
+
+				setInput(assignmentContent);
+
 				setUser(currentUser);
 				setAssignment(currentAssignment);
 			})
@@ -63,30 +69,35 @@ const EditAssignmentSubmission = (props) => {
 		return moment(assignment.dueDate).format("MMMM Do YYYY");
 	};
 
-	const handleSubmit = (e) => {
+	const handleStudentEdit = (e) => {
 		e.preventDefault();
 
-		const formData = new FormData();
+		//TO DO: Need to add upload file for student upload endpoint
+		// const formData = new FormData();
 		// formData.append("file", file);
 		// formData.append("text", userInput.text);
 
-		ApiService.submitAssignment(
-			formData,
-			props.match.params.assignmentId,
-			user.userName
-		).then((res) => console.log(res));
+		const obj = {
+			studentFeedback: userInput.studentFeedback,
+			studentAnswers: userInput.studentAnswers,
+			studentId: user._id,
+			assignmentId: assignment._id,
+		};
+
+		ApiService.submitAssignment(obj).then((res) => props.history.goBack());
 	};
 
 	const handleTextChange = (e) => {
 		e.preventDefault();
 		const { name, value } = e.target;
 
-		setAssignment({
-			...assignment,
+		setInput({
+			...userInput,
 			[name]: value,
 		});
 	};
 
+	//-- present assignment content from student submission
 	//EDIT STUDENT ROLE END//
 
 	// TEACHER EDIT ROLE ONLY START //
@@ -245,16 +256,28 @@ const EditAssignmentSubmission = (props) => {
 					Download File
 				</Link>
 			)}
-			<form onSubmit={(e) => handleSubmit(e)}>
+			<form onSubmit={(e) => handleStudentEdit(e)}>
 				<label htmlFor='submission'>
+					<h2>Type Answers or Upload a File Below</h2>
 					<textarea
 						className='text-area'
-						name='text'
-						// value={text}
+						name='studentAnswers'
+						value={userInput.studentAnswers}
 						placeholder='Write your submission here'
 						onChange={(e) => handleTextChange(e)}
 					/>
 				</label>
+				<label htmlFor='feedback'>
+					<h2>Feedback</h2>
+					<textarea
+						className='feedback'
+						name='studentFeedback'
+						value={userInput.studentFeedback}
+						placeholder='Feedback details '
+						onChange={(e) => handleTextChange(e)}
+					/>
+				</label>
+
 				<label htmlFor='files' className='upload-file-label'>
 					<span className='upload-file-title'>Upload File</span>
 					<input
@@ -299,6 +322,11 @@ const EditAssignmentSubmissionStyle = styled.div`
 		font-size: 4rem;
 		color: #00a3ff;
 		margin-top: 20px;
+	}
+
+	h2 {
+		font-size: 1.75rem;
+		color: #00a3ff;
 	}
 	.assignment-details {
 		display: grid;
@@ -361,12 +389,18 @@ const EditAssignmentSubmissionStyle = styled.div`
 		background-color: #00a3ff;
 		color: #fff;
 	}
+	.feedback {
+		height: 50px;
+	}
 	form {
 		width: 100%;
 		textarea {
-			margin-top: 40px;
+			font-size: 1.5rem;
+			padding-left: 10px;
+			margin-top: 10px;
+			margin-bottom: 10px;
 			width: 100%;
-			min-height: 250px;
+			height: 250px;
 			border-radius: 10px;
 		}
 		.btns {
