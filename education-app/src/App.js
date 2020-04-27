@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import EditClass from "./pages/EditClass";
 import Grades from "./pages/teacher/Grades";
+import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
 import Sgrade from "./pages/student/Grade"
@@ -93,7 +94,7 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:title/:assignmentId/:role/submission'
+								path='/:title/:assignmentId/:status/submission'
 								render={(routeProps) => (
 									<AssignmentSubmission {...routeProps} />
 								)}
@@ -105,7 +106,31 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:studentUsername/:assignmentId/assignment-view'
+								path='/:title/:assignmentId/assignment'
+								render={(routeProps) => (
+									<AssignmentSubmission {...routeProps} />
+								)}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:title/:assignmentId/:role/edit-assignment'
+								render={(routeProps) => (
+									<EditAssignmentSubmission {...routeProps} />
+								)}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:studentUsername/:assignmentId/submitted-assignment-view'
 								component={AssignmentView}
 							/>
 						) : (

@@ -92,8 +92,8 @@ const AssignmentList = (props) => {
 	const studentAssignments =
 		assignments != null && makeCombinedAssignments(currentAssignments);
 
-	const renderSubmittedInfo = (bool) => {
-		if (!bool) {
+	const renderSubmittedInfo = (str) => {
+		if (str === "NOT SUBMITTED") {
 			return (
 				<div className='status-container'>
 					<p className='status no'>&#10008;</p>
@@ -114,9 +114,7 @@ const AssignmentList = (props) => {
 			? teacherAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
-							<Link
-								to={`/${assign.title}/${assign._id}/${userInfo.role}/assignment`}
-							>
+							<Link to={`/${assign.title}/${assign._id}/assignment`}>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div
 									key={index}
@@ -130,37 +128,38 @@ const AssignmentList = (props) => {
 			  })
 			: null;
 
-	//Get Assignments Submitted By Student
+	// Get Assignments Submitted By Student
 
-	// const makeListWithTitles = (arr) => {
-	// 	const list = [];
-	// 	arr.map((a) =>
-	// 		a.assignmentResults.forEach((b) =>
-	// 			list.push({ ...b, title: a.title, assignmentId: a.assignmentId })
-	// 		)
-	// 	);
+	const list = [];
+	assignments != null &&
+		studentAssignments.map((a) =>
+			a.assignmentResults.forEach((b) =>
+				list.push({
+					...b,
+					title: a.title,
+					assignmentId: a._id,
+					className: a.className,
+				})
+			)
+		);
 
-	// 	//make an array of assignment titles
-	// 	return list;
-	// };
+	const studentCurrentAssignments =
+		assignments != null && list.filter((a) => a.studentId === userId);
 
-	// const assignmentListWithTitles =
-	// 	assignments !== undefined && makeListWithTitles(formattedAssignments);
-
-	// Map for render - STUDENTS
+	assignments != null && console.log(studentCurrentAssignments);
 
 	const displayedStudentAssignments =
 		assignments != null
-			? studentAssignments.map((assign, index) => {
+			? studentCurrentAssignments.map((assign, index) => {
 					return (
 						<div key={assign._id} className='assignment'>
 							<Link
-								to={`/${assign.title}/${assign._id}/${userInfo.role}/submission`}
+								to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
 							>
 								<h4 className='assignment-title'>{assign.title}</h4>
 								<div key={index} className='class-name-container'>
 									<p className='class-name'>{assign.className}</p>
-									{renderSubmittedInfo(assign.submitted)}
+									{renderSubmittedInfo(assign.status)}
 								</div>
 							</Link>
 						</div>

@@ -133,11 +133,21 @@ const ApiService = {
 	},
 	updateAssignmentById(obj, assignmentId) {
 		return fetch(`${config.API_ENDPOINT}/assignment/${assignmentId}`, {
-			method: "POST",
+			method: "PUT",
 			headers: {
 				"content-type": "application/json",
 			},
 			body: JSON.stringify(obj),
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	deleteAssignmentById(assignmentId) {
+		return fetch(`${config.API_ENDPOINT}/assignment/${assignmentId}`, {
+			method: "DELETE",
+			headers: {
+				"content-type": "application/json",
+			},
 		}).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
@@ -147,17 +157,14 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
-	submitAssignment(obj, assignmentId, studentName) {
-		return fetch(
-			`${config.API_ENDPOINT}/assignment/${assignmentId}/student/${studentName}`,
-			{
-				method: "POST",
-				headers: {
-					"content-type": "application/json",
-				},
-				body: JSON.stringify(obj),
-			}
-		).then((res) =>
+	submitAssignment(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/submit`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
