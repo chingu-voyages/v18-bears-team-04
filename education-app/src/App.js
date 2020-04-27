@@ -15,6 +15,7 @@ import Grades from "./pages/teacher/Grades";
 import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
+import Sgrade from "./pages/student/Grade"
 
 import ScholarContext from "../src/ScholarContext";
 
@@ -43,7 +44,6 @@ const App = () => {
 					<ResetCSS />
 
 					<TopNav />
-
 					{/* Order matters! */}
 
 					<Route exact path='/' component={Homepage} />
@@ -51,7 +51,7 @@ const App = () => {
 					<Switch>
 						{TokenService.hasAuthToken() ? (
 							<Route
-								exact
+							exact
 								path='/:userName/:role/dashboard'
 								render={(routeProps) => <Dashboard {...routeProps} />}
 							/>
