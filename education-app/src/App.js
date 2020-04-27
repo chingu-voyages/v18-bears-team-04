@@ -16,6 +16,7 @@ import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
 import Sgrade from "./pages/student/Grade"
+import Evaluation from "./pages/student/Evaluation"
 
 import ScholarContext from "../src/ScholarContext";
 
@@ -45,7 +46,6 @@ const App = () => {
 
 					<TopNav />
 					{/* Order matters! */}
-
 					<Route exact path='/' component={Homepage} />
 
 					<Switch>
