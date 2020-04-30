@@ -103,7 +103,7 @@ const HomepageStyle = styled.div`
 		}
 		.home-left,
 		.home-right {
-			width: 50%;
+			width: 42%;
 			height: 100%;
 			display: flex;
 			flex-direction: column;
@@ -161,7 +161,7 @@ const HomepageStyle = styled.div`
 		.home-right {
 			align-items: center;
 			.img-wrap {
-				width: 85%;
+				width: 139%;
 				position: relative;
 				overflow: hidden;
 				img {
