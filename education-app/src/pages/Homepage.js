@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-
 import img from "../images/Homepage.jpg";
 import fbIcon from "../images/facebook-f-brands.svg";
 import instaIcon from "../images/instagram-brands.svg";
 import linkedinIcon from "../images/linkedin-in-brands.svg";
+import HowItWorks from './HowItWorks';
 
 const Homepage = () => {
 	return (
@@ -24,9 +24,9 @@ const Homepage = () => {
 						<br />
 						iScholars
 					</p>
-					<div className='descriptions'>
+					{/* <div className='descriptions'>
 						<div className='desc'>
-							<p className='user'>For the Teachers</p>
+							<p className='user'><i class="fas fa-chalkboard-teacher"> Teachers</i></p>
 							<ul>
 								<li className='what-you-can'>talk to your students</li>
 								<li className='what-you-can'>manage your classes</li>
@@ -36,7 +36,7 @@ const Homepage = () => {
 							</ul>
 						</div>
 						<div className='desc'>
-							<p className='user'>For the Students</p>
+							<p className='user'><i class="fas fa-users"> Students</i></p>
 							<ul>
 								<li className='what-you-can'>ask questions to your teacher</li>
 								<li className='what-you-can'>work on your assignment</li>
@@ -44,7 +44,7 @@ const Homepage = () => {
 								<li className='what-you-can'>get your grades</li>
 							</ul>
 						</div>
-					</div>
+					</div> */}
 				</div>
 				<div className='home-right'>
 					<div className='img-wrap'>
@@ -53,14 +53,18 @@ const Homepage = () => {
 					<button className='try-btn'>Try Now</button>
 				</div>
 			</div>
+			<div>
+			<HowItWorks />
+			</div>
+			
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
-						<a href='/about'>About us</a>
+						<a href='/about'>About us</a>     <span> <a href='/support'>Support</a></span>
 					</li>
-					<li>
+					{/* <li>
 						<a href='/support'>Support</a>
-					</li>
+					</li> */}
 				</ul>
 				<ul className='social-media'>
 					<li>
@@ -110,6 +114,8 @@ const HomepageStyle = styled.div`
 				font-size: 5.5rem;
 				text-align: center;
 				color: #00a3ff;
+				animation: 5s ease-out 0s 1 slideInDown;
+					-webkit-animation-name: slideInDown;
 			}
 			.descriptions {
 				width: 80%;
@@ -118,8 +124,17 @@ const HomepageStyle = styled.div`
 				justify-content: space-between;
 				.desc {
 					width: 50%;
+					
 					.user {
 						font-size: 2rem;
+						i.fas.fa-chalkboard-teacher {
+						font-size: 30px;
+						margin: 8px 20px;
+					},
+					i.fas.fa-users{
+						font-size: 30px;
+						margin: 8px 20px;
+					},
 					}
 					ul {
 						margin: 30px auto 0;
@@ -128,12 +143,15 @@ const HomepageStyle = styled.div`
 							display: flex;
 							align-items: center;
 							margin-bottom: 8px;
-							&:before {
+                            
+                            
+							&::before {
 								display: block;
-								content: "";
+								content:'*';
 								width: 15px;
 								margin-right: 10px;
-								border-top: 2px solid;
+								color: #00a3ff;
+								margin-top: 6px;
 							}
 						}
 					}
@@ -180,7 +198,7 @@ const HomepageStyle = styled.div`
 	.bottom {
 		width: 100%;
 		height: 80px;
-		background-color: #efefef;
+		background-color: #fff;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -190,6 +208,12 @@ const HomepageStyle = styled.div`
 				height: 40px;
 				line-height: 40px;
 				font-size: 2rem;
+			}
+			span{
+				height: 40px;
+				line-height: 40px;
+				font-size: 2rem;
+				padding-left: 25px;
 			}
 		}
 		.social-media {
@@ -215,6 +239,19 @@ const HomepageStyle = styled.div`
 			}
 		}
 	}
+	
+@keyframes slideInDown {
+  from {
+    -webkit-transform: translate3d(0, -90%, 0);
+    transform: translate3d(0, -90%, 0);
+    visibility: visible;
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
 `;
 
 export default Homepage;
