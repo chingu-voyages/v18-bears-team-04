@@ -2,7 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom"
 
-import img from "../images/Homepage.jpg";
+import img from "../images/iScholars-logo-medium.png";
+import teacherIcon from "../images/teacher.svg"
+import studentIcon from "../images/student.svg"
+import assignmentIcon from "../images/assignment.svg"
+import gradeIcon from "../images/grade.svg"
+import feedbackIcon from "../images/feedback.svg"
 import fbIcon from "../images/facebook-f-brands.svg";
 import instaIcon from "../images/instagram-brands.svg";
 import linkedinIcon from "../images/linkedin-in-brands.svg";
@@ -12,20 +17,58 @@ const Homepage = () => {
 	return (
 		<HomepageStyle>
 			<div className='first-view'>
-				<form id='select-lang' action=''>
+				{/* <form id='select-lang' action=''>
 					<select name='language'>
 						<option value='English'>English</option>
 						<option value='Italiano'>Italiano</option>
 						<option value='Español'>Español</option>
 						<option value='日本語'>日本語</option>
 					</select>
-				</form>
+				</form> */}
 				<div className='home-left'>
 					<p className='welcome'>
-						Welcome to
-						<br />
-						iScholars
+						Welcome to iScholars
 					</p>
+					<div className="how-work">
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<img src={teacherIcon} alt=""/>
+										<p>For Teacher</p>
+									</td>
+									<td>
+									</td>
+									<td>
+										<img src={studentIcon} alt=""/>
+										<p>For Student</p>
+									</td>
+								</tr>
+								<tr>
+									<td>Create assignments</td>
+									<td>
+										<img src={assignmentIcon} alt=""/>
+									</td>
+									<td>Submit assignment</td>
+								</tr>
+								<tr>
+									<td>Grade your students</td>
+									<td>
+										<img src={gradeIcon} alt=""/>
+									</td>
+									<td>Get your grde</td>
+								</tr>
+								<tr>
+									<td>Share your feedback</td>
+									<td>
+										<img src={feedbackIcon} alt=""/>
+									</td>
+									<td>Leave your comment</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					{/* Icons are from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> */}
 					{/* <div className='descriptions'>
 						<div className='desc'>
 							<p className='user'><i class="fas fa-chalkboard-teacher"> Teachers</i></p>
@@ -56,7 +99,7 @@ const Homepage = () => {
 				</div>
 			</div>
 			<div>
-			<HowItWorks />
+			{/* <HowItWorks /> */}
 			</div>
 			
 			<div className='bottom'>
@@ -93,6 +136,8 @@ const Homepage = () => {
 const HomepageStyle = styled.div`
 	.first-view {
 		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
 		height: 100vh;
 		display: flex;
 		padding-top: 60px;
@@ -105,19 +150,56 @@ const HomepageStyle = styled.div`
 		}
 		.home-left,
 		.home-right {
-			width: 42%;
+			width: 50%;
 			height: 100%;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-evenly;
 		}
 		.home-left {
+			width: 60%;
 			.welcome {
-				font-size: 5.5rem;
+				font-size: 4.5rem;
 				text-align: center;
 				color: #00a3ff;
-				animation: 5s ease-out 0s 1 slideInDown;
-					-webkit-animation-name: slideInDown;
+				/* animation: 5s ease-out 0s 1 slideInDown;
+					-webkit-animation-name: slideInDown; */
+			}
+			.how-work {
+				table {
+					width: 100%;
+					tr {
+						width: 80%;
+						margin: 0 auto 20px;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						td {
+							text-align: center;
+							display: block;
+							font-size: 2rem;
+							&:nth-child(odd) {
+								width: 40%;
+								img {
+									display: block;
+									width: 60%;
+									margin: 0 auto;
+								}
+							}
+							&:nth-child(even) {
+								width: 10%;
+								img {
+									display: block;
+									margin: 0 auto;
+									width: 100%;
+								}
+							}
+							p {
+								font-size: 2.4rem;
+							}
+						}
+					}
+				}
 			}
 			.descriptions {
 				width: 80%;
@@ -132,11 +214,11 @@ const HomepageStyle = styled.div`
 						i.fas.fa-chalkboard-teacher {
 						font-size: 30px;
 						margin: 8px 20px;
-					},
-					i.fas.fa-users{
+						}
+						i.fas.fa-users{
 						font-size: 30px;
 						margin: 8px 20px;
-					},
+						}
 					}
 					ul {
 						margin: 30px auto 0;
@@ -161,21 +243,14 @@ const HomepageStyle = styled.div`
 			}
 		}
 		.home-right {
+			width: 40%;
 			align-items: center;
 			.img-wrap {
-				width: 139%;
-				position: relative;
+				width: 100%;
+				/* position: relative; */
 				overflow: hidden;
 				img {
-					position: absolute;
-					top: 0;
-					right: 0;
-					width: 100%;
-				}
-				&:before {
-					content: "";
-					display: block;
-					padding-top: 60%;
+					width: 90%;
 				}
 			}
 			.try-btn {
