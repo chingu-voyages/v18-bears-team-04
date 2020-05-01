@@ -105,7 +105,7 @@ const Homepage = () => {
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
-						<a href='/about'>About us</a>     <span> <a href='/support'>Support</a></span>
+						<Link to='/aboutus'>About us</Link>     <span> <a href='/support'>Support</a></span>
 					</li>
 					{/* <li>
 						<a href='/support'>Support</a>
