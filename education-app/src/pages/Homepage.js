@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom"
 
 import img from "../images/Homepage.jpg";
 import fbIcon from "../images/facebook-f-brands.svg";
@@ -56,7 +57,7 @@ const Homepage = () => {
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
-						<a href='/about'>About us</a>
+						<Link to="/aboutus" >About us</Link>
 					</li>
 					<li>
 						<a href='/support'>Support</a>
