@@ -1,5 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+<<<<<<< HEAD
+import { Link } from "react-router-dom"
+
+=======
+>>>>>>> 27e3f05b804f317dfd319f9942257b0f566abd96
 import img from "../images/Homepage.jpg";
 import fbIcon from "../images/facebook-f-brands.svg";
 import instaIcon from "../images/instagram-brands.svg";
@@ -60,7 +65,11 @@ const Homepage = () => {
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
+<<<<<<< HEAD
+						<Link to="/aboutus" >About us</Link>
+=======
 						<a href='/about'>About us</a>     <span> <a href='/support'>Support</a></span>
+>>>>>>> 27e3f05b804f317dfd319f9942257b0f566abd96
 					</li>
 					{/* <li>
 						<a href='/support'>Support</a>
