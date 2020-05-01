@@ -8,7 +8,7 @@ import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
-import Logo from '../images/Logo.png'
+import Logo from '../images/iScholars-logo-small.png'
 
 const TopNav = (props) => {
 	const context = useContext(ScholarContext);
