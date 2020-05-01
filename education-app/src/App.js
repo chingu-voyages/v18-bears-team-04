@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
+import AboutUs from "./pages/AboutUs"
 // import StudentDashboard from "./pages/student/StudentDashboard";
 import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
@@ -47,6 +48,7 @@ const App = () => {
 					<TopNav />
 					{/* Order matters! */}
 					<Route exact path='/' component={Homepage} />
+					<Route exact path='/aboutus' component={AboutUs} />
 
 					<Switch>
 						{TokenService.hasAuthToken() ? (
