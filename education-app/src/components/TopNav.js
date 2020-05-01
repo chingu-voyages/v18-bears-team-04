@@ -8,6 +8,7 @@ import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
+import Logo from '../images/Logo.png'
 
 const TopNav = (props) => {
 	const context = useContext(ScholarContext);
@@ -98,7 +99,7 @@ const TopNav = (props) => {
 	return (
 		<NavStyle>
 			<Link to={`/`}>
-				<h1>iScholars</h1>
+				<img className="app-logo" src={Logo} alt="APP logo"/>
 			</Link>
 			<Modal
 				open={showModal}
@@ -132,6 +133,9 @@ const NavStyle = styled.header`
 	h1 {
 		font-size: 4rem;
 		color: #00a3ff;
+	}
+	.app-logo {
+		width: 100px
 	}
 	.top-nav-menu {
 		ul {
