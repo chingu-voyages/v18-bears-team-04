@@ -70,7 +70,7 @@ const EvaluationStyle = styled.div`
 	.wrap {
 		width: 90%;
 		margin: 0 auto;
-      color: #5f5f5f;
+      color: #5e5e5e;
 	}
 	.page-title {
 		font-size: 3.8rem;
