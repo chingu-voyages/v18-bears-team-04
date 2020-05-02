@@ -11,7 +11,7 @@ import styled from "styled-components";
 const StudentGrade = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
-	const [scoreColor, setScoreColor] = useState("#000000");
+	const [feedback, setFeedback] = useState({});
 	const [selection, setSelection] = useState({
 		title: "Select Assignment",
 		id: "",
@@ -27,9 +27,9 @@ const StudentGrade = (props) => {
 			ApiService.getUserName(props.match.params.userName),
 		])
 			.then((res) => {
-				// if (res.length === 0) {
-				// 	setError({ error: `Looks like you don't have any assignments yet.` });
-				// }
+				if (res.length === 0) {
+					setError({ error: `Looks like you don't have any assignments yet.` });
+				}
 
 				if (assignmentId) {
 					setSelection({ id: assignmentId });
@@ -53,17 +53,19 @@ const StudentGrade = (props) => {
 	}, [props]);
 
 	const updateScoreColor = (score) => {
+		let scoreColor;
 		if (score >= 90) {
-			setScoreColor("#FF0000");
+			scoreColor = "#FFD600";
 		} else if (score >= 80) {
-			setScoreColor("#FF5C00");
+			scoreColor = "#FF5C00";
 		} else if (score >= 70) {
-			setScoreColor("#FFD600");
+			scoreColor = "#FFD600";
 		} else if (score >= 60) {
-			setScoreColor("#17A300");
+			scoreColor = "#17A300";
 		} else {
-			setScoreColor("#0057FF");
+			scoreColor = "#0057FF";
 		}
+		return scoreColor;
 	};
 
 	const handleSelectionChange = (e) => {
@@ -74,26 +76,20 @@ const StudentGrade = (props) => {
 		setSelection({ title: title, id: id });
 	};
 
-	const combinedInfo =
-		assignments != null &&
-		assignments.map((a) => {
-			for (let i = 0; i < classInfo.length; i++) {
-				if (classInfo[i]._id === a.classId) {
-					return { ...classInfo[i], ...a };
-				}
-			}
-			return a;
-		});
+	const handleFeedbackChange = (e) => {
+		const { value } = e.target;
+		setFeedback(value);
+	};
 
-	const studentClass =
-		assignments != null && classInfo.filter((a) => a.studentIds);
+	const handleSubmitFeedback = (e) => {
+		e.preventDefault();
+		const obj = {
+			studentFeedback: feedback,
+		};
 
-	const currentAssignments =
-		assignments != null &&
-		studentClass
-			.filter((c) => c.studentIds.find((b) => b === userId))
-			.map((a) => a._id)
-			.map((a) => combinedInfo.filter((b) => b.classId === a));
+		console.log(obj);
+		// ApiService.submitAssignment();
+	};
 
 	const makeFilteredAssignments = (currentAssignments) => {
 		let list = [];
@@ -126,6 +122,28 @@ const StudentGrade = (props) => {
 		return filteredList;
 	};
 
+	const combinedInfo =
+		assignments != null &&
+		assignments.map((a) => {
+			for (let i = 0; i < classInfo.length; i++) {
+				if (classInfo[i]._id === a.classId) {
+					return { ...classInfo[i], ...a };
+				}
+			}
+			return a;
+		});
+
+	const studentClass =
+		assignments != null && classInfo.filter((a) => a.studentIds);
+
+	const currentAssignments =
+		assignments != null &&
+		studentClass
+			.filter((c) => c.studentIds.find((b) => b === userId))
+			.map((a) => a._id)
+			.map((a) => combinedInfo.filter((b) => b.classId === a));
+
+	//Grades to filter
 	const gradedAssignments =
 		assignments != null && makeFilteredAssignments(currentAssignments);
 
@@ -140,11 +158,12 @@ const StudentGrade = (props) => {
 			);
 		});
 
-	// const errorMessage = () => {
-	// 	if (error != null) {
-	// 		return `User name is not found.`;
-	// 	}
-	// };
+	const errorMessage = () => {
+		if (error != null) {
+			error.toString();
+			return error.toString();
+		}
+	};
 
 	const gradesToRender =
 		assignments !== null &&
@@ -152,7 +171,7 @@ const StudentGrade = (props) => {
 			.filter((a) => a.assignmentId === selection.id)
 			.map((a, index) => {
 				return (
-					<>
+					<div key={a.assignmentId}>
 						<div className='top'>
 							<h3>Asignment Title - {a.title}</h3>
 							<div className='status'>{a.status}</div>
@@ -167,17 +186,25 @@ const StudentGrade = (props) => {
 						</div>
 						<div className='feedback-for'>
 							<h4>Feedback for the Teacher</h4>
-							<form>
-								<textarea />
+							<form onSubmit={(e) => handleSubmitFeedback(e)}>
+								<textarea
+									name={feedback}
+									onChange={(e) => handleFeedbackChange(e)}
+								/>
 								<button className='submit-btn'>SUBMIT</button>
 							</form>
 						</div>
-					</>
+					</div>
 				);
 			});
 
-	assignments !== null &&
-		console.log(gradesToRender, gradedAssignments, selection.id);
+	//Setting conditional grade color
+	const gradeToColor =
+		assignments !== null &&
+		gradedAssignments.find((a) => a.assignmentId === selection.id);
+
+	const scoreColor =
+		gradeToColor !== undefined && updateScoreColor(gradeToColor.grade);
 
 	return (
 		<>
@@ -185,7 +212,7 @@ const StudentGrade = (props) => {
 			<StudentGradeStyle scoreColor={scoreColor}>
 				<div className='wrap'>
 					<h2 className='page-title'>Assignment Grade</h2>
-					{/* <ValidationError message={errorMessage()} /> */}
+					<ValidationError message={errorMessage()} />
 
 					<select onChange={(e) => handleSelectionChange(e)}>
 						<option> Select An Assignment</option>

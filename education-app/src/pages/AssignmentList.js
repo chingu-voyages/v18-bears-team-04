@@ -146,8 +146,6 @@ const AssignmentList = (props) => {
 	const studentCurrentAssignments =
 		assignments != null && list.filter((a) => a.studentId === userId);
 
-	assignments != null && console.log(studentCurrentAssignments);
-
 	const displayedStudentAssignments =
 		assignments != null &&
 		studentCurrentAssignments.map((assign, index) => {
