@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -17,6 +18,7 @@ const StudentGrade = (props) => {
 		id: "",
 	});
 	const [classInfo, setClasses] = useState(null);
+	const history = useHistory();
 	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
@@ -83,12 +85,18 @@ const StudentGrade = (props) => {
 
 	const handleSubmitFeedback = (e) => {
 		e.preventDefault();
-		const obj = {
+
+		const assignmentObj = {
 			studentFeedback: feedback,
+			assignmentId: selection.id,
+			studentId: userId,
 		};
 
-		console.log(obj);
-		// ApiService.submitAssignment();
+		//Need to refactor
+		ApiService.submitAssignment(assignmentObj).then((res) => {
+			setFeedback("");
+			history.push(`/${props.userName}/my-grades`);
+		});
 	};
 
 	const makeFilteredAssignments = (currentAssignments) => {
