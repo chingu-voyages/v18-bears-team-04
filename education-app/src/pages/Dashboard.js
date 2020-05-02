@@ -72,6 +72,7 @@ const Dashboard = (props) => {
 		setModal({
 			showClassModal: !showClassModal,
 			showAssignmentModal: showAssignmentModal,
+			showUploadProfileModal: showUploadProfileModal,
 		});
 	};
 
@@ -79,6 +80,7 @@ const Dashboard = (props) => {
 		setModal({
 			showClassModal: showClassModal,
 			showAssignmentModal: !showAssignmentModal,
+			showUploadProfileModal: showUploadProfileModal,
 		});
 	};
 

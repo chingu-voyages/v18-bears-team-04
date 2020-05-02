@@ -13,15 +13,15 @@ import TokenService from "../../services/token-service";
 
 const AssignmentSubmission = (props) => {
 	// TO DO: Download file from download button
-	const [userInput, setInput] = useState({
-		studentAnswers: "",
+	const initialFormState = {
 		studentFeedback: "",
-	});
+		studentAnswers: "",
+	};
+	const [userInput, setInput] = useState(initialFormState);
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
-	const { studentAnswers, studentFeedback } = userInput;
 	const history = useHistory();
 
 	function getAssignment(props) {
@@ -77,6 +77,7 @@ const AssignmentSubmission = (props) => {
 	const handleSubmit = (e) => {
 		//refactor
 		e.preventDefault();
+		const { studentFeedback, studentAnswers } = userInput;
 
 		const obj = {
 			studentFeedback,
@@ -154,7 +155,6 @@ const AssignmentSubmission = (props) => {
 						<textarea
 							className='text-area'
 							name='studentAnswers'
-							value={studentAnswers}
 							placeholder='Write your submission here'
 							onChange={(e) => handleTextChange(e)}
 						/>
@@ -165,7 +165,6 @@ const AssignmentSubmission = (props) => {
 						<textarea
 							className='feedback'
 							name='studentFeedback'
-							value={studentFeedback}
 							placeholder='Feedback details '
 							onChange={(e) => handleTextChange(e)}
 						/>
@@ -200,17 +199,17 @@ const AssignmentSubmission = (props) => {
 		);
 
 	const renderTeacherSubmissionView = assignment !== null &&
-		user.role === "student" && (
+		user.role === "teacher" && (
 			<>
 				{" "}
-				<h1> assignment.title</h1>
+				<h1> {assignment.title}</h1>
 				<div className='assignment-details'>
 					<div className='instructions'>
 						Instructions:
 						<div className='instructions-container'>
 							{assignment !== null
 								? assignment.instructions
-								: "Instructions Unavailable"}{" "}
+								: "Instructions Unavailable"}
 						</div>
 					</div>
 					<div className='assignment-dates'>
@@ -228,6 +227,7 @@ const AssignmentSubmission = (props) => {
 						to={stringURL}
 						target='_blank'
 						download
+						disabled
 					>
 						Download File
 					</Link>
@@ -237,16 +237,12 @@ const AssignmentSubmission = (props) => {
 						<textarea
 							className='text-area'
 							placeholder='Write your submission here'
-							onChange={(e) => handleTextChange(e)}
+							disabled
 						/>
 					</label>
 					<label htmlFor='files' className='upload-file-label'>
 						<span className='upload-file-title'>Upload File</span>
-						<input
-							type='file'
-							name='file'
-							onChange={(e) => handleFileChange(e)}
-						/>
+						<input type='file' name='file' disabled />
 					</label>
 
 					{error && <ValidationError message={errorMessage()} />}
