@@ -100,97 +100,95 @@ const EditClass = (props) => {
 							</button>
 						</li>
 					);
-			  })
+				})
 			: `You have no enrolled students.`;
 
 	return (
 		<>
 			<SideNav />
 			<EditClassStyle>
-				<div className='edit-class-box'>
-					<h1> Edit Class</h1>
-					<form className='form-grid'>
-						<label htmlFor='class-name'>
-							Class Name
-							<br />
-							{/* Can edit once we can change classnames */}
-							<input
-								type='text'
-								name='className'
-								className='class-name-text'
-								value={className}
-								readOnly={true}
-							/>
-						</label>
-						<label htmlFor='enrolled-students' className='enrolled-students'>
-							Enrolled Students
-							<div className='enrolled-students-container'>
-								<ul>{renderEnrolledStudents}</ul>
-							</div>
-						</label>
-						<label htmlFor='add-students'>
-							Add Students
-							<MultiSelect
-								options={allStudents !== undefined && allStudents}
-								value={selected}
-								onChange={setSelected}
-								labelledBy={"Select"}
-							/>
-						</label>
+				<div className="wrapper">
+					<div className='edit-class-box'>
+						<h2 className="page-title"> Edit Class</h2>
+						<form className='form-grid'>
+							<label htmlFor='class-name'>
+								Class Name
+								<br />
+								{/* Can edit once we can change classnames */}
+								<input
+									type='text'
+									name='className'
+									className='class-name-text'
+									value={className}
+									readOnly={true}
+								/>
+							</label>
+							<label htmlFor='enrolled-students' className='enrolled-students'>
+								Enrolled Students
+								<div className='enrolled-students-container'>
+									<ul>{renderEnrolledStudents}</ul>
+								</div>
+							</label>
+							<label htmlFor='add-students'>
+								Add Students
+								<MultiSelect
+									options={allStudents !== undefined && allStudents}
+									value={selected}
+									onChange={setSelected}
+									labelledBy={"Select"}
+								/>
+							</label>
 
-						<div className='button-container'>
-							<button className='modal-btn' onClick={(e) => handleAddSubmit(e)}>
-								Submit
-							</button>
-						</div>
-						{error && <ValidationError message={errorMessage()} />}
-					</form>
+							<div className='button-container'>
+								<button className='modal-btn' onClick={(e) => handleAddSubmit(e)}>
+									Submit
+								</button>
+							</div>
+							{error && <ValidationError message={errorMessage()} />}
+						</form>
+					</div>
 				</div>
 			</EditClassStyle>
 		</>
 	);
 };
 
-const EditClassStyle = styled.div`
+const EditClassStyle = styled.section`
 	padding-left: 250px;
 	padding-top: 60px;
-	width: 900px;
-	height: 100%;
-	margin-left: auto;
-	margin-right: auto;
-	.edit-class-box {
-		height: 90vh;
-	}
-	h1 {
-		font-size: 3.8rem;
-		margin: 20px auto;
-		color: #00a3ff;
+	width: 100%;
+	height: 100vh;
+	h2 {
 	}
 	.form-grid {
 		background-clip: content-box;
 		display: grid;
-		height: 500px;
-		padding: 20px;
-		grid-template-rows: 1fr 1fr 0.5fr;
+		padding-top: 20px;
+		/* height: 500px; */
+		height: 100%;
+		/* padding: 20px 20px 0; */
+		grid-template-rows: 1fr 1fr 0.2fr;
 		grid-template-columns: 1fr 1fr;
 	}
 	label {
 		font-size: 2rem;
-		margin: 10px;
+		/* margin: 10px; */
+		color: #5e5e5e;
 	}
 	input {
-		margin-left: 20px;
+		/* margin-left: 20px;
 		margin-top: 10px;
-		padding-left: 10px;
+		padding-left: 10px; */
 		font-size: 1.75rem;
 		height: 40px;
-		width: 200px;
+		width: 300px;
 		border-radius: 5px;
 		border: 1px solid lightgray;
+		outline: 0;
 	}
 	.multi-select {
-		margin-top: 10px;
-		margin-left: 20px;
+		/* margin-top: 10px;
+		margin-left: 20px; */
 		width: 300px;
 		border-radius: 0px;
 		div.panel-content {
@@ -223,6 +221,9 @@ const EditClassStyle = styled.div`
 	}
 	.class-name-text {
 		border: none;
+		color: #00a3ff;
+		margin-top: 10px;
+		font-size: 4rem;
 	}
 
 	.enrolled-students {
@@ -241,16 +242,15 @@ const EditClassStyle = styled.div`
 		font-size: 1.75rem;
 	}
 	.modal-btn {
-		background-color: #c4c4c4;
+		background-color: #00a3ff;
 		display: block;
 		height: 50px;
-		width: 140px;
-		padding: 10px;
-		margin: 20px 20px;
+		width: 200px;
+		color: #fff;
+		/* padding: 10px; */
+		/* margin: 20px 20px; */
 		font-size: 2rem;
-		border: 2px solid #c4c4c4;
 		border-radius: 10px;
-		box-shadow: 3px 3px 2px grey;
 	}
 	.button-container {
 		display: flex;
@@ -270,6 +270,7 @@ const EditClassStyle = styled.div`
 		color: white;
 		font-weight: bold;
 		border-radius: 5px;
+		border: none;
 		display: flex;
 		font-size: 1.2rem;
 		justify-content: center;
@@ -288,8 +289,8 @@ const EditClassStyle = styled.div`
 	.enrolled-students-container {
 		padding: 10px;
 		font-size: 2.5rem;
-		background-color: #e4e4e4;
-		box-shadow: 3px 3px 3px grey;
+		background-color: #fff;
+			box-shadow: 0 5px 10px #0000002f;
 		border-radius: 10px;
 		margin-top: 10px;
 		height: 100%;
@@ -299,6 +300,7 @@ const EditClassStyle = styled.div`
 
 	.enrolled-students-container::-webkit-scrollbar {
 		width: 10px;
+		background-color:#000;
 		border-radius: 0px 5px 5px 0px;
 	}
 
