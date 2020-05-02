@@ -212,6 +212,7 @@ const DashboardStyle = styled.main`
 		flex-direction: column;
 		justify-content: space-evenly;
 		background-color: #00a2ffbf;
+
 		.user-info {
 			display: flex;
 			flex-direction: column;

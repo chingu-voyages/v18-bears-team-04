@@ -70,13 +70,12 @@ const UploadProfileForm = (props) => {
 					</label>
 
 					<label htmlFor='username' className='username'>
-						{props.userName}
+						Username
 						<br />
 						<input
 							type='text'
 							name='userName'
-							placeholder='e.g. Syllabus'
-							value={props.userName}
+							value={props.userInfo.userName}
 							readOnly={true}
 						/>
 					</label>
@@ -88,7 +87,6 @@ const UploadProfileForm = (props) => {
 							type='text'
 							name='email'
 							value={props.email}
-							//MVP - teachers should only have one class
 							readOnly={true}
 						/>
 					</label>

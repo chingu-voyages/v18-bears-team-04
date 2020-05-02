@@ -258,7 +258,10 @@ const EditAssignmentSubmission = (props) => {
 			)}
 			<form onSubmit={(e) => handleStudentEdit(e)}>
 				<label htmlFor='submission'>
-					<h2>Type Answers or Upload a File Below</h2>
+					<h2 className='submission-message'>
+						Your Assignment has already been submitted and pending review.
+					</h2>
+					<h2>Update the information below to edit your submission</h2>
 					<textarea
 						className='text-area'
 						name='studentAnswers'
@@ -327,6 +330,11 @@ const EditAssignmentSubmissionStyle = styled.div`
 	h2 {
 		font-size: 1.75rem;
 		color: #00a3ff;
+		margin-top: 10px;
+	}
+	.submission-message {
+		font-style: italic;
+		color: red;
 	}
 	.assignment-details {
 		display: grid;
