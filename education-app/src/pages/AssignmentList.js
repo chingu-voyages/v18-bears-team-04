@@ -152,17 +152,45 @@ const AssignmentList = (props) => {
 		assignments != null
 			? studentCurrentAssignments.map((assign, index) => {
 					return (
-						<div key={assign._id} className='assignment'>
-							<Link
-								to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
-							>
-								<h4 className='assignment-title'>{assign.title}</h4>
-								<div key={index} className='class-name-container'>
-									<p className='class-name'>{assign.className}</p>
-									{renderSubmittedInfo(assign.status)}
+						<>
+							{assign.status === "GRADED" ? (
+								<div key={assign._id} className='assignment'>
+									<Link
+										to={`/${assign.title}/${assign.assignmentId}/student/my-grades`}
+									>
+										<h4 className='assignment-title'>{assign.title}</h4>
+										<div key={index} className='class-name-container'>
+											<p className='class-name'>{assign.className}</p>
+											{renderSubmittedInfo(assign.status)}
+										</div>
+									</Link>
 								</div>
-							</Link>
-						</div>
+							) : assign.status === "SUBMITTED" ? (
+								<div key={assign._id} className='assignment'>
+									<Link
+										to={`/${assign.title}/${assign.assignmentId}/student/edit-assignment`}
+									>
+										<h4 className='assignment-title'>{assign.title}</h4>
+										<div key={index} className='class-name-container'>
+											<p className='class-name'>{assign.className}</p>
+											{renderSubmittedInfo(assign.status)}
+										</div>
+									</Link>
+								</div>
+							) : (
+								<div key={assign._id} className='assignment'>
+									<Link
+										to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
+									>
+										<h4 className='assignment-title'>{assign.title}</h4>
+										<div key={index} className='class-name-container'>
+											<p className='class-name'>{assign.className}</p>
+											{renderSubmittedInfo(assign.status)}
+										</div>
+									</Link>
+								</div>
+							)}
+						</>
 					);
 			  })
 			: null;

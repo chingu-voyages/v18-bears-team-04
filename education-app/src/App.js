@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
-import AboutUs from "./pages/AboutUs"
+import AboutUs from "./pages/AboutUs";
 // import StudentDashboard from "./pages/student/StudentDashboard";
 import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
@@ -16,8 +16,9 @@ import Grades from "./pages/teacher/Grades";
 import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
-import Sgrade from "./pages/student/Grade"
-import Evaluation from "./pages/student/Evaluation"
+import StudentGrade from "./pages/student/StudentGrade";
+
+import Evaluation from "./pages/student/Evaluation";
 
 import ScholarContext from "../src/ScholarContext";
 
@@ -53,7 +54,7 @@ const App = () => {
 					<Switch>
 						{TokenService.hasAuthToken() ? (
 							<Route
-							exact
+								exact
 								path='/:userName/:role/dashboard'
 								render={(routeProps) => <Dashboard {...routeProps} />}
 							/>
@@ -144,6 +145,16 @@ const App = () => {
 								exact
 								path='/:userName/grades'
 								render={(routeProps) => <Grades {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/:assignmentId/student/my-grades'
+								render={(routeProps) => <StudentGrade {...routeProps} />}
 							/>
 						) : (
 							<Redirect to='/' />
