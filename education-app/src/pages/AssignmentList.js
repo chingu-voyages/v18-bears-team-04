@@ -8,6 +8,9 @@ import SideNav from "../components/SideNav";
 import ValidationError from "../components/ValidationError";
 import styled from "styled-components";
 
+import yes from "../images/yes.png"
+import no from "../images/no.png"
+
 const AssignmentList = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
@@ -96,13 +99,15 @@ const AssignmentList = (props) => {
 		if (str === "NOT SUBMITTED") {
 			return (
 				<div className='status-container'>
-					<p className='status no'>&#10008;</p>
+					{/* <p className='status no'>&#10008;</p> */}
+					<img src={no} alt="icon"/>
 				</div>
 			);
 		}
 		return (
 			<div className='status-container'>
-				<p className='status yes'>&#10003;</p>
+				{/* <p className='status yes'>&#10003;</p> */}
+				<img src={yes} alt="icon"/>
 			</div>
 		);
 	};
@@ -125,7 +130,7 @@ const AssignmentList = (props) => {
 							</Link>
 						</div>
 					);
-			  })
+				})
 			: null;
 
 	// Get Assignments Submitted By Student
@@ -192,14 +197,14 @@ const AssignmentList = (props) => {
 							)}
 						</>
 					);
-			  })
+				})
 			: null;
 
 	return (
 		<>
 			<SideNav />
 			<AssignmentListStyle>
-				<div className='wrap'>
+				<div className='wrapper'>
 					<h2 className='page-title'>Assignments List</h2>
 					<h3>Your Assignments</h3>
 					{error !== null && <ValidationError message={errorMessage()} />}
@@ -218,22 +223,9 @@ const AssignmentList = (props) => {
 	);
 };
 
-const AssignmentListStyle = styled.div`
+const AssignmentListStyle = styled.section`
 	padding-left: 250px;
 	padding-top: 60px;
-	width: 90vw;
-	height: 100%;
-	margin-left: auto;
-	margin-right: auto;
-	.wrap {
-		width: 90%;
-		margin: 0 auto;
-	}
-	.page-title {
-		font-size: 3.8rem;
-		margin-top: 30px;
-		color: #00a3ff;
-	}
 	h3 {
 		font-size: 3rem;
 		margin-top: 10px;
@@ -268,20 +260,21 @@ const AssignmentListStyle = styled.div`
 
 		.assignment {
 			width: 45%;
-			// background-color: #ffffff;
+			max-width: 430px;
 			margin-bottom: 20px;
 			border-radius: 10px;
 			position: relative;
 			box-shadow: 0 5px 20px #0000001f;
-
+			transition: 0.2s;
 			&:before {
 				content: "";
 				display: block;
 				margin-top: 150px;
 			}
+			&:hover {
+				bottom: 10px;
+			}
 			.assignment-title {
-				width: 100%;
-				height: 100%;
 				position: absolute;
 				color: #5e5e5e;
 				top: 10%;
@@ -289,20 +282,28 @@ const AssignmentListStyle = styled.div`
 				font-size: 2.75rem;
 			}
 			.class-name-container {
+				position: absolute;
 				display: flex;
 				justify-content: space-around;
-				// margin: 0px 20px 20px;
-			}
-			.class-name {
-				width: 150px;
-				height: 50px;
-				text-align: center;
-				font-size: 2rem;
-				border: 1px solid black;
-				border-radius: 10px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
+				bottom: 10%;
+				left: 5%;
+				/* // margin: 0px 20px 20px; */
+				.class-name {
+					width: 200px;
+					height: 50px;
+					color: #5e5e5e;
+					text-align: center;
+					font-size: 2rem;
+					border: 1px solid;
+					border-radius: 10px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					margin-right: 30px;
+				}
+				img {
+					height: 50px;
+				}
 			}
 		}
 	}

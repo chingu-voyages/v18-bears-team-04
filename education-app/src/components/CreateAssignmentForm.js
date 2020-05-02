@@ -82,10 +82,10 @@ const CreateAssignmentForm = (props) => {
 	return (
 		<CreateAssignmentFormStyle>
 			<div className='create-assignment-box'>
-				<h1> Add An Assignment</h1>
+				<h2> Add An Assignment</h2>
 
 				<form className='form-grid' onSubmit={(e) => handleSubmit(e)}>
-					<label htmlFor='assignment-name'>
+					<label htmlFor='assignment-name' className="assignment-name">
 						Assignment Name
 						<br />
 						<input
@@ -126,7 +126,7 @@ const CreateAssignmentForm = (props) => {
 						/>
 					</label>
 
-					<label htmlFor='files'>
+					<label htmlFor='files' className="files">
 						File
 						<br />
 						<input
@@ -174,10 +174,11 @@ const CreateAssignmentFormStyle = styled.div`
 		flex-direction: column;
 		justify-content: center;
 	}
-	h1 {
+	h2 {
 		text-align: center;
 		font-size: 4rem;
 		margin: 20px;
+		color: #00a3ff;
 	}
 	.form-grid {
 		background-clip: content-box;
@@ -186,36 +187,62 @@ const CreateAssignmentFormStyle = styled.div`
 		grid-template-columns: 1fr 1fr;
 		grid-template-areas: "assignment-name class-name" "instructions files" "start-date due-date" "modal-btn modal-btn";
 		height: 90%;
+		width: 100%;
 		padding: 20px;
 	}
 	label {
 		font-size: 2rem;
+		color: #5e5e5e;
+		&:nth-child(odd) {
+			padding-right: 10px;
+		}
+		&:nth-child(even) {
+			padding-left: 10px;
+		}
 	}
+
 	input {
-		margin-left: 20px;
-		padding-left: 10px;
-		font-size: 1.75rem;
 		height: 30px;
 		width: 200px;
+		width: 100%;
+		margin-top: 10px;
+		/* margin-left: 20px;
+		padding-left: 10px; */
+		font-size: 1.75rem;
+		outline: 0;
+		border: 0.5px solid #00a3ff;
 	}
+	.files {
+		input {
+			border: none;
+		}
+	}
+
 	.text-area-box {
-		margin-left: 20px;
-		padding-left: 10px;
+		width: 100%;
 		height: 90px;
-		width: 200px;
+		margin-top: 10px;
+		border: 0.5px solid #00a3ff;
+		/* margin-left: 20px;
+		padding-left: 10px; */
+		/* width: 200px; */
 	}
 	.modal-btn {
-		background-color: #c4c4c4;
+		background-color: #00a3ff;
 		display: block;
 		height: 50px;
-		width: 140px;
+		color: #fff;
+		/* width: 140px; */
+		width: 200px;
 		padding: 10px;
 		margin-top: 20px;
 		margin-left: auto;
 		margin-right: auto;
 		margin-bottom: 10px;
 		font-size: 2rem;
-		border: 2px solid #c4c4c4;
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
 	}
 	.start-date,
 	.due-date {
