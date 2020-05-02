@@ -153,7 +153,17 @@ const App = () => {
 						{TokenService.hasAuthToken() ? (
 							<Route
 								exact
-								path='/:userName/:assignmentId/student/my-grades'
+								path='/:userName/:assignmentId/my-grades'
+								render={(routeProps) => <StudentGrade {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/my-grades'
 								render={(routeProps) => <StudentGrade {...routeProps} />}
 							/>
 						) : (

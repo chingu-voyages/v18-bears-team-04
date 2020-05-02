@@ -24,10 +24,10 @@ const Grades = (props) => {
 	const { users, classInfo, assignments } = apiInfo;
 
 	const getAllApiInfo = () => {
+		const classId = TokenService.getClassToken();
 		Promise.all([
 			ApiService.getUsers(),
-			ApiService.getClassById("5ea401ea13455e72b16c8b13"),
-			//TokenService.getClassToken()
+			ApiService.getClassById(classId),
 			ApiService.getAssignments(),
 		])
 			.then((res) =>
