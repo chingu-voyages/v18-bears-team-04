@@ -4,28 +4,37 @@ import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
 
 import SideNav from "../../components/SideNav";
-// import ValidationError from "../components/ValidationError";
+import ValidationError from "../../components/ValidationError";
 
 import styled from "styled-components";
 
 const StudentGrade = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
-	// const [userInfo, setUser] = useState(null);
-	const [selection, setSelection] = useState({});
+	const [scoreColor, setScoreColor] = useState("#000000");
+	const [selection, setSelection] = useState({
+		title: "Select Assignment",
+		id: "",
+	});
 	const [classInfo, setClasses] = useState(null);
 	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
+		const assignmentId = props.match.params.assignmentId;
 		Promise.all([
 			ApiService.getClasses(),
 			ApiService.getAssignments(),
 			ApiService.getUserName(props.match.params.userName),
 		])
 			.then((res) => {
-				if (res.length === 0) {
-					setError({ error: `Looks like you don't have any assignments yet.` });
+				// if (res.length === 0) {
+				// 	setError({ error: `Looks like you don't have any assignments yet.` });
+				// }
+
+				if (assignmentId) {
+					setSelection({ id: assignmentId });
 				}
+
 				const filteredClasses = res[0].filter((a) =>
 					res[1].some((b) => a._id === b.classId)
 				);
@@ -33,7 +42,6 @@ const StudentGrade = (props) => {
 					res[0].some((b) => a.classId === b._id)
 				);
 
-				// setUser(res[2]);
 				setClasses(filteredClasses);
 				setAssignments(filteredAssignments);
 			})
@@ -43,6 +51,20 @@ const StudentGrade = (props) => {
 	useEffect(() => {
 		getAllApiInfo(props);
 	}, [props]);
+
+	const updateScoreColor = (score) => {
+		if (score >= 90) {
+			setScoreColor("#FF0000");
+		} else if (score >= 80) {
+			setScoreColor("#FF5C00");
+		} else if (score >= 70) {
+			setScoreColor("#FFD600");
+		} else if (score >= 60) {
+			setScoreColor("#17A300");
+		} else {
+			setScoreColor("#0057FF");
+		}
+	};
 
 	const handleSelectionChange = (e) => {
 		const value = e.target.value.split("+");
@@ -73,25 +95,21 @@ const StudentGrade = (props) => {
 			.map((a) => a._id)
 			.map((a) => combinedInfo.filter((b) => b.classId === a));
 
-	const makeCombinedAssignments = (currentAssignments) => {
+	const makeFilteredAssignments = (currentAssignments) => {
 		let list = [];
+		let assignmentList = [];
+
+		//combine lists and keys
 		for (let i = 0; i < currentAssignments.length; i++) {
 			for (let x = 0; x < currentAssignments[i].length; x++) {
 				list.push(currentAssignments[i][x]);
 			}
 		}
 
-		return list;
-	};
-
-	const studentAssignments =
-		assignments != null && makeCombinedAssignments(currentAssignments);
-
-	const list = [];
-	assignments != null &&
-		studentAssignments.map((a) =>
+		//make a list based on assignment results
+		list.map((a) =>
 			a.assignmentResults.forEach((b) =>
-				list.push({
+				assignmentList.push({
 					...b,
 					title: a.title,
 					assignmentId: a._id,
@@ -100,42 +118,38 @@ const StudentGrade = (props) => {
 			)
 		);
 
-	const gradedAssignments =
-		assignments != null &&
-		list.filter((a) => a.studentId === userId && a.status === "GRADED");
+		//list specific to this user
+		const filteredList = assignmentList.filter(
+			(a) => a.studentId === userId && a.status === "GRADED"
+		);
 
+		return filteredList;
+	};
+
+	const gradedAssignments =
+		assignments != null && makeFilteredAssignments(currentAssignments);
+
+	//For Drop Down List
 	const assignmentSelection =
 		assignments !== null &&
 		gradedAssignments.map((a, index) => {
 			return (
-				<option key={index} value={a._id + "+" + a.title}>
+				<option key={index} value={a.assignmentId + "+" + a.title}>
 					{a.title}
 				</option>
 			);
 		});
 
-	assignments != null && console.log(gradedAssignments);
+	// const errorMessage = () => {
+	// 	if (error != null) {
+	// 		return `User name is not found.`;
+	// 	}
+	// };
 
-	// temporary
-	let score = 82;
-
-	let scoreColor;
-	if (score >= 90) {
-		scoreColor = "#FF0000";
-	} else if (score >= 80) {
-		scoreColor = "#FF5C00";
-	} else if (score >= 70) {
-		scoreColor = "#FFD600";
-	} else if (score >= 60) {
-		scoreColor = "#17A300";
-	} else {
-		scoreColor = "#0057FF";
-	}
-
-	const renderedGrades =
+	const gradesToRender =
 		assignments !== null &&
 		gradedAssignments
-			.filter((a) => a.title === selection.title)
+			.filter((a) => a.assignmentId === selection.id)
 			.map((a, index) => {
 				return (
 					<>
@@ -162,17 +176,23 @@ const StudentGrade = (props) => {
 				);
 			});
 
+	assignments !== null &&
+		console.log(gradesToRender, gradedAssignments, selection.id);
+
 	return (
 		<>
 			<SideNav />
 			<StudentGradeStyle scoreColor={scoreColor}>
 				<div className='wrap'>
 					<h2 className='page-title'>Assignment Grade</h2>
+					{/* <ValidationError message={errorMessage()} /> */}
+
 					<select onChange={(e) => handleSelectionChange(e)}>
-						<option>Select Assignment</option>
+						<option> Select An Assignment</option>
 						{assignmentSelection}
 					</select>
-					{renderedGrades}
+
+					{gradesToRender}
 				</div>
 			</StudentGradeStyle>
 		</>

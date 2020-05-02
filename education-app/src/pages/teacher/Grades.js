@@ -127,6 +127,8 @@ const Grades = (props) => {
 			);
 		});
 
+	assignments !== undefined && console.log(filteredView);
+
 	const displayedGrades =
 		assignments !== undefined &&
 		filteredView.map((s, index) => {
@@ -140,7 +142,7 @@ const Grades = (props) => {
 
 						<td>
 							<label htmlFor='grade' className='grade-label'>
-								{!s.grade ? (
+								{s.grade ? (
 									<input type='text' readOnly={true} />
 								) : (
 									<input
