@@ -75,9 +75,14 @@ const AssignmentSubmission = (props) => {
 	};
 
 	const handleSubmit = (e) => {
-		//refactor
 		e.preventDefault();
+		const userId = TokenService.getAuthToken();
 		const { studentFeedback, studentAnswers } = userInput;
+
+		const formData = new FormData();
+		for (let i = 0; i < file.length; i++) {
+			formData.append("doc", file[i]);
+		}
 
 		const obj = {
 			studentFeedback,
@@ -86,7 +91,14 @@ const AssignmentSubmission = (props) => {
 			assignmentId: assignment._id,
 		};
 
-		ApiService.submitAssignment(obj).then((res) => props.history.goBack());
+		ApiService.submitAssignment(obj).then((res) => {
+			ApiService.uploadStudentAssignmentFile(
+				formData,
+				res.assignment._id,
+				userId
+			);
+			props.history.goBack();
+		});
 	};
 
 	//FOR STUDENT SUBMISSION END//
@@ -94,25 +106,19 @@ const AssignmentSubmission = (props) => {
 	// TO DO: Upload a file - need upload route for student submission in API
 	const handleFileChange = (e) => {
 		e.preventDefault();
-
-		setFile(e.target.files[0]);
+		setFile(e.target.files);
 	};
-
-	const assignmentResult =
-		assignment !== null && assignment.assignmentResults !== undefined
-			? assignment.assignmentResults.find((a) => a.studentId === user._id)
-			: null;
 
 	const stringURL =
 		assignment !== null && assignment.teacherDocLink.length > 0
-			? config.DOC_BASE_URL + assignment.teacherDocLink[0]
+			? config.FILE_BASE_URL + assignment.teacherDocLink[0]
 			: null;
 
 	const formatDate = () => {
 		if (assignment.dueDate === null) {
 			return "Due Date Unavailable";
 		}
-		return moment(assignment.startDate).format("MMMM DD, YYYY");
+		return moment(assignment.dueDate).format("MMMM DD, YYYY");
 	};
 
 	const renderStudentSubmissionView = assignment !== null &&
@@ -175,7 +181,9 @@ const AssignmentSubmission = (props) => {
 						<input
 							type='file'
 							name='file'
+							accept='application/pdf,application/msword'
 							onChange={(e) => handleFileChange(e)}
+							multiple
 						/>
 					</label>
 					{user !== null && user.role === "student" && (

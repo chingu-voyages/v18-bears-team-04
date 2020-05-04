@@ -38,10 +38,7 @@ const CreateAssignmentForm = (props) => {
 
 	const handleFileChange = (e) => {
 		e.preventDefault();
-		const { name, files } = e.target;
-
-		// const types = files.map((a) => a.type);
-		console.log(files);
+		const { name } = e.target;
 
 		setInput({ ...userInput, [name]: e.target.files });
 	};

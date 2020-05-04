@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-import ApiService from "../../services/api-services";
+import config from "../../config";
+import moment from "moment";
 
+import ApiService from "../../services/api-services";
 import SideNav from "../../components/SideNav";
 
 import styled from "styled-components";
@@ -30,6 +32,10 @@ const AssignmentView = (props) => {
 			.catch((err) => setError({ error: err }));
 	};
 
+	useEffect(() => {
+		getAssignmentInfo(props);
+	}, [props]);
+
 	const handleFeedbackChange = (e) => {
 		e.preventDefault();
 		setInfo({
@@ -38,9 +44,17 @@ const AssignmentView = (props) => {
 		});
 	};
 
-	useEffect(() => {
-		getAssignmentInfo(props);
-	}, [props]);
+	const formatDate = () => {
+		if (assignmentInfo.submittedOnDate === null) {
+			return;
+		}
+		return moment(assignmentInfo.submittedOnDate).format("MMMM DD, YYYY");
+	};
+
+	const uploadedAssignmentURL =
+		assignmentInfo !== null && assignmentInfo.studentDocLink.length > 0
+			? config.FILE_BASE_URL + assignmentInfo.studentDocLink[0]
+			: null;
 
 	return (
 		<>
@@ -51,10 +65,15 @@ const AssignmentView = (props) => {
 					<div className='submission-container'>
 						<div className='student-submission-view-container'>
 							<h2> Student: {props.match.params.studentUsername}</h2>
+							<a className='download-btn' href={uploadedAssignmentURL} download>
+								Download File
+							</a>
+							<span className='submitted-date'>
+								Submitted on {assignmentInfo !== null && formatDate()}
+							</span>
 							<div className='submission-text'>
 								{assignmentInfo !== null && assignmentInfo.studentAnswers}
 							</div>
-							<button>Attached File Download</button>
 							{/* Add Link to download document */}
 						</div>
 
@@ -125,7 +144,22 @@ const AssignmentViewStyle = styled.div`
 		font-size: 2rem;
 		padding: 10px;
 	}
-	button {
+	.download-btn {
+		background-color: #00a3ff;
+		line-height: 40px;
+		text-align:center;
+		font-size: 2rem;
+		width: 200px;
+		height: 40px;
+		margin: 3px auto 3px 20px;
+		color: #ffffff;
+		border-radius: 10px;
+	}
+	.submitted-date{
+		font-size: 1.25rem;
+		margin: 3px auto 3px 20px;
+	}
+	button{
 		background-color: #00a3ff;
 		font-size: 2rem;
 		width: 200px;
@@ -136,7 +170,7 @@ const AssignmentViewStyle = styled.div`
 		margin-right: auto;
 		margin-bottom: 20px;
 	}
-	button:hover {
+	button:hover, .download-btn:hover {
 		box-shadow: 3px 3px 3px #a9a9a9;
 		cursor: pointer;
 	}

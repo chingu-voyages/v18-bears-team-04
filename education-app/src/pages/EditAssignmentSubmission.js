@@ -12,7 +12,7 @@ import ApiService from "../services/api-services";
 import TokenService from "../services/token-service";
 
 const EditAssignmentSubmission = (props) => {
-	const [userInput, setInput] = useState({});
+	const [userInput, setInput] = useState(null);
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [file, setFile] = useState({});
@@ -71,11 +71,6 @@ const EditAssignmentSubmission = (props) => {
 
 	const handleStudentEdit = (e) => {
 		e.preventDefault();
-
-		//TO DO: Need to add upload file for student upload endpoint
-		// const formData = new FormData();
-		// formData.append("file", file);
-		// formData.append("text", userInput.text);
 
 		const obj = {
 			studentFeedback: userInput.studentFeedback,
@@ -157,8 +152,17 @@ const EditAssignmentSubmission = (props) => {
 
 	const stringURL =
 		assignment !== null && assignment.teacherDocLink.length > 0
-			? config.DOC_BASE_URL + assignment.teacherDocLink[0]
+			? config.FILE_BASE_URL + assignment.teacherDocLink[0]
 			: null;
+
+	const uploadedAssignmentURL =
+		userInput !== null &&
+		userInput !== undefined &&
+		userInput.studentDocLink.length > 0
+			? config.FILE_BASE_URL + userInput.studentDocLink[0]
+			: null;
+
+	userInput !== null && console.log(uploadedAssignmentURL);
 
 	const renderTeacherEditPage = user !== null && assignment !== null && (
 		<>
@@ -252,9 +256,9 @@ const EditAssignmentSubmission = (props) => {
 				</div>
 			</div>
 			{stringURL !== null && (
-				<Link className='download-btn' to={stringURL} target='_blank' download>
+				<a className='download-btn' href={stringURL} download>
 					Download File
-				</Link>
+				</a>
 			)}
 			<form onSubmit={(e) => handleStudentEdit(e)}>
 				<label htmlFor='submission'>
@@ -289,6 +293,11 @@ const EditAssignmentSubmission = (props) => {
 						onChange={(e) => handleFileChange(e)}
 					/>
 				</label>
+				{uploadedAssignmentURL !== null && (
+					<a className='download-btn' href={uploadedAssignmentURL} download>
+						Uploaded File
+					</a>
+				)}
 				{user !== null && user.role === "student" && (
 					<div className='btns'>
 						<button className='submit-btn'>SUBMIT</button>
