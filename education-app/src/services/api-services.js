@@ -41,6 +41,18 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	uploadStudentAssignmentFile(data, assignmentId, studentId) {
+		// "/assignment/:assignmentId/student/:studentId"
+		return fetch(
+			`${config.API_ENDPOINT}/upload/assignment/${assignmentId}/student/${studentId}`,
+			{
+				method: "PUT",
+				body: data,
+			}
+		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	addClass(obj) {
 		return fetch(`${config.API_ENDPOINT}/class`, {
 			method: "POST",
