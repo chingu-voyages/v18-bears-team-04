@@ -169,6 +169,16 @@ const App = () => {
 						) : (
 							<Redirect to='/' />
 						)}
+
+						{TokenService.hasAuthToken() ? (
+							<Route
+								exact
+								path='/:userName/student/evaluation'
+								render={(routeProps) => <Evaluation {...routeProps} />}
+							/>
+						) : (
+							<Redirect to='/' />
+						)}
 					</Switch>
 				</Router>
 			</>

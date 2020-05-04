@@ -157,6 +157,13 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	getGradesByStudentId(assignmentId) {
+		return fetch(
+			`${config.API_ENDPOINT}/assignment/all/result/${assignmentId}`
+		).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	submitAssignment(obj) {
 		return fetch(`${config.API_ENDPOINT}/assignment/submit`, {
 			method: "PUT",
