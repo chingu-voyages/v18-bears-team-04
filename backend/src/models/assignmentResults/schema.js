@@ -25,9 +25,11 @@ export const assignmentResultsSchema = new Schema({
     min: 0,
     max: 100,
   },
-  studentDocLink: {
-    type: String,
-  },
+  studentDocLink: [
+    {
+      type: String,
+    },
+  ],
   studentAnswers: {
     type: String,
   },
