@@ -34,13 +34,10 @@ const ApiService = {
 		);
 	},
 	uploadAssignmentFile(data, assignmentId) {
-		return fetch(
-			`${config.API_ENDPOINT}/upload/teacherAssignment/${assignmentId}`,
-			{
-				method: "PUT",
-				body: data,
-			}
-		).then((res) =>
+		return fetch(`${config.API_ENDPOINT}/upload/assignment/${assignmentId}`, {
+			method: "PUT",
+			body: data,
+		}).then((res) =>
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},

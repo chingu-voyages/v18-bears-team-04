@@ -37,10 +37,13 @@ const CreateAssignmentForm = (props) => {
 	};
 
 	const handleFileChange = (e) => {
-		const { name } = e.target;
 		e.preventDefault();
+		const { name, files } = e.target;
 
-		setInput({ ...userInput, [name]: e.target.files[0] });
+		// const types = files.map((a) => a.type);
+		console.log(files);
+
+		setInput({ ...userInput, [name]: e.target.files });
 	};
 
 	const handleSubmit = (e) => {
@@ -58,7 +61,9 @@ const CreateAssignmentForm = (props) => {
 		};
 
 		const formData = new FormData();
-		formData.append("doc", files);
+		for (let i = 0; i < files.length; i++) {
+			formData.append("doc", files[i]);
+		}
 
 		ApiService.addAssignment(newAssignmentObj)
 			.then((res) => {
@@ -85,7 +90,7 @@ const CreateAssignmentForm = (props) => {
 				<h2> Add An Assignment</h2>
 
 				<form className='form-grid' onSubmit={(e) => handleSubmit(e)}>
-					<label htmlFor='assignment-name' className="assignment-name">
+					<label htmlFor='assignment-name' className='assignment-name'>
 						Assignment Name
 						<br />
 						<input
@@ -126,13 +131,15 @@ const CreateAssignmentForm = (props) => {
 						/>
 					</label>
 
-					<label htmlFor='files' className="files">
+					<label htmlFor='files' className='files'>
 						File
 						<br />
 						<input
 							type='file'
 							name='files'
+							accept='application/pdf,application/msword'
 							onChange={(e) => handleFileChange(e)}
+							multiple
 						/>
 					</label>
 
