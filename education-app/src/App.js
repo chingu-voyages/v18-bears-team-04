@@ -8,7 +8,6 @@ import {
 import TopNav from "./components/TopNav";
 import Homepage from "./pages/Homepage";
 import AboutUs from "./pages/AboutUs";
-// import StudentDashboard from "./pages/student/StudentDashboard";
 import Dashboard from "./pages/Dashboard";
 import AssignmentView from "./pages/teacher/AssignmentView";
 import EditClass from "./pages/EditClass";
@@ -63,16 +62,6 @@ const App = () => {
 						) : (
 							<Redirect to='/' />
 						)}
-
-						{/* {TokenService.hasAuthToken() ? (
-							<Route
-								exact
-								path='/:userName/student/dashboard'
-								render={(routeProps) => <StudentDashboard {...routeProps} />}
-							/>
-						) : (
-							<Redirect to='/' />
-						)} */}
 					</Switch>
 
 					<Switch>
