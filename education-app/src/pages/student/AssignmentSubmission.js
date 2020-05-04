@@ -178,17 +178,8 @@ const AssignmentSubmission = (props) => {
 							onChange={(e) => handleFileChange(e)}
 						/>
 					</label>
-					{user !== null &&
-					user.role === "student" &&
-					props.match.params.status === "GRADED" ? (
-						<div className='graded-class-message'>Class is already graded.</div>
-					) : (
+					{user !== null && user.role === "student" && (
 						<div className='btns'>
-							<Link
-								to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
-							>
-								<button className='edit-btn'>EDIT</button>
-							</Link>
 							<button className='submit-btn'>SUBMIT</button>
 						</div>
 					)}
