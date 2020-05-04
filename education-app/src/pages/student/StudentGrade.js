@@ -243,7 +243,7 @@ const StudentGradeStyle = styled.div`
 	.wrap {
 		width: 90%;
 		margin: 0 auto;
-		color: #5f5f5f;
+		color: #5e5e5e;
 	}
 	.page-title {
 		font-size: 3.8rem;
@@ -291,7 +291,7 @@ const StudentGradeStyle = styled.div`
 		p {
 			height: 200px;
 			margin-top: 10px;
-			border: 1px solid #5f5f5f;
+			border: 1px solid #5e5e5e;
 			border-radius: 10px;
 			padding: 8px;
 			font-size: 1.2rem;
@@ -309,7 +309,7 @@ const StudentGradeStyle = styled.div`
 				width: 100%;
 				padding: 8px;
 				height: 200px;
-				border: 1px solid #5f5f5f;
+				border: 1px solid #5e5e5e;
 				border-radius: 10px;
 				outline: 0;
 			}

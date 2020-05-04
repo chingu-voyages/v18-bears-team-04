@@ -23,6 +23,7 @@ import Evaluation from "./pages/student/Evaluation";
 import ScholarContext from "../src/ScholarContext";
 
 import ResetCSS from "./ResetCSS";
+import GlobalCSS from "./GlobalCSS";
 import TokenService from "./services/token-service";
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
 			<>
 				<Router>
 					<ResetCSS />
+					<GlobalCSS />
 
 					<TopNav />
 					{/* Order matters! */}
