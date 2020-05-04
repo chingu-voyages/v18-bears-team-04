@@ -24,10 +24,10 @@ const Grades = (props) => {
 	const { users, classInfo, assignments } = apiInfo;
 
 	const getAllApiInfo = () => {
+		const classId = TokenService.getClassToken();
 		Promise.all([
 			ApiService.getUsers(),
-			ApiService.getClassById("5ea401ea13455e72b16c8b13"),
-			//TokenService.getClassToken()
+			ApiService.getClassById(classId),
 			ApiService.getAssignments(),
 		])
 			.then((res) =>
@@ -127,6 +127,8 @@ const Grades = (props) => {
 			);
 		});
 
+	assignments !== undefined && console.log(filteredView);
+
 	const displayedGrades =
 		assignments !== undefined &&
 		filteredView.map((s, index) => {
@@ -140,7 +142,7 @@ const Grades = (props) => {
 
 						<td>
 							<label htmlFor='grade' className='grade-label'>
-								{!s.grade ? (
+								{s.grade ? (
 									<input type='text' readOnly={true} />
 								) : (
 									<input

@@ -151,54 +151,51 @@ const AssignmentList = (props) => {
 	const studentCurrentAssignments =
 		assignments != null && list.filter((a) => a.studentId === userId);
 
-	assignments != null && console.log(studentCurrentAssignments);
-
 	const displayedStudentAssignments =
-		assignments != null
-			? studentCurrentAssignments.map((assign, index) => {
-					return (
-						<>
-							{assign.status === "GRADED" ? (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/student/my-grades`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+		assignments != null &&
+		studentCurrentAssignments.map((assign, index) => {
+			return (
+				<>
+					{assign.status === "GRADED" ? (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${userInfo.userName}/${assign.assignmentId}/my-grades`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							) : assign.status === "SUBMITTED" ? (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/student/edit-assignment`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+							</Link>
+						</div>
+					) : assign.status === "SUBMITTED" ? (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${assign.title}/${assign.assignmentId}/student/edit-submission`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							) : (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+							</Link>
+						</div>
+					) : (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							)}
-						</>
-					);
-				})
-			: null;
+							</Link>
+						</div>
+					)}
+				</>
+			);
+		});
 
 	return (
 		<>
