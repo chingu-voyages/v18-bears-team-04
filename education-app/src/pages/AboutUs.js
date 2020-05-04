@@ -59,7 +59,7 @@ const AboutUs = () => {
 
 	const team = members.map((member, i) => {
 		return (
-			<div className='member'>
+			<div key={i} className='member'>
 				<div className='img-wrap'>
 					<img src={member.icon} alt={member.name} />
 				</div>
