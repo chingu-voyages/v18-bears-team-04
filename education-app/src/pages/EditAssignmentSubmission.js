@@ -58,7 +58,7 @@ const EditAssignmentSubmission = (props) => {
 
 	const errorMessage = () => {
 		if (error != null) {
-			return `Something went wrong.`;
+			return `Something went wrong. Try again later`;
 		}
 	};
 
@@ -100,7 +100,78 @@ const EditAssignmentSubmission = (props) => {
 		});
 	};
 
-	//-- present assignment content from student submission
+	const renderStudentEditPage = user !== null && user.role === "student" && (
+		<>
+			<h1>{assignment !== null && assignment.title}</h1>
+			<div className='assignment-details'>
+				<div className='instructions'>
+					Instructions:
+					<div className='instructions-container'>
+						{assignment !== null
+							? assignment.instructions
+							: "Instructions Unavailable"}{" "}
+					</div>
+				</div>
+				<div className='assignment-dates'>
+					<div>
+						Due Date:{" "}
+						<span className='date-string'>
+							{assignment !== null && formatDate()}
+						</span>
+					</div>
+				</div>
+			</div>
+			{/* {stringURL !== null && (
+				<a className='download-btn' href={stringURL} download>
+					Download File
+				</a>
+			)} */}
+			<form onSubmit={(e) => handleStudentEdit(e)}>
+				<label htmlFor='submission'>
+					<h2 className='submission-message'>
+						Your Assignment has already been submitted and pending review.
+					</h2>
+					<h2>Update the information below to edit your submission</h2>
+					<textarea
+						className='text-area'
+						name='studentAnswers'
+						value={userInput.studentAnswers}
+						placeholder='Write your submission here'
+						onChange={(e) => handleTextChange(e)}
+					/>
+				</label>
+				<label htmlFor='feedback'>
+					<h2>Feedback</h2>
+					<textarea
+						className='feedback'
+						name='studentFeedback'
+						value={userInput.studentFeedback}
+						placeholder='Feedback details '
+						onChange={(e) => handleTextChange(e)}
+					/>
+				</label>
+
+				<label htmlFor='files' className='upload-file-label'>
+					<span className='upload-file-title'>Upload File</span>
+					<input
+						type='file'
+						name='file'
+						onChange={(e) => handleFileChange(e)}
+					/>
+				</label>
+				{/* {uploadedAssignmentURL !== null && (
+					<a className='download-btn' href={uploadedAssignmentURL} download>
+						Uploaded File
+					</a>
+				)} */}
+				{user !== null && user.role === "student" && (
+					<div className='btns'>
+						<button className='submit-btn'>SUBMIT</button>
+					</div>
+				)}
+			</form>
+		</>
+	);
 	//EDIT STUDENT ROLE END//
 
 	// TEACHER EDIT ROLE ONLY START //
@@ -117,28 +188,25 @@ const EditAssignmentSubmission = (props) => {
 
 	const formatEditDate = (date) => {
 		let formattedDate;
-
 		formattedDate = moment(date).format("YYYY-MM-DD");
-
 		return formattedDate;
 	};
 
-	const renderCurrentFile =
+	const renderCurrentFiles =
 		fileUrl !== null
 			? fileUrl.map((a, index) => {
 					return (
 						<a key={index} className='download-btn' href={a} download>
-							Download File {index + 1}
+							File {index + 1}
 						</a>
 					);
 			  })
 			: null;
 
-	console.log(renderCurrentFile);
-
 	const handleTeacherEdit = (e) => {
 		e.preventDefault();
 		const date = moment(assignment.dueDate).toISOString();
+		const today = moment().toISOString();
 
 		const editObj = {
 			title: assignment.title,
@@ -149,41 +217,22 @@ const EditAssignmentSubmission = (props) => {
 		const formData = new FormData();
 		formData.append("doc", file);
 
-		ApiService.updateAssignmentById(editObj, props.match.params.assignmentId)
-			.then((res) => {
-				console.log(res);
-				ApiService.uploadAssignmentFile(
-					formData,
-					res.assignment._id
-				).then((res) => console.log(res));
-				setInput({
-					assignmentName: "",
-					className: props.className,
-					dueDate: "",
-					startDate: "",
-					file: "",
-					description: "",
-				});
-				history.push(`/${props.userName}/assignments`);
-			})
-			.catch((err) => setError({ error: err }));
+		date == null
+			? alert("Check your date.")
+			: date < today
+			? alert("Due date can't be before today.")
+			: ApiService.updateAssignmentById(
+					editObj,
+					props.match.params.assignmentId
+			  )
+					.then((res) => {
+						if (file.length > 1) {
+							ApiService.uploadAssignmentFile(formData, res.assignment._id);
+						}
+						history.push(`/${user.userName}/assignments`);
+					})
+					.catch((err) => setError({ error: err }));
 	};
-
-	// TEACHER EDIT ROLE ONLY END //
-
-	const stringURL =
-		assignment !== null && assignment.teacherDocLink.length > 0
-			? config.FILE_BASE_URL + assignment.teacherDocLink[0]
-			: null;
-
-	const uploadedAssignmentURL =
-		userInput !== null &&
-		userInput !== undefined &&
-		userInput.studentDocLink.length > 0
-			? config.FILE_BASE_URL + userInput.studentDocLink[0]
-			: null;
-
-	userInput !== null && console.log(uploadedAssignmentURL);
 
 	const renderTeacherEditPage = user !== null && assignment !== null && (
 		<>
@@ -226,11 +275,21 @@ const EditAssignmentSubmission = (props) => {
 				</div>
 			</form>
 
-			<label htmlFor='files download-btn'>
-				File
-				<br />
-				<input type='file' name='files' onChange={(e) => handleFileChange(e)} />
-			</label>
+			<div className='file-downloads'> {renderCurrentFiles}</div>
+
+			{fileUrl.length < 3 ? (
+				<label htmlFor='files'>
+					<span className='add-file-teacher'>Add File</span>
+					<br />
+					<input
+						type='file'
+						name='files'
+						onChange={(e) => handleFileChange(e)}
+					/>
+				</label>
+			) : (
+				""
+			)}
 
 			<form>
 				<label htmlFor='submission'>
@@ -255,83 +314,14 @@ const EditAssignmentSubmission = (props) => {
 		</>
 	);
 
-	const renderStudentEditPage = user !== null && user.role === "student" && (
-		<>
-			<h1>{assignment !== null && assignment.title}</h1>
-			<div className='assignment-details'>
-				<div className='instructions'>
-					Instructions:
-					<div className='instructions-container'>
-						{assignment !== null
-							? assignment.instructions
-							: "Instructions Unavailable"}{" "}
-					</div>
-				</div>
-				<div className='assignment-dates'>
-					<div>
-						Due Date:{" "}
-						<span className='date-string'>
-							{assignment !== null && formatDate()}
-						</span>
-					</div>
-				</div>
-			</div>
-			{stringURL !== null && (
-				<a className='download-btn' href={stringURL} download>
-					Download File
-				</a>
-			)}
-			<form onSubmit={(e) => handleStudentEdit(e)}>
-				<label htmlFor='submission'>
-					<h2 className='submission-message'>
-						Your Assignment has already been submitted and pending review.
-					</h2>
-					<h2>Update the information below to edit your submission</h2>
-					<textarea
-						className='text-area'
-						name='studentAnswers'
-						value={userInput.studentAnswers}
-						placeholder='Write your submission here'
-						onChange={(e) => handleTextChange(e)}
-					/>
-				</label>
-				<label htmlFor='feedback'>
-					<h2>Feedback</h2>
-					<textarea
-						className='feedback'
-						name='studentFeedback'
-						value={userInput.studentFeedback}
-						placeholder='Feedback details '
-						onChange={(e) => handleTextChange(e)}
-					/>
-				</label>
+	// TEACHER EDIT ROLE ONLY END //
 
-				<label htmlFor='files' className='upload-file-label'>
-					<span className='upload-file-title'>Upload File</span>
-					<input
-						type='file'
-						name='file'
-						onChange={(e) => handleFileChange(e)}
-					/>
-				</label>
-				{uploadedAssignmentURL !== null && (
-					<a className='download-btn' href={uploadedAssignmentURL} download>
-						Uploaded File
-					</a>
-				)}
-				{user !== null && user.role === "student" && (
-					<div className='btns'>
-						<button className='submit-btn'>SUBMIT</button>
-					</div>
-				)}
-			</form>
-		</>
-	);
 	return (
 		<>
 			<SideNav />
 			<EditAssignmentSubmissionStyle>
 				<div className='wrap'>
+					<ValidationError message={errorMessage()} />
 					{user !== null && user.role === "student"
 						? renderStudentEditPage
 						: renderTeacherEditPage}
@@ -365,6 +355,17 @@ const EditAssignmentSubmissionStyle = styled.div`
 	.submission-message {
 		font-style: italic;
 		color: red;
+	}
+
+	.file-downloads {
+		margin: 5px;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+	}
+
+	.add-file-teacher {
+		font-size: 1.5rem;
 	}
 	.assignment-details {
 		display: grid;
@@ -419,9 +420,8 @@ const EditAssignmentSubmissionStyle = styled.div`
 
 	.download-btn {
 		display: block;
-		width: 200px;
+		width: 100px;
 		text-align: center;
-		margin-top: 20px;
 		padding: 10px;
 		font-size: 1.6rem;
 		background-color: #00a3ff;
@@ -476,6 +476,13 @@ const EditAssignmentSubmissionStyle = styled.div`
 			}
 		}
 	}
+
+	.edit-date-string {
+		font-family: sans-serif;
+		font-size: 1.3rem;
+		padding-left: 10px;
+	}
+
 	.btns {
 		width: 100%;
 		display: flex;
