@@ -21,7 +21,7 @@ const AssignmentSubmission = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [fileUrl, setFileUrl] = useState([]);
-	const [file, setFile] = useState({});
+	const [files, setFiles] = useState([{ value: "" }]);
 	const [assignment, setAssignment] = useState(null);
 	const history = useHistory();
 
@@ -67,11 +67,11 @@ const AssignmentSubmission = (props) => {
 		}
 	};
 
-	// Teacher Delete
-	const handleDelete = () => {
-		ApiService.deleteAssignmentById(
-			props.match.params.assignmentId
-		).then((res) => props.history.goBack());
+	const formatDate = () => {
+		if (assignment.dueDate === null) {
+			return "Due Date Unavailable";
+		}
+		return moment(assignment.dueDate).format("MMMM DD, YYYY");
 	};
 
 	//FOR STUDENT SUBMISSION START//
@@ -82,15 +82,47 @@ const AssignmentSubmission = (props) => {
 		setInput({ ...userInput, [name]: value });
 	};
 
+	const handleFileChange = (e) => {
+		e.preventDefault();
+		const values = [...files];
+		if (files.length === 1) {
+			setFiles([{ value: e.target.files[0] }]);
+		} else {
+			let newList = values.map((item) => {
+				if (item.value === "") {
+					item.value = e.target.files[0];
+				}
+				return item;
+			});
+
+			setFiles(newList);
+		}
+	};
+
+	const addInput = (e) => {
+		e.preventDefault();
+		const values = [...files];
+		if (values.length === 2) {
+			alert("Maximum upload files allowed is 2 or less.");
+		} else {
+			values.push({ value: "" });
+			setFiles(values);
+		}
+	};
+
+	const renderInput = (
+		<input
+			type='file'
+			name='files'
+			accept='application/pdf,application/msword'
+			onChange={(e) => handleFileChange(e)}
+		/>
+	);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const userId = TokenService.getAuthToken();
 		const { studentFeedback, studentAnswers } = userInput;
-
-		const formData = new FormData();
-		for (let i = 0; i < file.length; i++) {
-			formData.append("doc", file[i]);
-		}
 
 		const obj = {
 			studentFeedback,
@@ -100,11 +132,15 @@ const AssignmentSubmission = (props) => {
 		};
 
 		ApiService.submitAssignment(obj).then((res) => {
-			ApiService.uploadStudentAssignmentFile(
-				formData,
-				res.assignment._id,
-				userId
-			);
+			files.map((a) => {
+				const formData = new FormData();
+				formData.append("doc", a.value);
+				return ApiService.uploadStudentAssignmentFile(
+					formData,
+					res.assignment._id,
+					userId
+				);
+			});
 			props.history.goBack();
 		});
 	};
@@ -119,21 +155,6 @@ const AssignmentSubmission = (props) => {
 					);
 			  })
 			: null;
-
-	//FOR STUDENT SUBMISSION END//
-
-	// TO DO: Upload a file - need upload route for student submission in API
-	const handleFileChange = (e) => {
-		e.preventDefault();
-		setFile(e.target.files);
-	};
-
-	const formatDate = () => {
-		if (assignment.dueDate === null) {
-			return "Due Date Unavailable";
-		}
-		return moment(assignment.dueDate).format("MMMM DD, YYYY");
-	};
 
 	const renderStudentSubmissionView = assignment !== null &&
 		user.role === "student" && (
@@ -183,13 +204,12 @@ const AssignmentSubmission = (props) => {
 
 					<label htmlFor='files' className='upload-file-label'>
 						<span className='upload-file-title'>Upload File</span>
-						<input
-							type='file'
-							name='file'
-							accept='application/pdf,application/msword'
-							onChange={(e) => handleFileChange(e)}
-							multiple
-						/>
+						{files.map((a, index) => (
+							<div key={index}>{renderInput}</div>
+						))}
+						<button className='add-file-btn' onClick={(e) => addInput(e)}>
+							Add A File
+						</button>
 					</label>
 					{user !== null && user.role === "student" && (
 						<div className='btns'>
@@ -201,6 +221,16 @@ const AssignmentSubmission = (props) => {
 				</form>
 			</>
 		);
+
+	//FOR STUDENT SUBMISSION END//
+
+	/*TEACHER SUBMISSION VIEW START */
+	// Teacher Delete
+	const handleDelete = () => {
+		ApiService.deleteAssignmentById(
+			props.match.params.assignmentId
+		).then((res) => props.history.goBack());
+	};
 
 	const renderTeacherSubmissionView = assignment !== null &&
 		user.role === "teacher" && (
@@ -255,7 +285,7 @@ const AssignmentSubmission = (props) => {
 				)}
 			</>
 		);
-
+	/*TEACHER SUBMISSION VIEW END */
 	return (
 		<>
 			<SideNav />
@@ -346,9 +376,17 @@ const AssignmentSubmissionStyle = styled.div`
 			height: 250px;
 			border-radius: 10px;
 		}
-
+		.add-file-btn {
+			width: 100px;
+			border: 1px solid #ffffff;
+			background-color: #ffffff;
+			border-radius: 5px;
+			margin: 5px;
+			font-size: 1rem;
+		}
 		.upload-file-label {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			width: 100%;
 			padding: 5px;
 			background-color: #c4c4c4;

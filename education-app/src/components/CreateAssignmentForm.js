@@ -82,8 +82,6 @@ const CreateAssignmentForm = (props) => {
 		);
 		const today = moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
-		console.log(today, formattedStartDate, formattedDueDate);
-
 		if (today > formattedDueDate) {
 			alert("Due date cannot be before today.");
 		} else if (formattedDueDate < formattedStartDate) {
@@ -109,7 +107,6 @@ const CreateAssignmentForm = (props) => {
 					});
 					history.push(`/${props.userName}/assignments`);
 				})
-				// TO DO: make error message for non doc or pdf files
 				.catch((err) => {
 					setError({ error: err });
 				});
@@ -133,7 +130,6 @@ const CreateAssignmentForm = (props) => {
 			name='files'
 			accept='application/pdf,application/msword'
 			onChange={(e) => handleFileChange(e)}
-			multiple
 		/>
 	);
 
