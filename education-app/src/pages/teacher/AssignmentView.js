@@ -52,7 +52,9 @@ const AssignmentView = (props) => {
 	};
 
 	const uploadedAssignmentURL =
-		assignmentInfo !== null && assignmentInfo.studentDocLink.length > 0
+		assignmentInfo !== null &&
+		assignmentInfo.studentDocLink !== undefined &&
+		assignmentInfo.studentDocLink.length > 0
 			? config.FILE_BASE_URL + assignmentInfo.studentDocLink[0]
 			: null;
 
