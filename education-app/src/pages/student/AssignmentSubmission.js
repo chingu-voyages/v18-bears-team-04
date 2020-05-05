@@ -119,7 +119,6 @@ const AssignmentSubmission = (props) => {
 					);
 			  })
 			: null;
-	fileUrl !== null && console.log(renderFileDownload, fileUrl);
 
 	//FOR STUDENT SUBMISSION END//
 
