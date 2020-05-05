@@ -16,6 +16,7 @@ const EditAssignmentSubmission = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [fileUrl, setFileUrl] = useState([]);
+	const [studentFileUrl, setStudentFileUrl] = useState([]);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const history = useHistory();
@@ -67,6 +68,17 @@ const EditAssignmentSubmission = (props) => {
 
 		setFile(e.target.files[0]);
 	};
+
+	const renderCurrentFiles =
+		fileUrl !== null
+			? fileUrl.map((a, index) => {
+					return (
+						<a key={index} className='download-btn' href={a} download>
+							Download File {index + 1}
+						</a>
+					);
+			  })
+			: null;
 
 	//EDIT STUDENT ROLE START//
 
@@ -121,11 +133,7 @@ const EditAssignmentSubmission = (props) => {
 					</div>
 				</div>
 			</div>
-			{/* {stringURL !== null && (
-				<a className='download-btn' href={stringURL} download>
-					Download File
-				</a>
-			)} */}
+			<div className='file-downloads'> {renderCurrentFiles}</div>
 			<form onSubmit={(e) => handleStudentEdit(e)}>
 				<label htmlFor='submission'>
 					<h2 className='submission-message'>
@@ -191,17 +199,6 @@ const EditAssignmentSubmission = (props) => {
 		formattedDate = moment(date).format("YYYY-MM-DD");
 		return formattedDate;
 	};
-
-	const renderCurrentFiles =
-		fileUrl !== null
-			? fileUrl.map((a, index) => {
-					return (
-						<a key={index} className='download-btn' href={a} download>
-							File {index + 1}
-						</a>
-					);
-			  })
-			: null;
 
 	const handleTeacherEdit = (e) => {
 		e.preventDefault();
@@ -420,7 +417,7 @@ const EditAssignmentSubmissionStyle = styled.div`
 
 	.download-btn {
 		display: block;
-		width: 100px;
+		width: 150px;
 		text-align: center;
 		padding: 10px;
 		font-size: 1.6rem;
