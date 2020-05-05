@@ -15,6 +15,7 @@ const EditAssignmentSubmission = (props) => {
 	const [userInput, setInput] = useState(null);
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
+	const [fileUrl, setFileUrl] = useState([]);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const history = useHistory();
@@ -36,8 +37,15 @@ const EditAssignmentSubmission = (props) => {
 					(a) => a.studentId === currentUser._id
 				);
 
-				setInput(assignmentContent);
+				let list = [];
+				if (currentAssignment.teacherDocLink.length > 0) {
+					list = currentAssignment.teacherDocLink.map(
+						(a) => config.FILE_BASE_URL + a
+					);
+				}
 
+				setInput(assignmentContent);
+				setFileUrl(list);
 				setUser(currentUser);
 				setAssignment(currentAssignment);
 			})
@@ -115,6 +123,19 @@ const EditAssignmentSubmission = (props) => {
 		return formattedDate;
 	};
 
+	const renderCurrentFile =
+		fileUrl !== null
+			? fileUrl.map((a, index) => {
+					return (
+						<a key={index} className='download-btn' href={a} download>
+							Download File {index + 1}
+						</a>
+					);
+			  })
+			: null;
+
+	console.log(renderCurrentFile);
+
 	const handleTeacherEdit = (e) => {
 		e.preventDefault();
 		const date = moment(assignment.dueDate).toISOString();
@@ -178,7 +199,7 @@ const EditAssignmentSubmission = (props) => {
 			<form htmlFor='edit-assignment-details' className='assignment-details'>
 				<label htmlFor='instructions' className='instructions'>
 					Instructions:
-					<input
+					<textarea
 						type='text'
 						name='instructions'
 						value={
@@ -373,7 +394,6 @@ const EditAssignmentSubmissionStyle = styled.div`
 			}
 		}
 	}
-
 	.instructions-container {
 		width: 300px;
 		margin: 10px;
@@ -384,11 +404,12 @@ const EditAssignmentSubmissionStyle = styled.div`
 
 	.edit-instructions-container {
 		display: block;
-
+		padding-bottom: 140px;
 		width: 300px;
 		margin: 10px;
 		padding: 10px;
-		overflow-y: scroll;
+		border: 1px solid #c4c4c4;
+		border-radius: 0px;
 		height: 140px;
 	}
 

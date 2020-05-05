@@ -20,6 +20,7 @@ const AssignmentSubmission = (props) => {
 	const [userInput, setInput] = useState(initialFormState);
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
+	const [fileUrl, setFileUrl] = useState([]);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const history = useHistory();
@@ -41,8 +42,15 @@ const AssignmentSubmission = (props) => {
 					(a) => a.studentId === currentUser._id
 				);
 
-				setInput(assignmentContent);
+				let list = [];
+				if (currentAssignment.teacherDocLink.length > 0) {
+					list = currentAssignment.teacherDocLink.map(
+						(a) => config.FILE_BASE_URL + a
+					);
+				}
 
+				setInput(assignmentContent);
+				setFileUrl(list);
 				setUser(currentUser);
 				setAssignment(currentAssignment);
 			})
@@ -101,6 +109,18 @@ const AssignmentSubmission = (props) => {
 		});
 	};
 
+	const renderFileDownload =
+		fileUrl !== null
+			? fileUrl.map((a, index) => {
+					return (
+						<a key={index} className='download-btn' href={a} download>
+							Download File {index + 1}
+						</a>
+					);
+			  })
+			: null;
+	fileUrl !== null && console.log(renderFileDownload, fileUrl);
+
 	//FOR STUDENT SUBMISSION END//
 
 	// TO DO: Upload a file - need upload route for student submission in API
@@ -108,11 +128,6 @@ const AssignmentSubmission = (props) => {
 		e.preventDefault();
 		setFile(e.target.files);
 	};
-
-	const stringURL =
-		assignment !== null && assignment.teacherDocLink.length > 0
-			? config.FILE_BASE_URL + assignment.teacherDocLink[0]
-			: null;
 
 	const formatDate = () => {
 		if (assignment.dueDate === null) {
@@ -144,16 +159,7 @@ const AssignmentSubmission = (props) => {
 						</div>
 					</div>
 				</div>
-				{stringURL !== null && (
-					<Link
-						className='download-btn'
-						to={stringURL}
-						target='_blank'
-						download
-					>
-						Download File
-					</Link>
-				)}
+				<div className='file-downloads'>{renderFileDownload}</div>
 
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='submission'>
@@ -220,17 +226,7 @@ const AssignmentSubmission = (props) => {
 						</div>
 					</div>
 				</div>
-				{stringURL !== null && (
-					<Link
-						className='download-btn'
-						to={stringURL}
-						target='_blank'
-						download
-						disabled
-					>
-						Download File
-					</Link>
-				)}
+				<div className='file-downloads'>{renderFileDownload}</div>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='submission'>
 						<textarea
@@ -331,9 +327,7 @@ const AssignmentSubmissionStyle = styled.div`
 	}
 	.download-btn {
 		display: block;
-		width: 200px;
 		text-align: center;
-		margin-top: 20px;
 		padding: 10px;
 		font-size: 1.6rem;
 		background-color: #00a3ff;
@@ -366,6 +360,12 @@ const AssignmentSubmissionStyle = styled.div`
 				margin-bottom: 10px;
 			}
 		}
+	}
+	.file-downloads {
+		margin: 5px;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
 	}
 	.btns {
 		width: 100%;
