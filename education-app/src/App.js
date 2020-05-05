@@ -16,6 +16,7 @@ import EditAssignmentSubmission from "./pages/EditAssignmentSubmission";
 import AssignmentSubmission from "./pages/student/AssignmentSubmission";
 import AssignmentList from "./pages/AssignmentList";
 import StudentGrade from "./pages/student/StudentGrade";
+import SideNav from "./components/SideNav";
 
 import Evaluation from "./pages/student/Evaluation";
 
