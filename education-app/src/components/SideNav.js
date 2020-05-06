@@ -36,7 +36,7 @@ const SideNav = (props) => {
 
 	let userImage =
 		userInfo !== null
-			? config.IMG_BASE_URL + userInfo.userProfileLink
+			? config.FILE_BASE_URL + userInfo.userProfileLink
 			: defaultImg;
 
 	const handleImageError = (e) => (e.target.src = defaultImg);
@@ -77,13 +77,10 @@ const SideNav = (props) => {
 						<Link to={`/${userInfo.userName}/grades`}>Grades</Link>
 					) : (
 						userInfo !== null && (
-							<Link to={`/${userInfo.userName}/my-grades`}>Grades</Link>
+							<Link to={`/${userInfo.userName}/${userInfo.role}/evaluation`}>
+								Class Evaluation
+							</Link>
 						)
-					)}
-					{userInfo !== null && userInfo.role === "student" && (
-						<Link to={`/${userInfo.userName}/${userInfo.role}/evaluation`}>
-							Class Evaluation
-						</Link>
 					)}
 				</div>
 			</div>

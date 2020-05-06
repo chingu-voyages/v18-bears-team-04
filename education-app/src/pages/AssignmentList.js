@@ -8,8 +8,8 @@ import SideNav from "../components/SideNav";
 import ValidationError from "../components/ValidationError";
 import styled from "styled-components";
 
-import yes from "../images/yes.png"
-import no from "../images/no.png"
+import yes from "../images/yes.png";
+import no from "../images/no.png";
 
 const AssignmentList = (props) => {
 	const [{ error }, setError] = useState({ error: null });
@@ -100,14 +100,14 @@ const AssignmentList = (props) => {
 			return (
 				<div className='status-container'>
 					{/* <p className='status no'>&#10008;</p> */}
-					<img src={no} alt="icon"/>
+					<img src={no} alt='icon' />
 				</div>
 			);
 		}
 		return (
 			<div className='status-container'>
 				{/* <p className='status yes'>&#10003;</p> */}
-				<img src={yes} alt="icon"/>
+				<img src={yes} alt='icon' />
 			</div>
 		);
 	};
@@ -130,7 +130,7 @@ const AssignmentList = (props) => {
 							</Link>
 						</div>
 					);
-				})
+			  })
 			: null;
 
 	// Get Assignments Submitted By Student
@@ -151,54 +151,51 @@ const AssignmentList = (props) => {
 	const studentCurrentAssignments =
 		assignments != null && list.filter((a) => a.studentId === userId);
 
-	assignments != null && console.log(studentCurrentAssignments);
-
 	const displayedStudentAssignments =
-		assignments != null
-			? studentCurrentAssignments.map((assign, index) => {
-					return (
-						<>
-							{assign.status === "GRADED" ? (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/student/my-grades`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+		assignments != null &&
+		studentCurrentAssignments.map((assign, index) => {
+			return (
+				<React.Fragment key={assign._id}>
+					{assign.status === "GRADED" ? (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${userInfo.userName}/${assign.assignmentId}/my-grades`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							) : assign.status === "SUBMITTED" ? (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/student/edit-assignment`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+							</Link>
+						</div>
+					) : assign.status === "SUBMITTED" ? (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${assign.title}/${assign.assignmentId}/student/edit-assignment`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							) : (
-								<div key={assign._id} className='assignment'>
-									<Link
-										to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
-									>
-										<h4 className='assignment-title'>{assign.title}</h4>
-										<div key={index} className='class-name-container'>
-											<p className='class-name'>{assign.className}</p>
-											{renderSubmittedInfo(assign.status)}
-										</div>
-									</Link>
+							</Link>
+						</div>
+					) : (
+						<div key={assign._id} className='assignment'>
+							<Link
+								to={`/${assign.title}/${assign.assignmentId}/${assign.status}/submission`}
+							>
+								<h4 className='assignment-title'>{assign.title}</h4>
+								<div key={index} className='class-name-container'>
+									<p className='class-name'>{assign.className}</p>
+									{renderSubmittedInfo(assign.status)}
 								</div>
-							)}
-						</>
-					);
-				})
-			: null;
+							</Link>
+						</div>
+					)}
+				</React.Fragment>
+			);
+		});
 
 	return (
 		<>
