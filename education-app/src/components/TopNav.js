@@ -8,7 +8,7 @@ import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
 import bellIcon from "../images/bell-solid.svg";
-import Logo from '../images/iScholars-logo-small.png'
+import Logo from "../images/iScholars-logo-small.png";
 
 const TopNav = (props) => {
 	const context = useContext(ScholarContext);
@@ -17,6 +17,7 @@ const TopNav = (props) => {
 		showModal: false,
 		formType: "",
 	});
+	const [user, setUser] = useState(null);
 
 	const history = useHistory();
 
@@ -27,6 +28,7 @@ const TopNav = (props) => {
 
 	const handleLogIn = (response) => {
 		setForm({ loggedIn: true, showModal: false });
+		setUser(response);
 
 		if (response.role === "teacher") {
 			context.saveUser(response);
@@ -68,6 +70,13 @@ const TopNav = (props) => {
 	const renderLogOut = () => {
 		return (
 			<>
+				{user !== null && (
+					<button>
+						<Link to={`/${user.userName}/${user.role}/dashboard`}>
+							Dashboard
+						</Link>
+					</button>
+				)}
 				<button className='logout-btn' onClick={() => handleLogOut()}>
 					Log Out
 				</button>
@@ -99,7 +108,7 @@ const TopNav = (props) => {
 	return (
 		<NavStyle>
 			<Link to={`/`}>
-				<img className="app-logo" src={Logo} alt="APP logo"/>
+				<img className='app-logo' src={Logo} alt='APP logo' />
 			</Link>
 			<Modal
 				open={showModal}
@@ -135,7 +144,7 @@ const NavStyle = styled.header`
 		color: #00a3ff;
 	}
 	.app-logo {
-		width: 100px
+		width: 100px;
 	}
 	.top-nav-menu {
 		ul {
