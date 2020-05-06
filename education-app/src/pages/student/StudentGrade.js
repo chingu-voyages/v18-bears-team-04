@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -11,18 +10,17 @@ import styled from "styled-components";
 
 const StudentGrade = (props) => {
 	const [{ error }, setError] = useState({ error: null });
-	const [assignments, setAssignments] = useState(null);
+	const [gradedAssignments, setGradedAssignments] = useState(null);
 	const [feedback, setFeedback] = useState({});
 	const [selection, setSelection] = useState({
 		title: "Select Assignment",
 		id: "",
 	});
-	const [classInfo, setClasses] = useState(null);
-	const history = useHistory();
 	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
 		const assignmentId = props.match.params.assignmentId;
+		const userId = TokenService.getAuthToken();
 		Promise.all([
 			ApiService.getClasses(),
 			ApiService.getAssignments(),
@@ -40,12 +38,54 @@ const StudentGrade = (props) => {
 				const filteredClasses = res[0].filter((a) =>
 					res[1].some((b) => a._id === b.classId)
 				);
+
 				const filteredAssignments = res[1].filter((a) =>
 					res[0].some((b) => a.classId === b._id)
 				);
 
-				setClasses(filteredClasses);
-				setAssignments(filteredAssignments);
+				const combinedInfo = filteredAssignments.map((a) => {
+					for (let i = 0; i < filteredClasses.length; i++) {
+						if (filteredClasses[i]._id === a.classId) {
+							return { ...filteredClasses[i], ...a };
+						}
+					}
+					return a;
+				});
+
+				const currentAssignments = filteredClasses
+					.filter((a) => a.studentIds)
+					.filter((c) => c.studentIds.find((b) => b === userId))
+					.map((a) => a._id)
+					.map((a) => combinedInfo.filter((b) => b.classId === a));
+
+				let list = [];
+				let assignmentList = [];
+
+				//combine lists and keys
+				for (let i = 0; i < currentAssignments.length; i++) {
+					for (let x = 0; x < currentAssignments[i].length; x++) {
+						list.push(currentAssignments[i][x]);
+					}
+				}
+
+				// //make a list based on assignment results
+				list.map((a) =>
+					a.assignmentResults.forEach((b) =>
+						assignmentList.push({
+							...b,
+							title: a.title,
+							assignmentId: a._id,
+							className: a.className,
+						})
+					)
+				);
+
+				//list specific to this user
+				const filteredList = assignmentList.filter(
+					(a) => a.studentId === userId && a.status === "GRADED"
+				);
+
+				setGradedAssignments(filteredList);
 			})
 			.catch((err) => setError({ error: err }));
 	};
@@ -80,84 +120,38 @@ const StudentGrade = (props) => {
 
 	const handleFeedbackChange = (e) => {
 		const { value } = e.target;
-		setFeedback(value);
+		const values = [...gradedAssignments];
+		console.log(selection.id);
+		let newList = values.map((item) => {
+			if (item.assignmentId === selection.id) {
+				item.studentFeedback = value;
+			}
+			return item;
+		});
+		setGradedAssignments(newList);
 	};
 
 	const handleSubmitFeedback = (e) => {
 		e.preventDefault();
+		const { value } = e.target;
+		const assignmentToUpdate = gradedAssignments.find(
+			(a) => a.assignmentId === selection.id
+		);
 
 		const assignmentObj = {
-			studentFeedback: feedback,
+			studentFeedback: assignmentToUpdate.studentFeedback,
 			assignmentId: selection.id,
 			studentId: userId,
 		};
 
-		//Need to refactor
-		ApiService.submitAssignment(assignmentObj).then((res) => {
-			setFeedback("");
-			history.push(`/${props.userName}/my-grades`);
+		ApiService.addStudentFeedback(assignmentObj).then((res) => {
+			props.history.push(`/${props.match.params.userName}/assignments`);
 		});
 	};
-
-	const makeFilteredAssignments = (currentAssignments) => {
-		let list = [];
-		let assignmentList = [];
-
-		//combine lists and keys
-		for (let i = 0; i < currentAssignments.length; i++) {
-			for (let x = 0; x < currentAssignments[i].length; x++) {
-				list.push(currentAssignments[i][x]);
-			}
-		}
-
-		//make a list based on assignment results
-		list.map((a) =>
-			a.assignmentResults.forEach((b) =>
-				assignmentList.push({
-					...b,
-					title: a.title,
-					assignmentId: a._id,
-					className: a.className,
-				})
-			)
-		);
-
-		//list specific to this user
-		const filteredList = assignmentList.filter(
-			(a) => a.studentId === userId && a.status === "GRADED"
-		);
-
-		return filteredList;
-	};
-
-	const combinedInfo =
-		assignments != null &&
-		assignments.map((a) => {
-			for (let i = 0; i < classInfo.length; i++) {
-				if (classInfo[i]._id === a.classId) {
-					return { ...classInfo[i], ...a };
-				}
-			}
-			return a;
-		});
-
-	const studentClass =
-		assignments != null && classInfo.filter((a) => a.studentIds);
-
-	const currentAssignments =
-		assignments != null &&
-		studentClass
-			.filter((c) => c.studentIds.find((b) => b === userId))
-			.map((a) => a._id)
-			.map((a) => combinedInfo.filter((b) => b.classId === a));
-
-	//Grades to filter
-	const gradedAssignments =
-		assignments != null && makeFilteredAssignments(currentAssignments);
 
 	//For Drop Down List
 	const assignmentSelection =
-		assignments !== null &&
+		gradedAssignments !== null &&
 		gradedAssignments.map((a, index) => {
 			return (
 				<option key={index} value={a.assignmentId + "+" + a.title}>
@@ -174,7 +168,7 @@ const StudentGrade = (props) => {
 	};
 
 	const gradesToRender =
-		assignments !== null &&
+		gradedAssignments !== null &&
 		gradedAssignments
 			.filter((a) => a.assignmentId === selection.id)
 			.map((a, index) => {
@@ -195,11 +189,24 @@ const StudentGrade = (props) => {
 						<div className='feedback-for'>
 							<h4>Feedback for the Teacher</h4>
 							<form onSubmit={(e) => handleSubmitFeedback(e)}>
-								<textarea
-									name={feedback}
-									onChange={(e) => handleFeedbackChange(e)}
-								/>
-								<button className='submit-btn'>SUBMIT</button>
+								{a.studentFeedback ? (
+									<>
+										<textarea
+											value={a.studentFeedback}
+											name={feedback}
+											onChange={(e) => handleFeedbackChange(e)}
+										/>
+										<button className='submit-btn'>SUBMIT</button>
+									</>
+								) : (
+									<>
+										<textarea
+											name={feedback}
+											onChange={(e) => handleFeedbackChange(e)}
+										/>
+										<button className='submit-btn'>SUBMIT</button>
+									</>
+								)}
 							</form>
 						</div>
 					</div>
@@ -208,7 +215,7 @@ const StudentGrade = (props) => {
 
 	//Setting conditional grade color
 	const gradeToColor =
-		assignments !== null &&
+		gradedAssignments !== null &&
 		gradedAssignments.find((a) => a.assignmentId === selection.id);
 
 	const scoreColor =
@@ -321,6 +328,9 @@ const StudentGradeStyle = styled.div`
 				font-size: 2rem;
 				color: #fff;
 				background-color: #00a3ff;
+			}
+			.submit-btn:hover {
+				cursor: pointer;
 			}
 		}
 	}

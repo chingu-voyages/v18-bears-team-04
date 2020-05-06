@@ -155,7 +155,7 @@ const AssignmentList = (props) => {
 		assignments != null &&
 		studentCurrentAssignments.map((assign, index) => {
 			return (
-				<>
+				<React.Fragment key={assign._id}>
 					{assign.status === "GRADED" ? (
 						<div key={assign._id} className='assignment'>
 							<Link
@@ -193,7 +193,7 @@ const AssignmentList = (props) => {
 							</Link>
 						</div>
 					)}
-				</>
+				</React.Fragment>
 			);
 		});
 
