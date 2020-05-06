@@ -24,10 +24,10 @@ const Grades = (props) => {
 	const { users, classInfo, assignments } = apiInfo;
 
 	const getAllApiInfo = () => {
+		const classId = TokenService.getClassToken();
 		Promise.all([
 			ApiService.getUsers(),
-			ApiService.getClassById("5ea401ea13455e72b16c8b13"),
-			//TokenService.getClassToken()
+			ApiService.getClassById(classId),
 			ApiService.getAssignments(),
 		])
 			.then((res) =>
@@ -43,6 +43,12 @@ const Grades = (props) => {
 	useEffect(() => {
 		getAllApiInfo();
 	}, []);
+
+	// const errorMessage = () => {
+	// 	if (error != null) {
+	// 		return `Something went wrong. Try again later.`;
+	// 	}
+	// };
 
 	const filteredAssignments =
 		assignments !== undefined &&
@@ -130,7 +136,7 @@ const Grades = (props) => {
 	const displayedGrades =
 		assignments !== undefined &&
 		filteredView.map((s, index) => {
-			if (s.status === "SUBMITTED" || s.status === "GRADED") {
+			if (s.status === "SUBMITTED") {
 				return (
 					<tr key={index}>
 						<td>{s.studentUserName}</td>
@@ -140,28 +146,56 @@ const Grades = (props) => {
 
 						<td>
 							<label htmlFor='grade' className='grade-label'>
-								{!s.grade ? (
-									<input type='text' readOnly={true} />
-								) : (
-									<input
-										type='text'
-										className='grade-selection'
-										value={s.grade}
-										onChange={(e) => handleGradeChange(e)}
-									/>
-								)}
+								<input
+									type='text'
+									className='grade-selection'
+									value={s.grade}
+									onChange={(e) => handleGradeChange(e)}
+								/>
 								/100
 							</label>
 
-							{!s.grade && (
-								<button
-									className='submit-grade-btn'
-									value={s.assignmentId + "," + s.studentId}
-									onClick={(e) => handleSubmit(e)}
-								>
-									Submit Grade
-								</button>
+							<button
+								className='submit-grade-btn'
+								value={s.assignmentId + "," + s.studentId}
+								onClick={(e) => handleSubmit(e)}
+							>
+								Submit Grade
+							</button>
+						</td>
+						<td>
+							<Link
+								to={`/${s.studentUserName}/${s._id}/submitted-assignment-view`}
+							>
+								<button className='view-assignment-btn'>View</button>
+							</Link>
+						</td>
+						<td className='comment'>
+							{!s.studentFeedback ? (
+								" "
+							) : (
+								<span className='comment'>
+									{" "}
+									&#128681;
+									<span className='comment-text'>{s.studentFeedback}</span>
+								</span>
 							)}
+						</td>
+					</tr>
+				);
+			} else if (s.status === "GRADED") {
+				return (
+					<tr key={index}>
+						<td>{s.studentUserName}</td>
+						<td>
+							<span className='indicator-yes'>&#10004; </span>
+						</td>
+
+						<td>
+							<label htmlFor='grade' className='grade-label'>
+								{s.grade}
+								/100
+							</label>
 						</td>
 						<td>
 							<Link

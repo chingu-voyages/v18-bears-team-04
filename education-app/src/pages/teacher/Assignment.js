@@ -79,7 +79,7 @@ const AssignmentSubmission = (props) => {
 
 	const stringURL =
 		assignment !== null && assignment.teacherDocLink[0] !== undefined
-			? config.DOC_BASE_URL + assignment.teacherDocLink[0]
+			? config.FILE_BASE_URL + assignment.teacherDocLink[0]
 			: null;
 
 	const formatDate = () => {

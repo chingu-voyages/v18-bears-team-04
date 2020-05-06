@@ -1,17 +1,17 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 import img from "../images/iScholars-logo-medium.png";
-import teacherIcon from "../images/teacher.svg"
-import studentIcon from "../images/student.svg"
-import assignmentIcon from "../images/assignment.svg"
-import gradeIcon from "../images/grade.svg"
-import feedbackIcon from "../images/feedback.svg"
+import teacherIcon from "../images/teacher.svg";
+import studentIcon from "../images/student.svg";
+import assignmentIcon from "../images/assignment.svg";
+import gradeIcon from "../images/grade.svg";
+import feedbackIcon from "../images/feedback.svg";
 import fbIcon from "../images/facebook-f-brands.svg";
 import instaIcon from "../images/instagram-brands.svg";
 import linkedinIcon from "../images/linkedin-in-brands.svg";
-import HowItWorks from './HowItWorks';
+// import HowItWorks from './HowItWorks';
 
 const Homepage = () => {
 	return (
@@ -26,42 +26,39 @@ const Homepage = () => {
 					</select>
 				</form> */}
 				<div className='home-left'>
-					<p className='welcome'>
-						Welcome to iScholars
-					</p>
-					<div className="how-work">
+					<p className='welcome'>Welcome to iScholars</p>
+					<div className='how-work'>
 						<table>
 							<tbody>
 								<tr>
 									<td>
-										<img src={teacherIcon} alt=""/>
+										<img src={teacherIcon} alt='' />
 										<p>For Teacher</p>
 									</td>
+									<td></td>
 									<td>
-									</td>
-									<td>
-										<img src={studentIcon} alt=""/>
+										<img src={studentIcon} alt='' />
 										<p>For Student</p>
 									</td>
 								</tr>
 								<tr>
 									<td>Create assignments</td>
 									<td>
-										<img src={assignmentIcon} alt=""/>
+										<img src={assignmentIcon} alt='' />
 									</td>
 									<td>Submit assignment</td>
 								</tr>
 								<tr>
 									<td>Grade your students</td>
 									<td>
-										<img src={gradeIcon} alt=""/>
+										<img src={gradeIcon} alt='' />
 									</td>
 									<td>Get your grde</td>
 								</tr>
 								<tr>
 									<td>Share your feedback</td>
 									<td>
-										<img src={feedbackIcon} alt=""/>
+										<img src={feedbackIcon} alt='' />
 									</td>
 									<td>Leave your comment</td>
 								</tr>
@@ -98,14 +95,16 @@ const Homepage = () => {
 					<button className='try-btn'>Try Now</button>
 				</div>
 			</div>
-			<div>
-			{/* <HowItWorks /> */}
-			</div>
-			
+			<div>{/* <HowItWorks /> */}</div>
+
 			<div className='bottom'>
 				<ul className='links'>
 					<li>
-						<Link to='/aboutus'>About us</Link>     <span> <a href='/support'>Support</a></span>
+						<Link to='/aboutus'>About us</Link>{" "}
+						<span>
+							{" "}
+							<a href='/support'>Support</a>
+						</span>
 					</li>
 					{/* <li>
 						<a href='/support'>Support</a>
@@ -208,16 +207,16 @@ const HomepageStyle = styled.div`
 				justify-content: space-between;
 				.desc {
 					width: 50%;
-					
+
 					.user {
 						font-size: 2rem;
 						i.fas.fa-chalkboard-teacher {
-						font-size: 30px;
-						margin: 8px 20px;
+							font-size: 30px;
+							margin: 8px 20px;
 						}
-						i.fas.fa-users{
-						font-size: 30px;
-						margin: 8px 20px;
+						i.fas.fa-users {
+							font-size: 30px;
+							margin: 8px 20px;
 						}
 					}
 					ul {
@@ -227,11 +226,10 @@ const HomepageStyle = styled.div`
 							display: flex;
 							align-items: center;
 							margin-bottom: 8px;
-                            
-                            
+
 							&::before {
 								display: block;
-								content:'*';
+								content: "*";
 								width: 15px;
 								margin-right: 10px;
 								color: #00a3ff;
@@ -286,7 +284,7 @@ const HomepageStyle = styled.div`
 				line-height: 40px;
 				font-size: 2rem;
 			}
-			span{
+			span {
 				height: 40px;
 				line-height: 40px;
 				font-size: 2rem;
@@ -316,19 +314,19 @@ const HomepageStyle = styled.div`
 			}
 		}
 	}
-	
-@keyframes slideInDown {
-  from {
-    -webkit-transform: translate3d(0, -90%, 0);
-    transform: translate3d(0, -90%, 0);
-    visibility: visible;
-  }
 
-  to {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
+	@keyframes slideInDown {
+		from {
+			-webkit-transform: translate3d(0, -90%, 0);
+			transform: translate3d(0, -90%, 0);
+			visibility: visible;
+		}
+
+		to {
+			-webkit-transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0);
+		}
+	}
 `;
 
 export default Homepage;
