@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -16,7 +16,6 @@ const EditAssignmentSubmission = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
 	const [fileUrl, setFileUrl] = useState([]);
-	const [studentFileUrl, setStudentFileUrl] = useState([]);
 	const [file, setFile] = useState({});
 	const [assignment, setAssignment] = useState(null);
 	const history = useHistory();

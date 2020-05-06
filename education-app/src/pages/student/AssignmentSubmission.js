@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -23,7 +23,6 @@ const AssignmentSubmission = (props) => {
 	const [fileUrl, setFileUrl] = useState([]);
 	const [files, setFiles] = useState([{ value: "" }]);
 	const [assignment, setAssignment] = useState(null);
-	const history = useHistory();
 
 	function getAssignment(props) {
 		Promise.all([
@@ -217,7 +216,7 @@ const AssignmentSubmission = (props) => {
 						</div>
 					)}
 
-					{error && <ValidationError message={errorMessage()} />}
+					{error !== null && <ValidationError message={errorMessage()} />}
 				</form>
 			</>
 		);

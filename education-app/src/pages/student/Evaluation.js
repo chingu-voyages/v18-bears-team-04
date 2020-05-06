@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 
 import ApiService from "../../services/api-services";
 import TokenService from "../../services/token-service";
@@ -12,10 +11,8 @@ import styled from "styled-components";
 const Evaluation = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [assignments, setAssignments] = useState(null);
-	const [feedback, setFeedback] = useState({});
 
 	const [classInfo, setClasses] = useState(null);
-	const history = useHistory();
 	const userId = TokenService.getAuthToken();
 
 	const getAllApiInfo = (props) => {
@@ -45,6 +42,12 @@ const Evaluation = (props) => {
 	useEffect(() => {
 		getAllApiInfo(props);
 	}, [props]);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong. Try again later`;
+		}
+	};
 
 	const makeFilteredAssignments = (currentAssignments) => {
 		let list = [];
@@ -159,6 +162,7 @@ const Evaluation = (props) => {
 				<div className='wrap'>
 					<h2 className='page-title'>Assignment Grade</h2>
 					<h3>Your average grade per class</h3>
+					{error !== null && <ValidationError message={errorMessage()} />}
 					<div className='eval-table'>{displayedEvaluation}</div>
 				</div>
 			</EvaluationStyle>

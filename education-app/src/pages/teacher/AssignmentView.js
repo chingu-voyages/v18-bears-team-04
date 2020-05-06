@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 
 import config from "../../config";
 import moment from "moment";
 
 import ApiService from "../../services/api-services";
 import SideNav from "../../components/SideNav";
+import ValidationError from "../../components/ValidationError";
 
 import styled from "styled-components";
 
@@ -46,6 +46,12 @@ const AssignmentView = (props) => {
 	useEffect(() => {
 		getAssignmentInfo(props);
 	}, [props]);
+
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong.`;
+		}
+	};
 
 	const renderCurrentFiles =
 		fileUrl !== null
@@ -93,6 +99,7 @@ const AssignmentView = (props) => {
 				<div className='assignment-view-container'>
 					<h1>Assignment View</h1>
 					<div className='submission-container'>
+						{error !== null && <ValidationError message={errorMessage()} />}
 						<div className='student-submission-view-container'>
 							<h2> Student: {props.match.params.studentUsername}</h2>
 							<div className='file-downloads'> {renderCurrentFiles}</div>
