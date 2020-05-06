@@ -162,6 +162,17 @@ const ApiService = {
 			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
 		);
 	},
+	addStudentFeedback(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/student/feedback`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
 	deleteAssignmentById(assignmentId) {
 		return fetch(`${config.API_ENDPOINT}/assignment/${assignmentId}`, {
 			method: "DELETE",
