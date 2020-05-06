@@ -36,7 +36,7 @@ const SideNav = (props) => {
 
 	let userImage =
 		userInfo !== null
-			? config.IMG_BASE_URL + userInfo.userProfileLink
+			? config.FILE_BASE_URL + userInfo.userProfileLink
 			: defaultImg;
 
 	const handleImageError = (e) => (e.target.src = defaultImg);

@@ -100,16 +100,16 @@ const EditClass = (props) => {
 							</button>
 						</li>
 					);
-				})
+			  })
 			: `You have no enrolled students.`;
 
 	return (
 		<>
 			<SideNav />
 			<EditClassStyle>
-				<div className="wrapper">
+				<div className='wrapper'>
 					<div className='edit-class-box'>
-						<h2 className="page-title"> Edit Class</h2>
+						<h2 className='page-title'> Edit Class</h2>
 						<form className='form-grid'>
 							<label htmlFor='class-name'>
 								Class Name
@@ -140,7 +140,10 @@ const EditClass = (props) => {
 							</label>
 
 							<div className='button-container'>
-								<button className='modal-btn' onClick={(e) => handleAddSubmit(e)}>
+								<button
+									className='modal-btn'
+									onClick={(e) => handleAddSubmit(e)}
+								>
 									Submit
 								</button>
 							</div>
@@ -204,7 +207,7 @@ const EditClassStyle = styled.section`
 			font-size: 4rem;
 			margin-bottom: 20px;
 			position: relative;
-			top: 8px;
+			top: 13px;
 		}
 		input[type="search"] {
 			border: none;
@@ -214,11 +217,11 @@ const EditClassStyle = styled.section`
 		}
 		label {
 			font-size: 4rem;
+			padding-top: 0px;
+			padding-bottom: 0px;
 		}
 	}
-	.dropdown-container {
-		width: 200px;
-	}
+
 	.class-name-text {
 		border: none;
 		color: #00a3ff;
@@ -290,7 +293,7 @@ const EditClassStyle = styled.section`
 		padding: 10px;
 		font-size: 2.5rem;
 		background-color: #fff;
-			box-shadow: 0 5px 10px #0000002f;
+		box-shadow: 0 5px 10px #0000002f;
 		border-radius: 10px;
 		margin-top: 10px;
 		height: 100%;
@@ -300,7 +303,7 @@ const EditClassStyle = styled.section`
 
 	.enrolled-students-container::-webkit-scrollbar {
 		width: 10px;
-		background-color:#000;
+		background-color: #000;
 		border-radius: 0px 5px 5px 0px;
 	}
 
