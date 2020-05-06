@@ -44,6 +44,12 @@ const Grades = (props) => {
 		getAllApiInfo();
 	}, []);
 
+	const errorMessage = () => {
+		if (error != null) {
+			return `Something went wrong. Try again later.`;
+		}
+	};
+
 	const filteredAssignments =
 		assignments !== undefined &&
 		assignments.filter((a) => a.classId === classInfo._id);
@@ -126,8 +132,6 @@ const Grades = (props) => {
 				</option>
 			);
 		});
-
-	assignments !== undefined && console.log(filteredView);
 
 	const displayedGrades =
 		assignments !== undefined &&
@@ -263,6 +267,7 @@ const Grades = (props) => {
 			<GradesStyle>
 				<div className='grades-container'>
 					<div className='title-section'>
+						{error !== null && <ValidationError message={errorMessage()} />}
 						<h1 className='text'>Assignment Grades</h1>
 						<p className='selection-text'> View By Assignment</p>
 

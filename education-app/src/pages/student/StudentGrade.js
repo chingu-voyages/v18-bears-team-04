@@ -11,7 +11,6 @@ import styled from "styled-components";
 const StudentGrade = (props) => {
 	const [{ error }, setError] = useState({ error: null });
 	const [gradedAssignments, setGradedAssignments] = useState(null);
-	const [feedback, setFeedback] = useState({});
 	const [selection, setSelection] = useState({
 		title: "Select Assignment",
 		id: "",
@@ -133,7 +132,6 @@ const StudentGrade = (props) => {
 
 	const handleSubmitFeedback = (e) => {
 		e.preventDefault();
-		const { value } = e.target;
 		const assignmentToUpdate = gradedAssignments.find(
 			(a) => a.assignmentId === selection.id
 		);
@@ -193,7 +191,7 @@ const StudentGrade = (props) => {
 									<>
 										<textarea
 											value={a.studentFeedback}
-											name={feedback}
+											name='feedback'
 											onChange={(e) => handleFeedbackChange(e)}
 										/>
 										<button className='submit-btn'>SUBMIT</button>
@@ -201,7 +199,7 @@ const StudentGrade = (props) => {
 								) : (
 									<>
 										<textarea
-											name={feedback}
+											name='feedback'
 											onChange={(e) => handleFeedbackChange(e)}
 										/>
 										<button className='submit-btn'>SUBMIT</button>
