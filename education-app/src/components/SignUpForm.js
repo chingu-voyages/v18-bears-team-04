@@ -25,11 +25,8 @@ const SignUpForm = (props) => {
 		};
 		ApiService.addUser(newUser)
 			.then((res) => {
-				props.handleLogIn(res);
 				TokenService.saveAuthToken(res._id);
-				if (res.classIds.length === 1) {
-					TokenService.saveClassToken(res.classIds);
-				}
+				props.handleLogIn(res);
 			})
 			.catch((err) => setError({ error: err }));
 	};
