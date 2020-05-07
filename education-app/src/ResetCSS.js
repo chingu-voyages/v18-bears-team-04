@@ -1,7 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
 const ResetCSS = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
    html, button {
       font-family: 'Lato', sans-serif;
    }
