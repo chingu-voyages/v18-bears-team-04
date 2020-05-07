@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<EditClass /> renders as expected 1`] = `
+Array [
+  <div
+    className="sc-AxirZ HJAhU"
+  >
+    <div
+      className="wrap"
+    >
+      <div
+        className="userInfo"
+      >
+        <div
+          className="prof-img"
+        >
+          <img
+            alt="something that looks like you"
+            onError={[Function]}
+            src="defaultImg.png"
+          />
+        </div>
+        <p
+          className="user-name"
+        />
+        <p
+          className="user-type"
+        />
+      </div>
+      <div
+        className="links"
+      />
+    </div>
+  </div>,
+  <section
+    className="sc-AxiKw burnxw"
+  >
+    <div
+      className="wrapper"
+    >
+      <div
+        className="edit-class-box"
+      >
+        <h2
+          className="page-title"
+        >
+           Edit Class
+        </h2>
+        <form
+          className="form-grid"
+        >
+          <label
+            htmlFor="class-name"
+          >
+            Class Name
+            <br />
+            <input
+              className="class-name-text"
+              name="className"
+              readOnly={true}
+              type="text"
+              value=""
+            />
+          </label>
+          <label
+            className="enrolled-students"
+            htmlFor="enrolled-students"
+          >
+            Enrolled Students
+            <div
+              className="enrolled-students-container"
+            >
+              <ul />
+            </div>
+          </label>
+          <label
+            htmlFor="add-students"
+          >
+            Add Students
+            <div
+              className="go4079732705 multi-select"
+            >
+              <div
+                aria-expanded={false}
+                aria-labelledby="Select"
+                aria-readonly="true"
+                className="go3433208811 dropdown-container"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                tabIndex={0}
+              >
+                <div
+                  className="go1053659416 dropdown-heading"
+                  onClick={[Function]}
+                >
+                  <div
+                    className="dropdown-heading-value"
+                  >
+                    <span
+                      className="gray"
+                    >
+                      Select...
+                    </span>
+                  </div>
+                  <span
+                    className="dropdown-heading-dropdown-arrow gray"
+                    style={
+                      Object {
+                        "paddingTop": "4px",
+                      }
+                    }
+                  >
+                    <svg
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 9L12 15 18 9"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </label>
+          <div
+            className="button-container"
+          >
+            <button
+              className="modal-btn"
+              onClick={[Function]}
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>,
+]
+`;

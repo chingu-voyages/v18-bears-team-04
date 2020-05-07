@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AssignmentView /> renders as expected 1`] = `
+Array [
+  <div
+    className="sc-AxirZ HJAhU"
+  >
+    <div
+      className="wrap"
+    >
+      <div
+        className="userInfo"
+      >
+        <div
+          className="prof-img"
+        >
+          <img
+            alt="something that looks like you"
+            onError={[Function]}
+            src="defaultImg.png"
+          />
+        </div>
+        <p
+          className="user-name"
+        />
+        <p
+          className="user-type"
+        />
+      </div>
+      <div
+        className="links"
+      />
+    </div>
+  </div>,
+  <div
+    className="sc-AxiKw hFZwvH"
+  >
+    <div
+      className="assignment-view-container"
+    >
+      <h1>
+        Assignment View
+      </h1>
+      <div
+        className="submission-container"
+      >
+        <div
+          className="student-submission-view-container"
+        >
+          <h2>
+             Student: 
+          </h2>
+          <div
+            className="file-downloads"
+          >
+             
+          </div>
+          <span
+            className="submitted-date"
+          >
+            Submitted on 
+          </span>
+          <div
+            className="submission-text"
+          />
+        </div>
+        <div
+          className="feedback-container"
+        >
+          <h2>
+            Feedback
+          </h2>
+          <form
+            htmlFor="teacher-feedback"
+            onSubmit={[Function]}
+          >
+            <textarea
+              className="feedback-textarea"
+              onChange={[Function]}
+              value=" "
+            />
+            <button>
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;

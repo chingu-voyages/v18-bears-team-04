@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Dashboard /> renders as expected 1`] = `
+<main
+  className="sc-AxhUy hkqewg"
+>
+  <div
+    className="wrap"
+  >
+    <div
+      className="user-info"
+    >
+      <div
+        className="prof-img"
+      >
+        <img
+          alt="something that looks like you"
+          onError={[Function]}
+          src="defaultImg.png"
+        />
+      </div>
+      <button
+        className="edit-container"
+        onClick={[Function]}
+      >
+        <img
+          alt=""
+          className="edit-img"
+          src="iconmonstr-pencil-8-32.png"
+        />
+      </button>
+      <p
+        className="user-name"
+      >
+        joteacher
+      </p>
+    </div>
+    <div
+      className="links"
+    >
+       
+      <a
+        href="/joteacher/assignments"
+        onClick={[Function]}
+      >
+        Assignments
+      </a>
+      <a
+        href="/joteacher/grades"
+        onClick={[Function]}
+      >
+        Grades
+      </a>
+    </div>
+  </div>
+</main>
+`;

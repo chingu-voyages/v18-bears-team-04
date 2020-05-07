@@ -1,0 +1,169 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Homepage /> renders as expected 1`] = `
+<div
+  className="sc-AxjAm fZAAwD"
+>
+  <div
+    className="first-view"
+  >
+    <div
+      className="home-left"
+    >
+      <p
+        className="welcome"
+      >
+        Welcome to iScholars
+      </p>
+      <div
+        className="how-work"
+      >
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <img
+                  alt=""
+                  src="teacher.svg"
+                />
+                <p>
+                  For Teacher
+                </p>
+              </td>
+              <td />
+              <td>
+                <img
+                  alt=""
+                  src="student.svg"
+                />
+                <p>
+                  For Student
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Create assignments
+              </td>
+              <td>
+                <img
+                  alt=""
+                  src="assignment.svg"
+                />
+              </td>
+              <td>
+                Submit assignment
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Grade your students
+              </td>
+              <td>
+                <img
+                  alt=""
+                  src="grade.svg"
+                />
+              </td>
+              <td>
+                Get your grde
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Share your feedback
+              </td>
+              <td>
+                <img
+                  alt=""
+                  src="feedback.svg"
+                />
+              </td>
+              <td>
+                Leave your comment
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      className="home-right"
+    >
+      <div
+        className="img-wrap"
+      >
+        <img
+          alt=""
+          src="iScholars-logo-medium.png"
+        />
+      </div>
+      <button
+        className="try-btn"
+      >
+        Try Now
+      </button>
+    </div>
+  </div>
+  <div />
+  <div
+    className="bottom"
+  >
+    <ul
+      className="links"
+    >
+      <li>
+        <a
+          href="/aboutus"
+          onClick={[Function]}
+        >
+          About us
+        </a>
+         
+        <span>
+           
+          <a
+            href="/support"
+          >
+            Support
+          </a>
+        </span>
+      </li>
+    </ul>
+    <ul
+      className="social-media"
+    >
+      <li>
+        <a
+          href="/facebook"
+        >
+          <img
+            alt="facebook"
+            src="facebook-f-brands.svg"
+          />
+        </a>
+      </li>
+      <li>
+        <a
+          href="/instagram"
+        >
+          <img
+            alt="instagram"
+            src="instagram-brands.svg"
+          />
+        </a>
+      </li>
+      <li>
+        <a
+          href="/linkedin"
+        >
+          <img
+            alt="linkedin"
+            src="linkedin-in-brands.svg"
+          />
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
