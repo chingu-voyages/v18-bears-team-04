@@ -346,11 +346,10 @@ const AssignmentSubmissionStyle = styled.div`
 			}
 		}
 	}
-
 	.instructions-container {
 		width: 300px;
 		margin: 10px;
-		// overflow-y: scroll;
+		overflow-y: scroll;
 		height: 140px;
 	}
 	.download-btn {

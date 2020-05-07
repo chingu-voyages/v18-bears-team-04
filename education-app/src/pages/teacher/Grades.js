@@ -20,7 +20,7 @@ const Grades = (props) => {
 	const [apiInfo, setApiInfo] = useState({ infoObj });
 	const [newGrade, setGrade] = useState(null);
 	const [selection, setSelection] = useState({});
-	const [error, setError] = useState({ error: null });
+	const [error, setError] = useState(null);
 	const { users, classInfo, assignments } = apiInfo;
 
 	const getAllApiInfo = () => {
@@ -37,18 +37,12 @@ const Grades = (props) => {
 					assignments: res[2],
 				})
 			)
-			.catch((err) => setError({ error: err }));
+			.catch((err) => setError("Can't get information."));
 	};
 
 	useEffect(() => {
 		getAllApiInfo();
 	}, []);
-
-	// const errorMessage = () => {
-	// 	if (error != null) {
-	// 		return `Something went wrong. Try again later.`;
-	// 	}
-	// };
 
 	const filteredAssignments =
 		assignments !== undefined &&
@@ -154,7 +148,6 @@ const Grades = (props) => {
 								/>
 								/100
 							</label>
-
 							<button
 								className='submit-grade-btn'
 								value={s.assignmentId + "," + s.studentId}
@@ -221,17 +214,18 @@ const Grades = (props) => {
 			return (
 				<tr key={index}>
 					<td>{s.studentUserName}</td>
-
 					<td>
 						<span className='indicator-no'>&#10008; </span>
 					</td>
-
+					{selection === {} ? <p>No Assignments Available</p> : ""}
 					<td>
 						<label htmlFor='grade' className='grade-label'>
 							<input type='text' className='grade-selection' />
 							/100
 						</label>
-						<button className='submit-grade-btn'>Submit Grade</button>
+						<button className='submit-grade-btn' disabled={true}>
+							Submit Grade
+						</button>
 					</td>
 					<td>
 						<Link
@@ -268,6 +262,7 @@ const Grades = (props) => {
 				<div className='grades-container'>
 					<div className='title-section'>
 						<h1 className='text'>Assignment Grades</h1>
+						{error !== null && <ValidationError message={error} />}
 						<p className='selection-text'> View By Assignment</p>
 
 						<select
@@ -421,6 +416,9 @@ const GradesStyle = styled.div`
 	.submit-grade-btn:hover {
 		color: green;
 		cursor: pointer;
+	}
+	.submit-grade-btn:disabled:hover {
+		color: #c4c4c4;
 	}
 `;
 
