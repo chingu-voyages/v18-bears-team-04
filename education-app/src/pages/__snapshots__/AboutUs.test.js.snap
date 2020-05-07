@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AboutUs /> renders as expected 1`] = `
+<div
+  className="sc-AxjAm bjEsIV"
+>
+  <div
+    className="top"
+  >
+    <h2>
+      About Us
+    </h2>
+  </div>
+  <div
+    className="big-logo"
+  >
+    <img
+      alt="iScholars-Logo"
+      src="iScholars-logo-large.png"
+    />
+  </div>
+  <div
+    className="vision"
+  >
+    <div
+      className="wrap"
+    >
+      <h3>
+        Vision
+      </h3>
+      <p>
+        iScholars has been built to empower a worldwide community of teachers and students and improve their communication with more transparency.
+      </p>
+    </div>
+  </div>
+  <div
+    className="team"
+  >
+    <div
+      className="wrap"
+    >
+      <h3>
+        Meet the Team
+      </h3>
+      <p
+        className="desc"
+      >
+        The team consists of members from various countries.
+      </p>
+      <div
+        className="members"
+      >
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Giuseppe"
+              src="gius.png"
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Giuseppe
+             
+          </h4>
+          <p
+            className="job"
+          >
+            Product Owner
+          </p>
+          <img
+            alt="Italy"
+            className="flag"
+            src="Italy.svg"
+          />
+        </div>
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Joanne"
+              src="joanne.jpg"
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Joanne
+             
+          </h4>
+          <p
+            className="job"
+          >
+            Full Stack Developer
+          </p>
+          <img
+            className="flag"
+          />
+        </div>
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Chuks"
+              src="chuks.jpeg"
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Chuks
+             
+          </h4>
+          <p
+            className="job"
+          >
+            Backend Developer
+          </p>
+          <img
+            alt="Nigeria"
+            className="flag"
+            src="Nigeria.svg"
+          />
+        </div>
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Liam"
+              src="liam.jpg"
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Liam
+             
+          </h4>
+          <p
+            className="job"
+          >
+            Backend Developer
+          </p>
+          <img
+            alt="India"
+            className="flag"
+            src="India.svg"
+          />
+        </div>
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Yuto"
+              src="yuto.jpg"
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Yuto
+             
+          </h4>
+          <p
+            className="job"
+          >
+            UI Developer
+          </p>
+          <img
+            alt="Japan"
+            className="flag"
+            src="Japan.svg"
+          />
+        </div>
+        <div
+          className="member"
+        >
+          <div
+            className="img-wrap"
+          >
+            <img
+              alt="Dummy"
+              src={null}
+            />
+          </div>
+          <h4
+            className="name"
+          >
+            Dummy
+             
+          </h4>
+          <p
+            className="job"
+          >
+            Dummy
+          </p>
+          <img
+            className="flag"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

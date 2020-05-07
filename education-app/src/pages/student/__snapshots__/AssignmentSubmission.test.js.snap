@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AssignmentSubmission /> renders as expected 1`] = `
+Array [
+  <div
+    className="sc-AxirZ HJAhU"
+  >
+    <div
+      className="wrap"
+    >
+      <div
+        className="userInfo"
+      >
+        <div
+          className="prof-img"
+        >
+          <img
+            alt="something that looks like you"
+            onError={[Function]}
+            src="defaultImg.png"
+          />
+        </div>
+        <p
+          className="user-name"
+        />
+        <p
+          className="user-type"
+        />
+      </div>
+      <div
+        className="links"
+      />
+    </div>
+  </div>,
+  <div
+    className="sc-AxiKw UWIaT"
+  >
+    <div
+      className="wrap"
+    />
+  </div>,
+]
+`;
