@@ -34,7 +34,7 @@ app.use(
 		origin:
 			NODE_ENV === "development"
 				? "http://localhost:3000  "
-				: "ischolars.netlify.app",
+				: "https://ischolars.netlify.app",
 	})
 );
 
