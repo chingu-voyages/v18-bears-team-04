@@ -231,8 +231,6 @@ const AssignmentSubmission = (props) => {
 		).then((res) => props.history.goBack());
 	};
 
-	assignment !== null && console.log(assignment);
-
 	const renderTeacherSubmissionView = assignment !== null &&
 		user.role === "teacher" && (
 			<>
