@@ -231,6 +231,8 @@ const AssignmentSubmission = (props) => {
 		).then((res) => props.history.goBack());
 	};
 
+	assignment !== null && console.log(assignment);
+
 	const renderTeacherSubmissionView = assignment !== null &&
 		user.role === "teacher" && (
 			<>
@@ -276,7 +278,7 @@ const AssignmentSubmission = (props) => {
 							DELETE
 						</button>
 						<Link
-							to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
+							to={`/${assignment.title}/${assignment._id}/${user.role}/edit-assignment`}
 						>
 							<button className='edit-btn'>EDIT</button>
 						</Link>
