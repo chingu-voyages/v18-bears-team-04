@@ -42,7 +42,6 @@ const UploadProfileForm = (props) => {
 		ApiService.uploadProfileImg(formData, userId)
 			.then((res) => {
 				props.updateUserProfile(`/profile/${res.data.name}`);
-				console.log(`/profile/${res.data.name}`);
 				props.handleUploadProfileModal();
 			})
 			.catch((err) => setError({ error: err }));

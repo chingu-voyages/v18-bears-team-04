@@ -120,7 +120,6 @@ const StudentGrade = (props) => {
 	const handleFeedbackChange = (e) => {
 		const { value } = e.target;
 		const values = [...gradedAssignments];
-		console.log(selection.id);
 		let newList = values.map((item) => {
 			if (item.assignmentId === selection.id) {
 				item.studentFeedback = value;

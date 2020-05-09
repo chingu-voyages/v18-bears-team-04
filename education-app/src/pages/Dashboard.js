@@ -16,7 +16,6 @@ import bgImg from "../images/Dashboard-bg.jpg";
 import defaultImg from "../images/defaultImg.png";
 
 const Dashboard = (props) => {
-	console.log(config);
 	const [userInfo, setUserInfo] = useState(null);
 	const [{ currClass }, setClassInfo] = useState({ currClass: null });
 	const [{ error }, setError] = useState({ error: null });
