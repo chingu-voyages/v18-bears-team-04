@@ -38,6 +38,10 @@ const LogInForm = (props) => {
 		<LogInFormStyle>
 			<div className='modal-box'>
 				<h1 className='modal-title'>{props.formType}</h1>
+				<div className='demo-info'>
+					<h2>Demo Accounts</h2>
+					<h2 clasname='demo-names'>demoteacher | demostudent</h2>
+				</div>
 				<form className='modal-form' onSubmit={(e) => handleSubmit(e)}>
 					<input
 						className='username-input'
@@ -72,6 +76,19 @@ const LogInFormStyle = styled.div`
 		text-align: center;
 		color: #00a3ff;
 	}
+	.demo-info {
+		color: #888888;
+		margin: 5px auto;
+		text-align: center;
+		font-style: italic;
+		h2 {
+			font-size: 1.5rem;
+		}
+		.demo-names {
+			font-size: 1.25rem;
+		}
+	}
+
 	.username-input {
 		display: block;
 		width: 80%;
