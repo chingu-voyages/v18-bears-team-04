@@ -7,7 +7,7 @@ import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
 import "react-responsive-modal/styles.css";
 import styled from "styled-components";
-import bellIcon from "../images/bell-solid.svg";
+// import bellIcon from "../images/bell-solid.svg";
 import Logo from "../images/iScholars-logo-small.png";
 
 const TopNav = (props) => {
@@ -80,9 +80,10 @@ const TopNav = (props) => {
 				<button className='logout-btn' onClick={() => handleLogOut()}>
 					Log Out
 				</button>
-				<button className='notif-btn'>
+				{/* <button className='notif-btn'>
 					<img src={bellIcon} alt='notification' />
-				</button>
+				</button> */}
+				{/* Saved for next round */}
 			</>
 		);
 	};
