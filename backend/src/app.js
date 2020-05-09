@@ -33,7 +33,7 @@ app.use(
 	cors({
 		origin:
 			NODE_ENV === "development"
-				? "http://localhost:3000  "
+				? "http://localhost:3000"
 				: "https://ischolars.netlify.app",
 	})
 );
