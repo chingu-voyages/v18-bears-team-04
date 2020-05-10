@@ -14,6 +14,7 @@ import Italy from "../images/Italy.svg";
 import Nigeria from "../images/Nigeria.svg";
 import India from "../images/India.svg";
 import Japan from "../images/Japan.svg";
+import USA from "../images/usa.svg";
 
 const AboutUs = () => {
 	const members = [
@@ -28,6 +29,8 @@ const AboutUs = () => {
 			name: "Joanne",
 			job: "Full Stack Developer",
 			icon: joanneImg,
+			flag: USA,
+			nationality: "USA",
 		},
 		{
 			name: "Chuks",
