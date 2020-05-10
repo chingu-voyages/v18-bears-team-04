@@ -1,5 +1,7 @@
 ## Project Title and Description
 iScholar is an independent project which enables Teachers to create and rate assignments and Students to submit and share comments/questions to them.
+App is available at: https://ischolars.netlify.app/
+
 ## Motivation
 Considering the Covid-19 crises and the lack of easy and free tools for teachers and students to communicate to each other, an intercontinental team decided to build a fully functional MVP in a timebox of 6 weeks.
 April - May 2020
@@ -16,22 +18,30 @@ Giuseppe: Scrum Product Owner from Italy
 
 ## Release History
 Sprint 1: Brainstorming Ideas, Market Research
+
 Sprint 2: Front-end and Back-end Design
-Sprint 3: Homepage, Registration, Student and Teacher Dashboards, Connecting APIs
-Sprint 4: 
-Sprint 5: Notification MVP, 
+
+Sprint 3: Homepage, Registration, Student and Teacher Dashboards, Setting up User and Class API
+
+Sprint 4: Setting up Assignment API and Student and Teachers Assignments
+
+Sprint 5: Notification API, 
+
 Sprint 6: Testing and Deployment
- 
-## Code style
-If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
 
 ## Screenshots
 Include logo/demo screenshot etc.
-Tech/framework used
-Ex. -
-Built with
-Electron
 Features
+
+## Built with
+
+NodeJs
+
+Express
+
+React
+
+MongoDB
 
 ### Teacher side:
 Create a Class
