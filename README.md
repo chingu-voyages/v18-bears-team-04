@@ -25,13 +25,13 @@ Sprint 3: Homepage, Registration, Student and Teacher Dashboards, Setting up Use
 
 Sprint 4: Setting up Assignment API and Student and Teachers Assignments
 
-Sprint 5: Notification API, 
+Sprint 5: Notification API, additional adjustments and small features
 
 Sprint 6: Testing and Deployment
 
 ## Screenshots
-Include logo/demo screenshot etc.
-Features
+
+-
 
 ## Built with
 
@@ -71,11 +71,11 @@ and so on...
  
  
 ## Contribute
-Let people know how they can contribute into your project. A contributing guideline will be a big plus.
+Feel free to contribute with your coding skills to our iScholar project.
+You are more than welcome!
 
 ## Credits
-To all team members and Chingu Community
+To everyone has given a small or big contribute to it
 
 ## License
-A short snippet describing the license (MIT, Apache etc)
-MIT © Yourname
+opensoftware
