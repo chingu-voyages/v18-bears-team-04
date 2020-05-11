@@ -45,7 +45,7 @@ const UploadProfileForm = (props) => {
 				console.log(`/profile/${res.data.name}`);
 				props.handleUploadProfileModal();
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => setError({ error: err }));
 	};
 
 	return (

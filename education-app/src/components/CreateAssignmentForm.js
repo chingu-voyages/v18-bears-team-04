@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
+import moment from "moment";
 
 import ValidationError from "../components/ValidationError";
 
@@ -14,19 +15,25 @@ const CreateAssignmentForm = (props) => {
 		className: props.className,
 		dueDate: "",
 		startDate: "",
-		files: "",
 		instructions: "",
 		showModal: false,
+		renderAddAssignment: false,
 	};
 	const [userInput, setInput] = useState(initialFormState);
-
+	const [files, setFiles] = useState([{ value: "" }]);
 	const [{ error }, setError] = useState({ error: null });
-	const { assignmentName, dueDate, startDate, files, instructions } = userInput;
+	const { assignmentName, dueDate, startDate, instructions } = userInput;
 
 	const history = useHistory();
 
 	const handleChange = (e) => {
 		const { value, name } = e.target;
+		setInput({ ...userInput, [name]: value });
+	};
+
+	const handleDateChange = (e) => {
+		const { value, name } = e.target;
+
 		setInput({ ...userInput, [name]: value });
 	};
 
@@ -37,10 +44,20 @@ const CreateAssignmentForm = (props) => {
 	};
 
 	const handleFileChange = (e) => {
-		const { name } = e.target;
 		e.preventDefault();
+		const values = [...files];
+		if (files.length === 1) {
+			setFiles([{ value: e.target.files[0] }]);
+		} else {
+			let newList = values.map((item) => {
+				if (item.value === "") {
+					item.value = e.target.files[0];
+				}
+				return item;
+			});
 
-		setInput({ ...userInput, [name]: e.target.files[0] });
+			setFiles(newList);
+		}
 	};
 
 	const handleSubmit = (e) => {
@@ -57,27 +74,64 @@ const CreateAssignmentForm = (props) => {
 			dueDate,
 		};
 
-		const formData = new FormData();
-		formData.append("doc", files);
+		const formattedStartDate = moment(startDate).format(
+			"YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+		);
+		const formattedDueDate = moment(dueDate).format(
+			"YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+		);
+		const today = moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
-		ApiService.addAssignment(newAssignmentObj)
-			.then((res) => {
-				ApiService.uploadAssignmentFile(formData, res.assignment._id);
-				setInput({
-					assignmentName: "",
-					className: props.className,
-					dueDate: "",
-					startDate: "",
-					files: "",
-					description: "",
+		if (today > formattedDueDate) {
+			alert("Due date cannot be before today.");
+		} else if (formattedDueDate < formattedStartDate) {
+			alert("Due date cannot be before start date.");
+		} else {
+			ApiService.addAssignment(newAssignmentObj)
+				.then((res) => {
+					files.map((a) => {
+						const formData = new FormData();
+						formData.append("doc", a.value);
+						return ApiService.uploadAssignmentFile(
+							formData,
+							res.assignment._id
+						);
+					});
+					setInput({
+						assignmentName: "",
+						className: props.className,
+						dueDate: "",
+						startDate: "",
+						files: [{ value: "" }],
+						description: "",
+					});
+					history.push(`/${props.userName}/assignments`);
+				})
+				.catch((err) => {
+					setError({ error: err });
 				});
-				history.push(`/${props.userName}/assignments`);
-			})
-			// TO DO: make error message for non doc or pdf files
-			.catch((err) => {
-				setError({ error: err });
-			});
+		}
 	};
+
+	const addInput = (e) => {
+		e.preventDefault();
+		const values = [...files];
+		if (values.length === 3) {
+			alert("Maximum upload files allowed is 3 or less.");
+		} else {
+			values.push({ value: "" });
+			setFiles(values);
+		}
+	};
+
+	const renderInput = (
+		<input
+			type='file'
+			name='files'
+			accept='application/pdf,application/msword'
+			onChange={(e) => handleFileChange(e)}
+		/>
+	);
 
 	return (
 		<CreateAssignmentFormStyle>
@@ -85,7 +139,7 @@ const CreateAssignmentForm = (props) => {
 				<h2> Add An Assignment</h2>
 
 				<form className='form-grid' onSubmit={(e) => handleSubmit(e)}>
-					<label htmlFor='assignment-name' className="assignment-name">
+					<label htmlFor='assignment-name' className='assignment-name'>
 						Assignment Name
 						<br />
 						<input
@@ -94,6 +148,7 @@ const CreateAssignmentForm = (props) => {
 							placeholder='e.g. Syllabus'
 							value={assignmentName}
 							onChange={(e) => handleChange(e)}
+							required
 						/>
 					</label>
 
@@ -123,42 +178,48 @@ const CreateAssignmentForm = (props) => {
 							placeholder='Write your instructions here'
 							value={instructions}
 							onChange={(e) => handleChange(e)}
+							required
 						/>
 					</label>
 
-					<label htmlFor='files' className="files">
+					<label htmlFor='files' className='files'>
 						File
 						<br />
-						<input
-							type='file'
-							name='files'
-							onChange={(e) => handleFileChange(e)}
-						/>
+						{files.map((a) => renderInput)}
+						<button className='add-file-btn' onClick={(e) => addInput(e)}>
+							Add A File
+						</button>
 					</label>
 
-					<label htmlFor='start-date' className='start-date'>
-						Start Date
-						<br />
-						<input
-							type='date'
-							name='startDate'
-							value={startDate}
-							onChange={(e) => handleChange(e)}
-						/>
-					</label>
+					<div className='dates'>
+						<label htmlFor='start-date'>
+							Start Date
+							<br />
+							<input
+								type='date'
+								name='startDate'
+								value={startDate}
+								onChange={(e) => handleDateChange(e)}
+								required
+							/>
+						</label>
 
-					<label htmlFor='due-date' className='due-date'>
-						Due Date
-						<br />
-						<input
-							type='date'
-							name='dueDate'
-							value={dueDate}
-							onChange={(e) => handleChange(e)}
-						/>
-					</label>
+						<label htmlFor='due-date'>
+							Due Date
+							<br />
+							<input
+								type='date'
+								name='dueDate'
+								value={dueDate}
+								onChange={(e) => handleDateChange(e)}
+								required
+							/>
+						</label>
+					</div>
 
-					<button className='modal-btn'>Create</button>
+					<button className='modal-btn' type='submit'>
+						Create
+					</button>
 				</form>
 				<ValidationError message={errorMessage()} />
 			</div>
@@ -185,7 +246,7 @@ const CreateAssignmentFormStyle = styled.div`
 		display: grid;
 		grid-template-rows: 1fr 1fr 1fr 0.5fr;
 		grid-template-columns: 1fr 1fr;
-		grid-template-areas: "assignment-name class-name" "instructions files" "start-date due-date" "modal-btn modal-btn";
+		grid-template-areas: "assignment-name class-name" "instructions files" "dates files" "modal-btn modal-btn";
 		height: 90%;
 		width: 100%;
 		padding: 20px;
@@ -200,7 +261,6 @@ const CreateAssignmentFormStyle = styled.div`
 			padding-left: 10px;
 		}
 	}
-
 	input {
 		height: 30px;
 		width: 200px;
@@ -212,10 +272,26 @@ const CreateAssignmentFormStyle = styled.div`
 		outline: 0;
 		border: 0.5px solid #00a3ff;
 	}
+
+	input[type="date"],
+	input[type="text"] {
+		padding-left: 10px;
+		font-family: sans-serif;
+		font-size: 1.5rem;
+	}
+
 	.files {
 		input {
 			border: none;
 		}
+		.add-file-btn {
+			border-radius: 5px;
+			padding: 5px;
+			background-color: #00a3ff;
+			color: #ffffff;
+		}
+		grid-row-start: 2;
+		grid-row-end: 4;
 	}
 
 	.text-area-box {
@@ -223,9 +299,8 @@ const CreateAssignmentFormStyle = styled.div`
 		height: 90px;
 		margin-top: 10px;
 		border: 0.5px solid #00a3ff;
-		/* margin-left: 20px;
-		padding-left: 10px; */
-		/* width: 200px; */
+		padding-left: 10px;
+		padding-top: 10px;
 	}
 	.modal-btn {
 		background-color: #00a3ff;
@@ -244,12 +319,21 @@ const CreateAssignmentFormStyle = styled.div`
 		border-radius: 10px;
 		cursor: pointer;
 	}
-	.start-date,
-	.due-date {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
+	.dates {
+		label {
+			padding-left: 0px;
+		}
+		input {
+			margin-bottom: 5px;
+		}
+		.start-date,
+		.due-date {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
 	}
+
 	.modal-btn {
 		grid-column-start: 1;
 		grid-column-end: 3;
