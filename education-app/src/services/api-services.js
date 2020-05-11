@@ -34,8 +34,17 @@ const ApiService = {
 		);
 	},
 	uploadAssignmentFile(data, assignmentId) {
+		return fetch(`${config.API_ENDPOINT}/upload/assignment/${assignmentId}`, {
+			method: "PUT",
+			body: data,
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	uploadStudentAssignmentFile(data, assignmentId, studentId) {
+		// "/assignment/:assignmentId/student/:studentId"
 		return fetch(
-			`${config.API_ENDPOINT}/upload/teacherAssignment/${assignmentId}`,
+			`${config.API_ENDPOINT}/upload/assignment/${assignmentId}/student/${studentId}`,
 			{
 				method: "PUT",
 				body: data,
@@ -133,6 +142,28 @@ const ApiService = {
 	},
 	updateAssignmentById(obj, assignmentId) {
 		return fetch(`${config.API_ENDPOINT}/assignment/${assignmentId}`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	addTeacherFeedback(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/feedback`, {
+			method: "PUT",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(obj),
+		}).then((res) =>
+			!res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+		);
+	},
+	addStudentFeedback(obj) {
+		return fetch(`${config.API_ENDPOINT}/assignment/student/feedback`, {
 			method: "PUT",
 			headers: {
 				"content-type": "application/json",

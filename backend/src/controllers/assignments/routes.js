@@ -11,6 +11,7 @@ import {
   getResultsForAStudentInAllAssignments,
   getAStudentResultByAssignmentId,
   teacherGivesFeedback,
+  studentGivesFeedback
 } from "./controllers";
 
 const router = Router();
@@ -37,6 +38,9 @@ router.put("/grade", teacherGradesAssignment); //same
 
 //Teacher gives Feedback for assignment
 router.put("/feedback", teacherGivesFeedback); //same
+
+//Student gives Feedback for assignment
+router.put("/student/feedback", studentGivesFeedback);
 
 //Teacher Updates assignment's Title or Instructions
 router.put("/:assignmentId", teacherUpdatesAssignment); //same

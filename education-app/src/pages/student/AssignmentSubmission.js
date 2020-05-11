@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -20,9 +20,9 @@ const AssignmentSubmission = (props) => {
 	const [userInput, setInput] = useState(initialFormState);
 	const [{ error }, setError] = useState({ error: null });
 	const [user, setUser] = useState(null);
-	const [file, setFile] = useState({});
+	const [fileUrl, setFileUrl] = useState([]);
+	const [files, setFiles] = useState([{ value: "" }]);
 	const [assignment, setAssignment] = useState(null);
-	const history = useHistory();
 
 	function getAssignment(props) {
 		Promise.all([
@@ -41,8 +41,15 @@ const AssignmentSubmission = (props) => {
 					(a) => a.studentId === currentUser._id
 				);
 
-				setInput(assignmentContent);
+				let list = [];
+				if (currentAssignment.teacherDocLink.length > 0) {
+					list = currentAssignment.teacherDocLink.map(
+						(a) => config.FILE_BASE_URL + a
+					);
+				}
 
+				setInput(assignmentContent);
+				setFileUrl(list);
 				setUser(currentUser);
 				setAssignment(currentAssignment);
 			})
@@ -59,11 +66,11 @@ const AssignmentSubmission = (props) => {
 		}
 	};
 
-	// Teacher Delete
-	const handleDelete = () => {
-		ApiService.deleteAssignmentById(
-			props.match.params.assignmentId
-		).then((res) => props.history.goBack());
+	const formatDate = () => {
+		if (assignment.dueDate === null) {
+			return "Due Date Unavailable";
+		}
+		return moment(assignment.dueDate).format("MMMM DD, YYYY");
 	};
 
 	//FOR STUDENT SUBMISSION START//
@@ -74,9 +81,46 @@ const AssignmentSubmission = (props) => {
 		setInput({ ...userInput, [name]: value });
 	};
 
-	const handleSubmit = (e) => {
-		//refactor
+	const handleFileChange = (e) => {
 		e.preventDefault();
+		const values = [...files];
+		if (files.length === 1) {
+			setFiles([{ value: e.target.files[0] }]);
+		} else {
+			let newList = values.map((item) => {
+				if (item.value === "") {
+					item.value = e.target.files[0];
+				}
+				return item;
+			});
+
+			setFiles(newList);
+		}
+	};
+
+	const addInput = (e) => {
+		e.preventDefault();
+		const values = [...files];
+		if (values.length === 2) {
+			alert("Maximum upload files allowed is 2 or less.");
+		} else {
+			values.push({ value: "" });
+			setFiles(values);
+		}
+	};
+
+	const renderInput = (
+		<input
+			type='file'
+			name='files'
+			accept='application/pdf,application/msword'
+			onChange={(e) => handleFileChange(e)}
+		/>
+	);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const userId = TokenService.getAuthToken();
 		const { studentFeedback, studentAnswers } = userInput;
 
 		const obj = {
@@ -86,34 +130,30 @@ const AssignmentSubmission = (props) => {
 			assignmentId: assignment._id,
 		};
 
-		ApiService.submitAssignment(obj).then((res) => props.history.goBack());
+		ApiService.submitAssignment(obj).then((res) => {
+			files.map((a) => {
+				const formData = new FormData();
+				formData.append("doc", a.value);
+				return ApiService.uploadStudentAssignmentFile(
+					formData,
+					res.assignment._id,
+					userId
+				);
+			});
+			props.history.goBack();
+		});
 	};
 
-	//FOR STUDENT SUBMISSION END//
-
-	// TO DO: Upload a file - need upload route for student submission in API
-	const handleFileChange = (e) => {
-		e.preventDefault();
-
-		setFile(e.target.files[0]);
-	};
-
-	const assignmentResult =
-		assignment !== null && assignment.assignmentResults !== undefined
-			? assignment.assignmentResults.find((a) => a.studentId === user._id)
+	const renderFileDownload =
+		fileUrl !== null
+			? fileUrl.map((a, index) => {
+					return (
+						<a key={index} className='download-btn' href={a} download>
+							Download File {index + 1}
+						</a>
+					);
+			  })
 			: null;
-
-	const stringURL =
-		assignment !== null && assignment.teacherDocLink.length > 0
-			? config.DOC_BASE_URL + assignment.teacherDocLink[0]
-			: null;
-
-	const formatDate = () => {
-		if (assignment.dueDate === null) {
-			return "Due Date Unavailable";
-		}
-		return moment(assignment.startDate).format("MMMM DD, YYYY");
-	};
 
 	const renderStudentSubmissionView = assignment !== null &&
 		user.role === "student" && (
@@ -138,16 +178,7 @@ const AssignmentSubmission = (props) => {
 						</div>
 					</div>
 				</div>
-				{stringURL !== null && (
-					<Link
-						className='download-btn'
-						to={stringURL}
-						target='_blank'
-						download
-					>
-						Download File
-					</Link>
-				)}
+				<div className='file-downloads'>{renderFileDownload}</div>
 
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='submission'>
@@ -172,31 +203,33 @@ const AssignmentSubmission = (props) => {
 
 					<label htmlFor='files' className='upload-file-label'>
 						<span className='upload-file-title'>Upload File</span>
-						<input
-							type='file'
-							name='file'
-							onChange={(e) => handleFileChange(e)}
-						/>
+						{files.map((a, index) => (
+							<div key={index}>{renderInput}</div>
+						))}
+						<button className='add-file-btn' onClick={(e) => addInput(e)}>
+							Add A File
+						</button>
 					</label>
-					{user !== null &&
-					user.role === "student" &&
-					props.match.params.status === "GRADED" ? (
-						<div className='graded-class-message'>Class is already graded.</div>
-					) : (
+					{user !== null && user.role === "student" && (
 						<div className='btns'>
-							<Link
-								to={`/${props.match.params.title}/${props.match.params.assignmentId}/${user.role}/edit-assignment`}
-							>
-								<button className='edit-btn'>EDIT</button>
-							</Link>
 							<button className='submit-btn'>SUBMIT</button>
 						</div>
 					)}
 
-					{error && <ValidationError message={errorMessage()} />}
+					{error !== null && <ValidationError message={errorMessage()} />}
 				</form>
 			</>
 		);
+
+	//FOR STUDENT SUBMISSION END//
+
+	/*TEACHER SUBMISSION VIEW START */
+	// Teacher Delete
+	const handleDelete = () => {
+		ApiService.deleteAssignmentById(
+			props.match.params.assignmentId
+		).then((res) => props.history.goBack());
+	};
 
 	const renderTeacherSubmissionView = assignment !== null &&
 		user.role === "teacher" && (
@@ -221,17 +254,7 @@ const AssignmentSubmission = (props) => {
 						</div>
 					</div>
 				</div>
-				{stringURL !== null && (
-					<Link
-						className='download-btn'
-						to={stringURL}
-						target='_blank'
-						download
-						disabled
-					>
-						Download File
-					</Link>
-				)}
+				<div className='file-downloads'>{renderFileDownload}</div>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<label htmlFor='submission'>
 						<textarea
@@ -261,7 +284,7 @@ const AssignmentSubmission = (props) => {
 				)}
 			</>
 		);
-
+	/*TEACHER SUBMISSION VIEW END */
 	return (
 		<>
 			<SideNav />
@@ -332,9 +355,7 @@ const AssignmentSubmissionStyle = styled.div`
 	}
 	.download-btn {
 		display: block;
-		width: 200px;
 		text-align: center;
-		margin-top: 20px;
 		padding: 10px;
 		font-size: 1.6rem;
 		background-color: #00a3ff;
@@ -354,9 +375,17 @@ const AssignmentSubmissionStyle = styled.div`
 			height: 250px;
 			border-radius: 10px;
 		}
-
+		.add-file-btn {
+			width: 100px;
+			border: 1px solid #ffffff;
+			background-color: #ffffff;
+			border-radius: 5px;
+			margin: 5px;
+			font-size: 1rem;
+		}
 		.upload-file-label {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			width: 100%;
 			padding: 5px;
 			background-color: #c4c4c4;
@@ -367,6 +396,12 @@ const AssignmentSubmissionStyle = styled.div`
 				margin-bottom: 10px;
 			}
 		}
+	}
+	.file-downloads {
+		margin: 5px;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
 	}
 	.btns {
 		width: 100%;
