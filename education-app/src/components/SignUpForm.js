@@ -149,6 +149,22 @@ const SignUpFormStyle = styled.div`
 		display: inline-block;
 		margin: 5px;
 	}
+ /**
+	Screen size for signup form */
+	@media (max-width: 600px) {
+    /**
+ Modal form */
+    .modal-box {
+      width: 378px;
+    }
+  }
+  @media screen and (min-width: 300px) and (max-width: 420px){
+	    /**
+ Modal form */
+ .modal-box {
+      width: 260px;
+    
+  }
 `;
 
 export default SignUpForm;

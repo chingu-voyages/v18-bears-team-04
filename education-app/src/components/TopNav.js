@@ -50,14 +50,14 @@ const TopNav = (props) => {
 		return (
 			<>
 				<button
-					className='login-btn'
+					className='login-btn nav-item'
 					onClick={(e) => handleClick(e)}
 					value='Log In'
 				>
 					Log In
 				</button>
 				<button
-					className='signup-btn'
+					className='signup-btn nav-item'
 					onClick={(e) => handleClick(e)}
 					value='Sign Up'
 				>
@@ -111,20 +111,24 @@ const TopNav = (props) => {
 			<Link to={`/`}>
 				<img className='app-logo' src={Logo} alt='APP logo' />
 			</Link>
-			<Modal
+			<Modal id="modal-form"
 				open={showModal}
 				onClose={() => setForm({ showModal: false })}
 				center
 			>
 				{!formType ? null : renderForm(formType)}
 			</Modal>
-			<nav className='top-nav-menu'>
-				<ul>
+			<div id="menuToggle">
+      <input type="checkbox" />
+      <span />
+      <span />
+      <span />
+				<ul id="menu">
 					{loggedIn || TokenService.hasAuthToken()
 						? renderLogOut()
 						: renderLogIn()}
 				</ul>
-			</nav>
+			</div>
 		</NavStyle>
 	);
 };
@@ -132,10 +136,10 @@ const TopNav = (props) => {
 const NavStyle = styled.header`
 	position: fixed;
 	width: 100%;
-	height: 60px;
-	padding: 0 60px;
+	height: 70px;
+	${'' /* padding: 0 60px; */}
 	background-color: #fff;
-	display: flex;
+	${'' /* display: flex; */}
 	justify-content: space-between;
 	align-items: center;
 	border-bottom: 3px solid #00a3ff;
@@ -146,8 +150,15 @@ const NavStyle = styled.header`
 	}
 	.app-logo {
 		width: 100px;
+        position: relative;
+    top: 19px;
+    left: 15px;
 	}
-	.top-nav-menu {
+	#menuToggle {
+    display: block;
+    position: relative;
+    top: -2rem;
+    left: 100rem;
 		ul {
 			display: flex;
 			align-items: center;
@@ -184,7 +195,184 @@ const NavStyle = styled.header`
 				color: #fff;
 			}
 		}
+    input{
+      display: none
+    }
 	}
+ /* Adjust container size for (width > 600 and width < 768px) */
+ @media screen and (min-width: 769px) and (max-width: 1024px){
+  #menuToggle {
+    display: block;
+    position: relative;
+    top: -2rem;
+    left: 62rem; 
+    }
+	}
+ }
+
+  /* Adjust container size for (width > 600 and width < 768px) */
+  @media screen and (min-width: 600px) and (max-width: 768px){
+	#menuToggle {
+    display: block;
+    position: relative;
+    top: -2rem;
+    left: 37rem; 
+    }
+	}
+
+  /* Adjust container size for (width < 600px) */
+  @media  (max-width: 600px) {
+    #menuToggle
+ {
+   display: block;
+   position: relative;
+   top: -18px;
+   left: 34rem;
+   
+   z-index: 1;
+   
+   -webkit-user-select: none;
+   user-select: none;
+   .nav-item
+ {
+   text-decoration: none;
+   color: #232323;
+   
+   transition: color 0.3s ease;
+ }
+ .nav-item:hover
+ {
+   color: tomato;
+ }
+ input
+ {
+   display: block;
+   width: 40px;
+   height: 32px;
+   position: absolute;
+   top: -7px;
+   left: -5px;
+   
+   cursor: pointer;
+   
+   opacity: 0; /* hide this */
+   z-index: 2; /* and place it over the hamburger */
+   
+   -webkit-touch-callout: none;
+ }
+ /*
+  * Just a quick hamburger
+  */
+ span
+ {
+   display: block;
+   width: 33px;
+   height: 4px;
+   margin-bottom: 5px;
+   position: relative;
+   
+   background: #cdcdcd;
+   border-radius: 3px;
+   
+   z-index: 1;
+   
+   transform-origin: 4px 0px;
+   
+   transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+               background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+               opacity 0.55s ease;
+ }
+ span:first-child
+ {
+   transform-origin: 0% 0%;
+ }
+ span:nth-last-child(2)
+ {
+   transform-origin: 0% 100%;
+ }
+  /* 
+  * Transform all the slices of hamburger
+  * into a crossmark.
+  */
+ input:checked ~ span
+ {
+   opacity: 1;
+   transform: rotate(45deg) translate(-2px, -1px);
+   background: #ff0000;
+ }
+  /*
+  * But let's hide the middle one.
+  */
+ input:checked ~ span:nth-last-child(3)
+ {
+   opacity: 0;
+   transform: rotate(0deg) scale(0.2, 0.2);
+ }
+  /*
+  * Oh yeah and the last one should go the other direction
+  */
+ input:checked ~ span:nth-last-child(2)
+ {
+   transform: rotate(-45deg) translate(0, -1px);
+ }
+ .app-logo {
+    position: relative;
+    top: 10px;
+    left: -24px;
+  }
+ }
+ /* Adjust container size for (width > 300 and width < 420px) */
+ @media screen and (min-width: 300px) and (max-width: 420px){
+  #menuToggle
+ {
+   display: block;
+   position: relative;
+   top: -18px;
+   left: 28.9rem;
+   
+   z-index: 1;
+   
+   -webkit-user-select: none;
+   user-select: none;
+ }
+ }
+ 
+ /*
+  * Make this absolute positioned
+  * at the top left of the screen
+  */
+ #menu
+ {
+   position: absolute;
+   width: 300px;
+   ${'' /* margin: -100px 0 0 -50px;
+   padding: 50px;
+   padding-top: 125px; */}
+      margin: 0px 0px 0 -21.5rem;
+    padding: 48px;
+    padding-left: 6px;
+    padding-top: 20px;
+    padding-bottom: 22px;
+   
+   background: #ededed;
+   list-style-type: none;
+   -webkit-font-smoothing: antialiased;
+   /* to stop flickering of text in safari */
+   
+   transform-origin: 0% 0%;
+   transform: translate(100%, 0);
+   
+   transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+ }
+ 
+ /*
+  * And let's slide it in from the left
+  */
+ #menuToggle input:checked ~ ul
+ {
+   transform: none;
+ }
+ 
 `;
 
 export default TopNav;
