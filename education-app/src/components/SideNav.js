@@ -89,6 +89,14 @@ const SideNav = (props) => {
 };
 
 const SideNavStyle = styled.div`
+${'' /* @media screen and (min-width: 320px) and (max-width: 420px) {
+	SideNavStyle{
+      width: 164px;
+		height: 100%
+	}
+		
+	
+}; */}
 	width: 250px;
 	height: 100vh;
 	position: fixed;
@@ -96,6 +104,7 @@ const SideNavStyle = styled.div`
 	background-image: url(${bgImg});
 	background-size: cover;
 	background-position: 60% 0;
+	
 	.wrap {
 		height: 100%;
 		background-color: #00a2ffbf;
@@ -144,6 +153,13 @@ const SideNavStyle = styled.div`
 			}
 		}
 	}
+	@media screen and (min-width: 320px) and (max-width: 420px) {
+		width: 116px;
+		height: 100%;
+		.links {
+			height: 38%
+		}
+}
 `;
 
 export default SideNav;
