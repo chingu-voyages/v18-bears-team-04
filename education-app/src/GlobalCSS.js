@@ -18,10 +18,10 @@ const GlobalCSS = createGlobalStyle`
    }
    @media screen and (min-width: 320px) and (max-width: 420px) {
 	section{
-     padding-left: 18px !important;
+     padding-left: 50px !important;
 	}
 	
 };
-`
+`;
 
-export default GlobalCSS
+export default GlobalCSS;
