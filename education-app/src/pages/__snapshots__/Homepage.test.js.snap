@@ -2,7 +2,7 @@
 
 exports[`<Homepage /> renders as expected 1`] = `
 <div
-  className="sc-AxjAm fZAAwD"
+  className="sc-AxjAm duGnyl"
 >
   <div
     className="first-view"
@@ -66,7 +66,7 @@ exports[`<Homepage /> renders as expected 1`] = `
                 />
               </td>
               <td>
-                Get your grde
+                Get your grade
               </td>
             </tr>
             <tr>

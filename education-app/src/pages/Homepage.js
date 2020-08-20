@@ -53,7 +53,7 @@ const Homepage = () => {
 									<td>
 										<img src={gradeIcon} alt='' />
 									</td>
-									<td>Get your grde</td>
+									<td>Get your grade</td>
 								</tr>
 								<tr>
 									<td>Share your feedback</td>
