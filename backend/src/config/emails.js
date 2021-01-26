@@ -1,20 +1,23 @@
-import sgMail from '@sendgrid/mail';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
+import nodemailer from 'nodemailer';
 const sendEmail = async (to, subject, message) => {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    const msg = {
+  // use nodemailler during testing and development
+    const account = await nodemailer.createTestAccount();
+    const transporter = await nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: { user: account.user, pass: account.pass },
+    });
+    const mailOptions = {
+      from: 'no-reply@iScholars.com',
       to,
-      from: 'amaechichuks101@gmail.com',
       subject,
       html: message,
     };
-    await sgMail.send(msg).then(() => {
-        console.log('Message sent')
-    }).catch((error) => {
-        console.log(error.response.body)
-    })
+    const info = await transporter.sendMail(mailOptions);    
+    console.log('Message sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
 };
+
 export default sendEmail;
